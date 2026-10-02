@@ -1,0 +1,2 @@
+FROM tev1:4b
+PARAMETER num_ctx 262144
