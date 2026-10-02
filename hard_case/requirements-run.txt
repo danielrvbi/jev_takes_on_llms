@@ -1,0 +1,15 @@
+# Tested dependency snapshot for a fresh approved shared environment.
+# Python 3.12; no new environment is required on the existing development machine.
+ollama==0.6.3
+langchain-core==1.6.3
+langchain-ollama==1.1.0
+langchain-mistralai==1.1.6
+mistralai==3.0.0
+pydantic==2.13.5
+pandas==3.0.5
+numpy==2.5.3
+rich==15.0.0
+python-dotenv==1.2.3
+httpx==0.28.1
+matplotlib==3.11.2
+seaborn==0.13.2
