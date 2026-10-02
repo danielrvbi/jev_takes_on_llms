@@ -1,0 +1,616 @@
+{
+  "format_version": 1,
+  "original_source_sha256": "93f2e05df4e5c882f8bd7f4e0a263391f6020be646a84f68e1ccd3a46da9d261",
+  "compact_packet_sha256": "f33ea0b301fe514830f3e79cc02f8c25c2d3193b2fa3dd87ee1418417055c881",
+  "sources": {
+    "policy_wording.md": {
+      "sha256": "0071e32559ee3fbd974b3bb8522a00593fe27bdcca453bfe389fcca39b18a3ad",
+      "line_count": 103
+    },
+    "fnol.md": {
+      "sha256": "25a7bdec3a8af79462149ded6a4151b4633dd6c68035dc5fdfad6cc26f7a8655",
+      "line_count": 81
+    },
+    "customer_emails.md": {
+      "sha256": "687f375b852de30f26717fab45a897c79511f64efa80b9e202e7c80086b34286",
+      "line_count": 239
+    },
+    "adjuster_notes.md": {
+      "sha256": "260a0b21135db848cb7c2e2847bca46a3d4a17880e7e064a78a81c7167e3f2c3",
+      "line_count": 107
+    },
+    "repair_invoices.md": {
+      "sha256": "4edb7c2047952d04e32ae240262a675156d78441e7bccc7ab3454e9e286e0a9d",
+      "line_count": 125
+    },
+    "police_report.md": {
+      "sha256": "6dd350c2aa00bd89f7182247173968caf1c35a5529912c409e7ec41951bf146e",
+      "line_count": 46
+    },
+    "previous_claims.md": {
+      "sha256": "83a02a5c72e66df357fc42ff46548408a1d8ee58160aa8bc09baf84e0fd211cf",
+      "line_count": 46
+    },
+    "internal_guidelines.md": {
+      "sha256": "d453be7010b55afef30846f581535bfc3eb15aeb436c6c003bd5559a6703c87d",
+      "line_count": 110
+    },
+    "timeline.md": {
+      "sha256": "9e2a443034af0fc7dd9a1a5baa5871dd5b9309fea490b6a10bd9225019811b88",
+      "line_count": 76
+    }
+  },
+  "records": {
+    "PW01": {
+      "source": "policy_wording.md",
+      "lines": [
+        1,
+        24
+      ]
+    },
+    "PW02": {
+      "source": "policy_wording.md",
+      "lines": [
+        26,
+        42
+      ]
+    },
+    "PW03": {
+      "source": "policy_wording.md",
+      "lines": [
+        44,
+        50
+      ]
+    },
+    "PW04": {
+      "source": "policy_wording.md",
+      "lines": [
+        52,
+        58
+      ]
+    },
+    "PW05": {
+      "source": "policy_wording.md",
+      "lines": [
+        60,
+        73
+      ]
+    },
+    "PW06": {
+      "source": "policy_wording.md",
+      "lines": [
+        75,
+        79
+      ]
+    },
+    "PW07": {
+      "source": "policy_wording.md",
+      "lines": [
+        81,
+        87
+      ]
+    },
+    "PW08": {
+      "source": "policy_wording.md",
+      "lines": [
+        89,
+        95
+      ]
+    },
+    "PW09": {
+      "source": "policy_wording.md",
+      "lines": [
+        97,
+        103
+      ]
+    },
+    "FN01": {
+      "source": "fnol.md",
+      "lines": [
+        1,
+        18
+      ]
+    },
+    "FN02": {
+      "source": "fnol.md",
+      "lines": [
+        20,
+        33
+      ]
+    },
+    "FN03": {
+      "source": "fnol.md",
+      "lines": [
+        35,
+        43
+      ]
+    },
+    "FN04": {
+      "source": "fnol.md",
+      "lines": [
+        45,
+        55
+      ]
+    },
+    "FN05": {
+      "source": "fnol.md",
+      "lines": [
+        57,
+        61
+      ]
+    },
+    "FN06": {
+      "source": "fnol.md",
+      "lines": [
+        63,
+        81
+      ]
+    },
+    "EM00": {
+      "source": "customer_emails.md",
+      "lines": [
+        1,
+        7
+      ]
+    },
+    "EM01": {
+      "source": "customer_emails.md",
+      "lines": [
+        9,
+        28
+      ]
+    },
+    "EM02": {
+      "source": "customer_emails.md",
+      "lines": [
+        30,
+        47
+      ]
+    },
+    "EM03": {
+      "source": "customer_emails.md",
+      "lines": [
+        49,
+        67
+      ]
+    },
+    "EM04": {
+      "source": "customer_emails.md",
+      "lines": [
+        69,
+        83
+      ]
+    },
+    "EM05": {
+      "source": "customer_emails.md",
+      "lines": [
+        85,
+        97
+      ]
+    },
+    "EM06": {
+      "source": "customer_emails.md",
+      "lines": [
+        99,
+        120
+      ]
+    },
+    "EM07": {
+      "source": "customer_emails.md",
+      "lines": [
+        122,
+        136
+      ]
+    },
+    "EM08": {
+      "source": "customer_emails.md",
+      "lines": [
+        138,
+        153
+      ]
+    },
+    "EM09": {
+      "source": "customer_emails.md",
+      "lines": [
+        155,
+        167
+      ]
+    },
+    "EM10": {
+      "source": "customer_emails.md",
+      "lines": [
+        169,
+        179
+      ]
+    },
+    "EM11": {
+      "source": "customer_emails.md",
+      "lines": [
+        181,
+        196
+      ]
+    },
+    "EM12": {
+      "source": "customer_emails.md",
+      "lines": [
+        198,
+        210
+      ]
+    },
+    "EM13": {
+      "source": "customer_emails.md",
+      "lines": [
+        212,
+        225
+      ]
+    },
+    "EM14": {
+      "source": "customer_emails.md",
+      "lines": [
+        227,
+        239
+      ]
+    },
+    "AD00": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        1,
+        9
+      ]
+    },
+    "AD01": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        11,
+        17
+      ]
+    },
+    "AD02": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        19,
+        23
+      ]
+    },
+    "AD03": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        25,
+        29
+      ]
+    },
+    "AD04": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        31,
+        33
+      ]
+    },
+    "AD05": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        35,
+        39
+      ]
+    },
+    "AD06": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        41,
+        45
+      ]
+    },
+    "AD07": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        47,
+        51
+      ]
+    },
+    "AD08": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        53,
+        57
+      ]
+    },
+    "AD09": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        59,
+        65
+      ]
+    },
+    "AD10": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        67,
+        69
+      ]
+    },
+    "AD11": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        71,
+        75
+      ]
+    },
+    "AD12": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        77,
+        79
+      ]
+    },
+    "AD13": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        81,
+        83
+      ]
+    },
+    "AD14": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        85,
+        89
+      ]
+    },
+    "AD15": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        91,
+        95
+      ]
+    },
+    "AD16": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        97,
+        99
+      ]
+    },
+    "AD17": {
+      "source": "adjuster_notes.md",
+      "lines": [
+        101,
+        107
+      ]
+    },
+    "RP01": {
+      "source": "repair_invoices.md",
+      "lines": [
+        1,
+        21
+      ]
+    },
+    "RP02": {
+      "source": "repair_invoices.md",
+      "lines": [
+        23,
+        42
+      ]
+    },
+    "RP03": {
+      "source": "repair_invoices.md",
+      "lines": [
+        43,
+        49
+      ]
+    },
+    "RP04": {
+      "source": "repair_invoices.md",
+      "lines": [
+        51,
+        69
+      ]
+    },
+    "RP05": {
+      "source": "repair_invoices.md",
+      "lines": [
+        71,
+        95
+      ]
+    },
+    "RP06": {
+      "source": "repair_invoices.md",
+      "lines": [
+        97,
+        117
+      ]
+    },
+    "RP07": {
+      "source": "repair_invoices.md",
+      "lines": [
+        119,
+        125
+      ]
+    },
+    "PO01": {
+      "source": "police_report.md",
+      "lines": [
+        1,
+        10
+      ]
+    },
+    "PO02": {
+      "source": "police_report.md",
+      "lines": [
+        12,
+        20
+      ]
+    },
+    "PO03": {
+      "source": "police_report.md",
+      "lines": [
+        22,
+        28
+      ]
+    },
+    "PO04": {
+      "source": "police_report.md",
+      "lines": [
+        30,
+        34
+      ]
+    },
+    "PO05": {
+      "source": "police_report.md",
+      "lines": [
+        36,
+        40
+      ]
+    },
+    "PO06": {
+      "source": "police_report.md",
+      "lines": [
+        42,
+        46
+      ]
+    },
+    "PC01": {
+      "source": "previous_claims.md",
+      "lines": [
+        1,
+        9
+      ]
+    },
+    "PC02": {
+      "source": "previous_claims.md",
+      "lines": [
+        11,
+        19
+      ]
+    },
+    "PC03": {
+      "source": "previous_claims.md",
+      "lines": [
+        21,
+        30
+      ]
+    },
+    "PC04": {
+      "source": "previous_claims.md",
+      "lines": [
+        32,
+        38
+      ]
+    },
+    "PC05": {
+      "source": "previous_claims.md",
+      "lines": [
+        40,
+        46
+      ]
+    },
+    "IG01": {
+      "source": "internal_guidelines.md",
+      "lines": [
+        1,
+        20
+      ]
+    },
+    "IG02": {
+      "source": "internal_guidelines.md",
+      "lines": [
+        22,
+        37
+      ]
+    },
+    "IG03": {
+      "source": "internal_guidelines.md",
+      "lines": [
+        39,
+        54
+      ]
+    },
+    "IG04": {
+      "source": "internal_guidelines.md",
+      "lines": [
+        56,
+        68
+      ]
+    },
+    "IG05": {
+      "source": "internal_guidelines.md",
+      "lines": [
+        70,
+        76
+      ]
+    },
+    "IG06": {
+      "source": "internal_guidelines.md",
+      "lines": [
+        78,
+        86
+      ]
+    },
+    "IG07": {
+      "source": "internal_guidelines.md",
+      "lines": [
+        88,
+        94
+      ]
+    },
+    "IG08": {
+      "source": "internal_guidelines.md",
+      "lines": [
+        96,
+        102
+      ]
+    },
+    "IG09": {
+      "source": "internal_guidelines.md",
+      "lines": [
+        104,
+        110
+      ]
+    },
+    "TL01": {
+      "source": "timeline.md",
+      "lines": [
+        1,
+        18
+      ]
+    },
+    "TL02": {
+      "source": "timeline.md",
+      "lines": [
+        20,
+        33
+      ]
+    },
+    "TL03": {
+      "source": "timeline.md",
+      "lines": [
+        35,
+        50
+      ]
+    },
+    "TL04": {
+      "source": "timeline.md",
+      "lines": [
+        52,
+        68
+      ]
+    },
+    "TL05": {
+      "source": "timeline.md",
+      "lines": [
+        69,
+        76
+      ]
+    }
+  },
+  "review": {
+    "method": "Manual evidence rewrite; all nine originals reviewed, record line ranges audited. Headers, whitespace, repeated boilerplate and repeated descriptions condensed; attributed accounts, chronology, contradictions, corrections and document limitations retained. Designer README not consulted. No targets introduced.",
+    "limitations": "Line coverage is a provenance check, not a proof of semantic equivalence. Condensation can change judgments through wording and presentation.",
+    "retained_source_discrepancies": [
+      "FNOL name correction Senell to Senel; police spelling/OCR retained",
+      "Repair estimates and provisional control totals remain unreconciled",
+      "Timeline police preparation date differs from police extract",
+      "Timeline signature date differs from adjuster dated-note/receipt dates",
+      "Guideline example police rear-mark assertion differs from actual vehicle-specific police observation"
+    ]
+  }
+}
