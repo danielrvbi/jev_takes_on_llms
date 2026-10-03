@@ -1,3 +1,5 @@
+from execution import POLICY
+from runtime.testing import audited_result
 import copy
 import csv
 import io
@@ -17,7 +19,7 @@ from benchmark.metrics import derive, normalized, results_frame, summarize
 from benchmark.plots import plot_results
 from benchmark.providers.base import structured_result, token_usage, validate_result
 from benchmark.providers.ollama_systemone import SystemOneProvider, map_response
-from benchmark.runner import ResultStore, compatible_definition, measured_row, output_lock, run_benchmark
+from benchmark.runner import ResultStore, compatible_definition, measured_row as production_measured_row, output_lock, run_benchmark
 from benchmark.schemas import DecisionOutput
 from main import main, parse_args
 
@@ -34,7 +36,11 @@ def values():
 
 
 def result():
-    return validate_result(values(), {"fixture": True}, 10, 20)
+    return audited_result(validate_result(values(), {"fixture": True}, 10, 20))
+
+
+def measured_row(model, case, repetition, response, latency):
+    return production_measured_row(model, case, repetition, audited_result(response, model, case.message), latency)
 
 
 class SchemaAndMetricsTests(unittest.TestCase):
@@ -115,8 +121,8 @@ class ProviderTests(unittest.TestCase):
                                       "probabilities": values()["freshness_probabilities"]}},
             "usage": {"input_tokens": 123, "output_tokens": 4},
         }
-        with patch("benchmark.providers.ollama_systemone.ollama.systemone", return_value=response) as native:
-            measured = SystemOneProvider("tev1:0.8b").invoke(CASES[0].message)
+        with patch("benchmark.providers.ollama_systemone.systemone_call", return_value=response) as native:
+            measured = SystemOneProvider("tev1:0.8b", audit_directory="fixture").invoke(CASES[0].message)
         arguments = native.call_args.kwargs
         self.assertEqual(arguments["state"], CASES[0].message)
         self.assertEqual([q["type"] for q in arguments["questions"].values()], ["noul", "noul", "choice", "score"])
@@ -158,29 +164,23 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual(token_usage(AIMessage(content="")), (None, None))
 
     def test_provider_configuration(self):
-        with patch("benchmark.providers.ollama_chat.ChatOllama") as ollama_llm:
-            from benchmark.providers.ollama_chat import OllamaChatProvider
-            OllamaChatProvider("gemma4:e4b")
-            self.assertEqual(ollama_llm.call_args.kwargs["temperature"], 0)
-            self.assertNotIn("seed", ollama_llm.call_args.kwargs)
-            ollama_llm.return_value.with_structured_output.assert_called_once_with(
-                DecisionOutput, method="json_schema", include_raw=True)
-        with patch.dict("os.environ", {"MISTRAL_API_KEY": "fixture"}), patch(
-                "benchmark.providers.mistral.ChatMistralAI") as mistral_llm:
-            from benchmark.providers.mistral import MistralProvider
-            MistralProvider("mistral-small-latest")
-            self.assertEqual(mistral_llm.call_args.kwargs["max_retries"], 0)
-            self.assertEqual(mistral_llm.call_args.kwargs["temperature"], 0)
-            self.assertNotIn("seed", mistral_llm.call_args.kwargs)
-            mistral_llm.return_value.with_structured_output.assert_called_once_with(
-                DecisionOutput, method="json_schema", include_raw=True)
+        from benchmark.providers import create_provider
+        with patch("benchmark.providers.ollama_chat.ChatOllama") as local:
+            provider = create_provider("gemma4:e4b", audit_directory="fixture")
+            self.assertEqual(provider.model, "gemma4:e4b")
+            local.assert_not_called()  # Client creation is per invoke, never per model.
+        with patch.dict("os.environ", {"MISTRAL_API_KEY": "fixture"}), patch("benchmark.providers.mistral.ChatMistralAI") as hosted:
+            provider = create_provider("mistral-small-latest", audit_directory="fixture")
+            self.assertEqual(provider.model, "mistral-small-latest")
+            hosted.assert_not_called()
 
 
 class PersistenceAndRunnerTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
-        self.directory = Path(self.temp.name)
-        self.definition = {"fixture": "compatible"}
+        self.root = Path(self.temp.name)
+        self.directory = self.root / "benchmark"
+        self.definition = {"fixture": "compatible", "execution_policy": POLICY}
         self.console = Console(file=io.StringIO(), force_terminal=False)
 
     def tearDown(self):
@@ -218,9 +218,9 @@ class PersistenceAndRunnerTests(unittest.TestCase):
                     pass
 
     def test_retiring_model_preserves_resume_but_configuration_changes_rejected(self):
-        original = {"prompts": "unchanged", "model_configuration": {
+        original = {"execution_policy": POLICY, "prompts": "unchanged", "model_configuration": {
             "gemma4:e4b": {"temperature": 0}, "gemma4:12b": {"temperature": 0}}}
-        reduced = {"prompts": "unchanged", "model_configuration": {
+        reduced = {"execution_policy": POLICY, "prompts": "unchanged", "model_configuration": {
             "gemma4:e4b": {"temperature": 0}}}
         store = ResultStore(self.directory, original)
         store.record(measured_row("gemma4:e4b", CASES[0], 1, result(), 10))
@@ -238,9 +238,10 @@ class PersistenceAndRunnerTests(unittest.TestCase):
                 ResultStore(self.directory, incompatible)
 
     def run_fixture(self, models, cases, repetitions, provider_factory):
-        with patch("benchmark.runner.report"):
-            return run_benchmark(models, cases, repetitions, 2, self.directory,
-                                 provider_factory, self.console, self.definition)
+        with patch("benchmark.runner.report"), patch("benchmark.runner.measured_row", side_effect=measured_row):
+            return run_benchmark(models, cases, repetitions, 2, self.root,
+                                 provider_factory, self.console, self.definition,
+                                 )
 
     def test_resume_retries_failures_once_skips_successes_extends_cases_and_models(self):
         provider = Mock()
@@ -271,7 +272,7 @@ class PersistenceAndRunnerTests(unittest.TestCase):
         provider = Mock()
         provider.invoke.side_effect = [RuntimeError("warm-up"), result(), KeyboardInterrupt()]
         with self.assertRaises(KeyboardInterrupt):
-            self.run_fixture(["test"], [CASES[0]], 2, lambda _: provider)
+            self.run_fixture(["test"], [CASES[0]], 2, lambda _, **kwargs: provider)
         store = ResultStore(self.directory, self.definition)
         self.assertEqual(len(store.history), 1)
         self.assertIn("KeyboardInterrupt", store.latest[("test", 1, 1)]["error"])
@@ -349,11 +350,11 @@ class PersistenceAndRunnerTests(unittest.TestCase):
 
 
 class CliTests(unittest.TestCase):
-    def test_all_runs_five_models_without_gemma_12b(self):
+    def test_all_runs_six_models_without_gemma_12b(self):
         with patch("main.run_benchmark", return_value=0) as runner, patch("main.load_dotenv"):
             self.assertEqual(main(["--all"]), 0)
         models = runner.call_args.args[0]
-        self.assertEqual(len(models), 5)
+        self.assertEqual(len(models), 6)
         self.assertIn("gemma4:e4b", models)
         self.assertNotIn("gemma4:12b", models)
 

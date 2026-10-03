@@ -27,5 +27,6 @@ ENV/
 # uv
 # (uv.lock is committed on purpose)
 
-# Generated benchmark measurements and plots
-results/
+# Quarantined measurements and private compiler/runtime downloads
+results_contaminated_dont_use/
+.runtime/

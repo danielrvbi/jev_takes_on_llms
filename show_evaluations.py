@@ -26,9 +26,15 @@ from benchmark.schemas import ROUTES
 
 def find_results(directory):
     directory = Path(directory)
+    if any("contaminated" in part.lower() for part in directory.resolve().parts):
+        raise ValueError("Quarantined results cannot be imported for reporting")
+    if (directory / "benchmark/raw.csv").is_file():
+        return directory / "benchmark"
     if (directory / "raw.csv").is_file():
         return directory
-    candidates = sorted(path.parent for path in directory.rglob("raw.csv"))
+    candidates = sorted(path.parent for path in directory.rglob("raw.csv")
+                        if not any("contaminated" in part.lower() for part in path.parts)
+                        and path.parent.name != "hard_case")
     if len(candidates) == 1:
         return candidates[0]
     if not candidates:
@@ -73,6 +79,8 @@ def read_measurements(path):
 
 
 def load_results(directory, models=None, case_ids=None):
+    if any("contaminated" in part.lower() for part in Path(directory).resolve().parts):
+        raise ValueError("Quarantined results cannot be imported for reporting")
     with saved_snapshot(directory):
         frame = read_measurements(directory / "raw.csv")
         if frame.empty:
@@ -313,6 +321,9 @@ def build_report(directory, frame, history, metadata, include_raw=False, plot_di
                     raw = row.raw_response_json
                 fenced_json(lines, {"timestamp_utc": row.timestamp_utc, "response": raw})
 
+    lines.extend(["## Cache verification and cold timings", "",
+                  f"Latest cache verification failures: {int((frame.failure_kind == 'cache_verification').sum())}; schema failures: {int((frame.failure_kind == 'schema').sum())}.",
+                  "Local latency includes startup, model loading, prompt evaluation, verification and teardown. Per-call timings and evidence are linked in raw.csv.", ""])
     lines.extend(["## Original experiment metadata", "",
                   "Recorded metadata is reproduced below, including the full case set, exact prompts, schema, "
                   "provider settings, and dependency versions. Filters above select report rows and do not change the original experiment.", ""])
@@ -324,22 +335,111 @@ def build_report(directory, frame, history, metadata, include_raw=False, plot_di
     return "\n".join(lines) + "\n"
 
 
+def build_hard_case_report(directory, models=None, include_raw=False):
+    from hard_case.metrics import results_frame as hard_frame, summarize as hard_summary
+    from hard_case.schemas import PROBABILITY_FIELDS
+    if any("contaminated" in part.lower() for part in directory.resolve().parts):
+        raise ValueError("Quarantined results cannot be imported for reporting")
+    with saved_snapshot(directory):
+        with (directory / "raw.csv").open(newline="") as f:
+            frame = hard_frame(list(csv.DictReader(f)))
+        with (directory / "attempt_history.csv").open(newline="") as f:
+            history = hard_frame(list(csv.DictReader(f)))
+    if models:
+        frame = frame[frame.model.isin(models)]
+        history = history[history.model.isin(models)]
+    if frame.empty:
+        raise ValueError("No hard-case measurements match selected models")
+    metadata = json.loads((directory / 'metadata.json').read_text())
+    return render_hard_case_report(directory, frame, history, metadata, include_raw)
+
+
+def render_hard_case_report(directory, frame, history, metadata, include_raw=False):
+    from hard_case.metrics import summarize as hard_summary
+    from hard_case.schemas import PROBABILITY_FIELDS
+    summary = hard_summary(frame, history)
+    lines = ["# Hard-case insurance benchmark", "", f"Results: {directory.resolve()}", "",
+             "Six independent probabilities; no gold labels or accuracy claims. Local latency includes private startup and teardown.", "",
+             f"Latest cache verification failures: {int((frame.failure_kind == 'cache_verification').sum())}; schema failures: {int((frame.failure_kind == 'schema').sum())}.", ""]
+    overview = ["model", "successful_repetitions", "attempted_repetitions", "cache_verification_failures", "schema_failures", "latency_ms_p50", "latency_ms_p95"]
+    table(lines, overview, summary[overview].itertuples(index=False, name=None))
+    fields = ["model", *[f"{name}_mean" for name in PROBABILITY_FIELDS]]
+    table(lines, fields, summary[fields].itertuples(index=False, name=None))
+    lines.extend(['## Complete suite statistics', ''])
+    table(lines, list(summary.columns), summary.fillna('NA').itertuples(index=False, name=None))
+    lines.extend(["", "## Every latest repetition", ""])
+    fields = ["model", "repetition", "attempt", "timestamp_utc", *PROBABILITY_FIELDS,
+              "latency_ms", "input_tokens", "output_tokens", "validation_success",
+              "cache_verified", "failure_kind", "error", "call_id", "request_sha256",
+              "runtime_sha256", "model_sha256", "audit_path", "audit_sha256"]
+    table(lines, fields, frame[fields].itertuples(index=False, name=None))
+    lines.extend(["## Original experiment metadata", ""])
+    fenced_json(lines, metadata)
+    if include_raw:
+        for _, row in history.iterrows():
+            fenced_json(lines, {"model": row.model, "repetition": int(row.repetition), "error": row.error,
+                                "response": json.loads(row.raw_response_json)})
+    return "\n".join(lines) + "\n"
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input-dir", type=Path, default=Path("results"),
+    inputs = parser.add_mutually_exclusive_group()
+    inputs.add_argument("--input-dir", type=Path, default=Path("results"),
                         help="directory containing raw.csv; one descendant is auto-selected if needed")
+    inputs.add_argument('--input-dirs', type=Path, nargs='*',
+                        help='compare independent result roots; omit paths to use Tev/Gemma/hosted-Jev defaults')
     parser.add_argument("--models", nargs="+", help="filter saved models; does not run them")
     parser.add_argument("--case", type=int, nargs="+", action="extend", dest="case_ids", help="filter case IDs")
     parser.add_argument("--output", type=Path, help="write Markdown to this file instead of stdout")
     parser.add_argument("--include-raw", action="store_true", help="also include original responses for every historical attempt")
+    parser.add_argument("--suite", choices=("all", "benchmark", "hard_case"), default="all")
     args = parser.parse_args(argv)
     try:
-        directory = find_results(args.input_dir)
-        frame, history, metadata = load_results(directory, args.models, args.case_ids)
-        report = build_report(directory, frame, history, metadata, args.include_raw)
+        if args.input_dirs is not None:
+            from combined_reporting import build_combined_report, DEFAULT_ROOTS
+            roots = args.input_dirs or [Path(root) for root in DEFAULT_ROOTS]
+            directories = [root / suite for root in roots for suite in ('benchmark', 'hard_case')
+                           if (root / suite / 'raw.csv').exists()]
+            if args.output:
+                protected = {(d / name).resolve() for d in directories for name in
+                             ['raw.csv', 'summary.csv', 'attempt_history.csv', 'metadata.json', '.benchmark.lock']}
+                protected |= {(root / name).resolve() for root in roots for name in
+                              ['validation.json', 'run_plan.json', 'jev_budget.json', 'jev_run.json']}
+                if args.output.resolve() in protected or any(
+                    args.output.resolve().is_relative_to((d / 'execution_audit').resolve()) for d in directories):
+                    raise ValueError('--output must not overwrite a benchmark data file')
+            report, _ = build_combined_report(roots, args.suite, args.models, args.case_ids,
+                args.include_raw, output_directory=args.output.parent if args.output else None)
+            if args.output:
+                args.output.parent.mkdir(parents=True, exist_ok=True)
+                args.output.write_text(report, encoding='utf-8')
+                print(f'Evaluation report saved to {args.output.resolve()}', file=sys.stderr)
+            else:
+                sys.stdout.write(report)
+            return 0
+        root = args.input_dir
+        known = [root / suite for suite in ["benchmark", "hard_case"] if (root / suite / "raw.csv").exists()]
+        if known:
+            directories = [d for d in known if args.suite == "all" or d.name == args.suite]
+        elif args.suite == "hard_case" or (root / "metadata.json").exists() and json.loads((root / "metadata.json").read_text()).get("kind") == "hard_case_benchmark":
+            directories = [root]
+        else:
+            directories = [find_results(root)]
+        if not directories:
+            raise ValueError("Selected suite has no saved results")
+        reports = []
+        for directory in directories:
+            metadata = json.loads((directory / "metadata.json").read_text()) if (directory / "metadata.json").exists() else {}
+            if metadata.get("kind") == "hard_case_benchmark":
+                reports.append(build_hard_case_report(directory, args.models, args.include_raw))
+            else:
+                frame, history, metadata = load_results(directory, args.models, args.case_ids)
+                reports.append(build_report(directory, frame, history, metadata, args.include_raw))
+        report = "\n".join(reports)
         if args.output:
-            protected = {(directory / name).resolve() for name in
-                         ["raw.csv", "summary.csv", "attempt_history.csv", "metadata.json", ".benchmark.lock"]}
+            protected = {(d / name).resolve() for d in directories for name in
+                         ["raw.csv", "summary.csv", "attempt_history.csv", "metadata.json", ".benchmark.lock"]} | {(root / "validation.json").resolve()}
             if args.output.resolve() in protected:
                 raise ValueError("--output must not overwrite a benchmark data file")
             args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -1,3 +1,4 @@
+from execution import AUDIT_COLUMNS
 import math
 
 import pandas as pd
@@ -8,7 +9,7 @@ from hard_case.schemas import PROBABILITY_FIELDS
 RAW_COLUMNS = [
     "model", "repetition", "attempt", "timestamp_utc",
     *PROBABILITY_FIELDS,
-    "latency_ms", "input_tokens", "output_tokens", "validation_success", "error", "raw_response_json",
+    "latency_ms", "input_tokens", "output_tokens", "validation_success", "error", "raw_response_json", *AUDIT_COLUMNS,
 ]
 
 
@@ -47,6 +48,8 @@ def summarize(frame, history=None):
             "total_attempts": len(attempts),
             "historical_failures": int((~attempts.validation_success).sum()),
         }
+        record["cache_verification_failures"] = int((group.failure_kind == "cache_verification").sum())
+        record["schema_failures"] = int((group.failure_kind == "schema").sum())
         for name in PROBABILITY_FIELDS:
             series = valid[name].dropna()
             record.update({

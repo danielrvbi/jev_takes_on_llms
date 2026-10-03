@@ -1,3 +1,5 @@
+from execution import POLICY
+from runtime.testing import audited_result
 import io
 import tempfile
 import unittest
@@ -17,7 +19,7 @@ class EvaluationReportTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.directory = self.root / "smoke"
-        self.store = ResultStore(self.directory, {"prompts": {"fixture": "original prompt"}})
+        self.store = ResultStore(self.directory, {"execution_policy": POLICY, "prompts": {"fixture": "original prompt"}})
         failed = validate_result({}, {"content": "invalid structured output"}, error="fixture parsing failure")
         self.store.record(measured_row("tev1:0.8b", CASES[0], 1, failed, 10))
         self.store.record(measured_row("tev1:0.8b", CASES[0], 1, result(), 20))
@@ -68,7 +70,7 @@ class EvaluationReportTests(unittest.TestCase):
     def test_directory_discovery_does_not_combine_experiments(self):
         self.assertEqual(find_results(self.root), self.directory)
         other = self.root / "other"
-        ResultStore(other, {"fixture": "other"})
+        ResultStore(other, {"execution_policy": POLICY, "fixture": "other"})
         with self.assertRaisesRegex(ValueError, "Multiple result directories"):
             find_results(self.root)
         self.assertEqual(find_results(self.directory), self.directory)

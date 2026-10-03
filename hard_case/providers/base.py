@@ -94,15 +94,3 @@ def exception_result(exc):
     if getattr(exc, "error", None) is not None:
         raw["body"] = exc.error
     return ProviderResult(raw_response=raw, error=f"{type(exc).__name__}: {exc}")
-
-
-class StructuredChatProvider:
-    def __init__(self, llm):
-        self.structured_llm = llm.with_structured_output(
-            HardCaseOutput, method="json_schema", include_raw=True,
-        )
-
-    def invoke(self, packet):
-        return structured_result(self.structured_llm.invoke([
-            ("system", SYSTEM_PROMPT), ("human", packet),
-        ]))

@@ -1,3 +1,4 @@
+from execution import AUDIT_COLUMNS
 import math
 
 import numpy as np
@@ -16,7 +17,7 @@ DERIVED_COLUMNS = [
 RAW_COLUMNS = [
     "model", "case_id", "message", "repetition", "attempt", "timestamp_utc",
     *PROBABILITY_COLUMNS, "route_sum_error", "freshness_sum_error", *DERIVED_COLUMNS,
-    "latency_ms", "input_tokens", "output_tokens", "validation_success", "error", "raw_response_json",
+    "latency_ms", "input_tokens", "output_tokens", "validation_success", "error", "raw_response_json", *AUDIT_COLUMNS,
 ]
 
 
@@ -100,6 +101,8 @@ def summarize(frame, history=None):
         record = {"model": model, "case_id": int(case_id),
                   "attempted_repetitions": len(group), "successful_repetitions": len(valid),
                   "validation_failures": len(group) - len(valid)}
+        record["cache_verification_failures"] = int((group.failure_kind == "cache_verification").sum())
+        record["schema_failures"] = int((group.failure_kind == "schema").sum())
         attempts = group if history is None else history[
             (history.model == model) & (history.case_id == case_id)]
         record["total_attempts"] = len(attempts)

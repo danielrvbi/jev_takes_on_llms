@@ -1,12 +1,12 @@
-import os
-
 from langchain_mistralai import ChatMistralAI
 
-from .base import StructuredChatProvider
+from chat_execution import AuditedChatProvider, reject_truncation
+from benchmark.prompts import SYSTEM_PROMPT
+from benchmark.schemas import DecisionOutput
+from .base import ProviderResult, structured_result
 
 
-class MistralProvider(StructuredChatProvider):
-    def __init__(self, model):
-        if not os.environ.get("MISTRAL_API_KEY"):
-            raise ValueError("MISTRAL_API_KEY is required for Mistral models")
-        super().__init__(ChatMistralAI(model=model, temperature=0, max_retries=0, timeout=120))
+class MistralProvider(AuditedChatProvider):
+    def __init__(self, model, *, audit_directory=None):
+        super().__init__(model, audit_directory, ChatMistralAI, DecisionOutput, SYSTEM_PROMPT,
+                         structured_result, ProviderResult)

@@ -32,8 +32,13 @@ def parse_args(argv=None):
     parser.add_argument("--warmups", type=nonnegative_integer, default=2)
     parser.add_argument("--case", nargs="+", action="extend", type=int,
                         choices=range(1, 11), dest="case_ids", help="case IDs; flag may be repeated")
-    parser.add_argument("--output-dir", type=Path, default=Path("results"))
-    return parser.parse_args(argv)
+    parser.add_argument("--output-dir", type=Path, default=None)
+    parser.add_argument("--prefix-experiment", action="store_true", help="separate Mistral unique-prefix experiment")
+    parser.add_argument("--max-new-calls", type=positive_integer, default=None, help="cap new calls, including warm-ups")
+    args = parser.parse_args(argv)
+    if args.output_dir is None:
+        args.output_dir = Path(__file__).resolve().parent / "results"
+    return args
 
 
 def main(argv=None):
@@ -44,7 +49,8 @@ def main(argv=None):
     cases = [case for case in CASES if args.case_ids is None or case.case_id in args.case_ids]
     try:
         failures = run_benchmark(models, cases, args.repetitions, args.warmups,
-                                 args.output_dir, console=console)
+                                 args.output_dir, console=console, prefix_experiment=args.prefix_experiment,
+                                 max_new_calls=args.max_new_calls)
         return 1 if failures else 0
     except KeyboardInterrupt:
         console.print("Interrupted. Saved repetitions will be reused on resume.")

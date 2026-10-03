@@ -1,9 +1,12 @@
 from langchain_ollama import ChatOllama
 
-from .base import StructuredChatProvider
+from chat_execution import AuditedChatProvider, reject_truncation
+from benchmark.prompts import SYSTEM_PROMPT
+from benchmark.schemas import DecisionOutput
+from .base import ProviderResult, structured_result
 
 
-class OllamaChatProvider(StructuredChatProvider):
-    def __init__(self, model):
-        super().__init__(ChatOllama(model=model, temperature=0,
-                                   client_kwargs={"timeout": 120}))
+class OllamaChatProvider(AuditedChatProvider):
+    def __init__(self, model, *, audit_directory=None):
+        super().__init__(model, audit_directory, ChatOllama, DecisionOutput, SYSTEM_PROMPT,
+                         structured_result, ProviderResult)

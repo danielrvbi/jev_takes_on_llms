@@ -1,13 +1,10 @@
 import csv
-import fcntl
 import hashlib
 import importlib.metadata
 import json
 import os
 import platform
-import tempfile
 import time
-from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -18,13 +15,18 @@ from rich.table import Table
 from hard_case.loader import HARD_CASE_DIR, PACKET_JSON_BUDGET, compact_records, load_claim_packet
 from hard_case.metrics import RAW_COLUMNS, flatten_values, is_success, results_frame, summarize
 from hard_case.prompts import SYSTEM_PROMPT, systemone_questions
+from hard_case.plots import plot_results
 from hard_case.providers import MODELS, create_provider, model_configuration
 from hard_case.providers.base import ProviderResult, exception_result
 from hard_case.providers.context import inference_model, validate_alias, validate_request_budget
 from hard_case.schemas import HardCaseOutput
+from execution import (POLICY, atomic_write, output_lock, suite_directory, experiment_execution,
+                       enforce_result, audit_fields, revalidate_row, model_identity, failed_audit)
+from validation import validation_on_exit
+from run_control import PREFIX_STRATEGY, experiment_settings
 
 
-DEFAULT_OUTPUT_DIR = HARD_CASE_DIR / "results"
+DEFAULT_OUTPUT_DIR = HARD_CASE_DIR.parent / "results"
 
 
 def utc_now():
@@ -85,16 +87,24 @@ def local_model_information(models, systemone_context=None):
 def experiment_definition(packet, models=MODELS, local_information=None, systemone_context=None):
     dependencies = {}
     for package in ["ollama", "langchain-core", "langchain-ollama", "langchain-mistralai",
-                    "pydantic", "pandas", "numpy", "rich", "python-dotenv", "httpx"]:
+                    "pydantic", "pandas", "numpy", "matplotlib", "rich", "python-dotenv", "httpx",
+                    *(['langchain-typesafe', 'httpx2'] if 'jev-1.13.0' in models else [])]:
         try:
             dependencies[package] = importlib.metadata.version(package)
         except importlib.metadata.PackageNotFoundError:
             dependencies[package] = "not-installed"
     observed = (local_model_information(models, systemone_context)
                 if local_information is None else local_information)
+    if local_information is None:
+        for model, info in observed.items():
+            info["disk_identity"] = model_identity(inference_model(model, systemone_context))
     return {
+        **experiment_execution([inference_model(m, systemone_context) for m in models]),
         "kind": "hard_case_benchmark",
-        "format_version": 1,
+        "suite_source_sha256": hashlib.sha256("".join(
+            str(p.relative_to(Path(__file__).resolve().parent)) + hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(Path(__file__).resolve().parent.rglob("*.py")) if "tests" not in p.parts).encode()).hexdigest(),
+        "format_version": 2,
         "case_input": packet.metadata(),
         "input_format": "reviewed compact evidence records with source line references; identical state for all backends",
         "schema": HardCaseOutput.model_json_schema(),
@@ -132,20 +142,6 @@ def merged_definition(previous, current):
     return {**old, "model_configuration": {**old_models, **new_models}}
 
 
-def atomic_write(path, write):
-    path = Path(path)
-    descriptor, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
-    try:
-        with os.fdopen(descriptor, "w", newline="", encoding="utf-8") as handle:
-            write(handle)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
-
-
 def write_csv(handle, rows):
     writer = csv.DictWriter(handle, fieldnames=RAW_COLUMNS)
     writer.writeheader()
@@ -159,27 +155,15 @@ def row_key(row):
     return key
 
 
-@contextmanager
-def output_lock(directory):
-    directory = Path(directory)
-    directory.mkdir(parents=True, exist_ok=True)
-    with (directory / ".benchmark.lock").open("a") as handle:
-        try:
-            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError as exc:
-            raise ValueError("Another benchmark is writing to this output directory") from exc
-        try:
-            yield
-        finally:
-            fcntl.flock(handle, fcntl.LOCK_UN)
-
-
 class ResultStore:
     """Append-only history is authoritative; raw.csv contains latest repetitions."""
 
     def __init__(self, directory, definition):
+        if definition.get("execution_policy") != POLICY:
+            raise ValueError("Incompatible resume: mandatory cache-free metadata required")
         if definition.get("case_input", {}).get("profile") != "compact":
             raise ValueError("Only compact experiment metadata is supported")
+        self.definition = definition
         self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=True)
         manifest = self.directory / "metadata.json"
@@ -222,6 +206,8 @@ class ResultStore:
                             raise ValueError("Successful history row contains an error")
                         HardCaseOutput.model_validate({name: float(row[name])
                                                        for name in HardCaseOutput.model_fields})
+                    if is_success(row["validation_success"]):
+                        revalidate_row(row, self.definition)
                     self.history.append(row)
                     self.latest[key] = row
         elif (self.directory / "raw.csv").exists():
@@ -246,6 +232,8 @@ class ResultStore:
         prior = self.latest.get(key)
         if prior and is_success(prior["validation_success"]):
             raise ValueError("Cannot duplicate a completed repetition")
+        if is_success(row["validation_success"]):
+            revalidate_row(row, self.definition)
         row = {column: row.get(column) for column in RAW_COLUMNS}
         row["attempt"] = int(prior["attempt"]) + 1 if prior else 1
         needs_header = not self.history_path.exists() or self.history_path.stat().st_size == 0
@@ -272,6 +260,7 @@ def measured_row(model, repetition, result, latency_ms):
         "validation_success": result.output is not None and not result.error,
         "error": result.error,
         "raw_response_json": json.dumps(result.raw_response, ensure_ascii=False, default=str),
+        **audit_fields(result),
         **flatten_values(result.output.model_dump() if result.output is not None else result.values),
     }
 
@@ -282,6 +271,7 @@ def report(store, console):
         return None
     summary = summarize(frame, results_frame(store.history))
     atomic_write(store.directory / "summary.csv", lambda handle: summary.to_csv(handle, index=False))
+    plot_results(frame, summary, store.directory)
     table = Table(title="Hard-case insurance judgment repeatability")
     for name in ["Model", "Valid", "Latest failures", "Historical failures", "p50 ms", "p95 ms"]:
         table.add_column(name)
@@ -297,7 +287,7 @@ def report(store, console):
 
 def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=DEFAULT_OUTPUT_DIR,
                             provider_factory=create_provider, console=None, packet=None, definition=None,
-                            input_profile="compact", systemone_context=None):
+                            input_profile="compact", systemone_context=None, prefix_experiment=False, max_new_calls=None):
     console = console or Console()
     if input_profile != "compact":
         raise ValueError("Only the compact input profile is supported")
@@ -310,6 +300,10 @@ def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=DEFAUL
     models = list(dict.fromkeys(models))
     if not models or repetitions < 1 or warmups < 0:
         raise ValueError("Select models, at least one repetition, and nonnegative warm-ups")
+    output_dir, guard = experiment_settings(output_dir, models, prefix_experiment, max_new_calls)
+    if 'jev-1.13.0' in models:
+        from jev_execution import validate_selection
+        validate_selection(output_dir, models, warmups, max_new_calls)
     # Validate the actual SDK payload and aliases before creating/overwriting results or inference.
     for model in models:
         actual = inference_model(model, systemone_context)
@@ -319,8 +313,12 @@ def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=DEFAUL
                 validate_alias(model, systemone_context)
     definition = (experiment_definition(packet, models, systemone_context=systemone_context)
                   if definition is None else definition)
-    directory = Path(output_dir)
-    with output_lock(directory):
+    definition = {**definition, "execution_policy": POLICY}
+    if prefix_experiment:
+        definition = {**definition, "prefix_strategy": PREFIX_STRATEGY}
+    console.print("Mandatory cache-free calls. Local latency includes private startup and teardown.")
+    directory = suite_directory(output_dir, "hard_case")
+    with validation_on_exit(Path(output_dir)), output_lock(directory):
         store = ResultStore(directory, definition)
         pending = [(model, repetition) for model in models for repetition in range(1, repetitions + 1)
                    if store.pending(model, repetition)]
@@ -334,39 +332,54 @@ def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=DEFAUL
                         continue
                     initialization_failure = None
                     try:
-                        provider = (provider_factory(model) if systemone_context is None
-                                    else provider_factory(model, systemone_context=systemone_context))
+                        settings = {}
+                        if systemone_context is not None:
+                            settings["systemone_context"] = systemone_context
+                        settings["audit_directory"] = directory / "execution_audit"
+                        provider = provider_factory(model, **settings)
                     except Exception as exc:
                         initialization_failure = exception_result(exc)
                         initialization_failure.error = f"Provider initialization failed: {initialization_failure.error}"
                         console.print(initialization_failure.error, markup=False)
                     if initialization_failure is None:
                         progress.update(task, description=f"Warming up {model}")
+                        provider.prefix_experiment = prefix_experiment
+                        provider.purpose = "warmup"
                         for _ in range(warmups):
+                            guard.before_call()
                             try:
-                                result = provider.invoke(packet.text)
+                                result = enforce_result(provider.invoke(packet.text), model, {"state": packet.text}, directory / "execution_audit")
                                 if result.error:
                                     console.print(f"Warm-up failed ({model}): {result.error}", markup=False)
                             except Exception as exc:
+                                failed_audit(model, {"state": packet.text}, directory / "execution_audit", exc, "warmup")
+                                result = ProviderResult(error=f"{type(exc).__name__}: {exc}")
                                 console.print(f"Warm-up failed ({model}): {type(exc).__name__}: {exc}", markup=False)
+                            guard.after_result(model, result, console)
+                    if initialization_failure is None:
+                        provider.purpose = "measurement"
                     for repetition in work:
                         progress.update(task, description=f"{model} · repetition {repetition}")
+                        guard.before_call()
                         started = time.perf_counter()
                         interrupted = False
                         try:
                             result = initialization_failure or provider.invoke(packet.text)
-                        except KeyboardInterrupt:
+                        except KeyboardInterrupt as exc:
                             interrupted = True
-                            result = ProviderResult(error="KeyboardInterrupt: measurement interrupted")
+                            result = ProviderResult(raw_response={"execution_audit": exc.audit} if hasattr(exc, "audit") else None,
+                                                    error="KeyboardInterrupt: measurement interrupted")
                         except Exception as exc:
                             result = exception_result(exc)
                         latency = (time.perf_counter() - started) * 1000
+                        result = enforce_result(result, model, {"state": packet.text}, directory / "execution_audit")
                         store.record(measured_row(model, repetition, result, latency))
                         progress.advance(task)
                         if result.error:
                             console.print(f"Failed {model}, repetition {repetition}: {result.error}", markup=False)
                         if interrupted:
                             raise KeyboardInterrupt
+                        guard.after_result(model, result, console)
         finally:
             report(store, console)
         return sum(not is_success(store.latest[(model, repetition)]["validation_success"])

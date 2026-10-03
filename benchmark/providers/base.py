@@ -73,15 +73,3 @@ def structured_result(response):
     inputs, outputs = token_usage(raw)
     raw_data = raw.model_dump(mode="json") if hasattr(raw, "model_dump") else raw
     return validate_result(values, raw_data, inputs, outputs, error or "")
-
-
-class StructuredChatProvider:
-    def __init__(self, llm):
-        self.structured_llm = llm.with_structured_output(
-            DecisionOutput, method="json_schema", include_raw=True,
-        )
-
-    def invoke(self, message):
-        return structured_result(self.structured_llm.invoke([
-            ("system", SYSTEM_PROMPT), ("human", message),
-        ]))

@@ -1,7 +1,6 @@
-import ollama
-
 from benchmark.prompts import systemone_questions
 from .base import ProviderResult, validate_result
+from execution import AuditError, systemone_call
 
 
 def map_response(response):
@@ -24,10 +23,23 @@ def map_response(response):
 
 
 class SystemOneProvider:
-    def __init__(self, model):
+    def __init__(self, model, *, audit_directory=None):
         self.model = model
+        if audit_directory is None:
+            raise ValueError("An execution audit directory is mandatory")
+        self.audit_directory = audit_directory
+        self.purpose = "measurement"
 
     def invoke(self, message):
-        return map_response(ollama.systemone(
-            model=self.model, state=message, questions=systemone_questions(),
-        ))
+        try:
+            return map_response(systemone_call(
+                model=self.model, state=message, questions=systemone_questions(),
+                directory=self.audit_directory, purpose=self.purpose))
+        except AuditError as exc:
+            import json
+            from pathlib import Path
+            raw = json.loads(Path(exc.audit['audit_path']).read_text()).get("response")
+            result = map_response(raw) if isinstance(raw, dict) else ProviderResult()
+            result.raw_response = {**(raw or {}), "execution_audit": exc.audit}
+            result.error = f"Cache verification failed: {exc}"
+            return result

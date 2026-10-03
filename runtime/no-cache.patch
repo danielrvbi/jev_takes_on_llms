@@ -1,0 +1,156 @@
+--- a/llm/llama_server_score.go
++++ b/llm/llama_server_score.go
+@@ -6,6 +6,7 @@
+ 	"encoding/json"
+ 	"fmt"
+ 	"io"
++	"log/slog"
+ 	"math"
+ 	"net/http"
+ 	"slices"
+@@ -92,12 +93,7 @@
+ 		}
+ 	}
+ 
+-	result.OutputTokens, err = s.primeSharedPrefix(ctx, rows)
+-	if err != nil {
+-		return ScoreResponse{}, err
+-	}
+-
+-	// Rows are scored in order: the first row continues from the primer.
++	// Evaluate each complete scoring prompt independently.
+ 	result.Logits = make([][]float32, len(rows))
+ 	for i, row := range rows {
+ 		logits, outputTokens, err := s.scoreRow(ctx, row)
+@@ -108,65 +104,6 @@
+ 		result.OutputTokens += outputTokens
+ 	}
+ 	return result, nil
+-}
+-
+-// llama-server saves a checkpoint of state it cannot roll back, from recurrent
+-// and sliding-window layers, this many tokens before the end of each prompt it
+-// evaluates. See https://github.com/ggml-org/llama.cpp/pull/20288.
+-const scoreCheckpointOffset = 4
+-
+-// primeSharedPrefix makes llama-server save a checkpoint at the end of the
+-// tokens every row shares, so each row evaluates only its own last few tokens
+-// instead of its whole prompt.
+-//
+-// Rows share the rendered context and schema and differ only near the end.
+-// llama-server usually reuses a cached prefix by trimming its cache, but it
+-// cannot trim the state of recurrent layers, as in hybrid models like Qwen 3.5,
+-// or of sliding-window layers. Such models can only resume from a checkpoint,
+-// and the checkpoints llama-server saves on its own sit near the end of each
+-// prompt, past the point where the next row differs. Without a primer, every row would be
+-// evaluated from the start.
+-//
+-// The primer evaluates the shared tokens plus the first row's next
+-// scoreCheckpointOffset tokens into the cache, so llama-server saves its
+-// checkpoint exactly at the end of the shared tokens. The pinned server still
+-// generates one token with n_predict 0; it is discarded but counted in usage.
+-// The first row continues from the primer; later rows restore the checkpoint.
+-// With 8 questions, scoring is about 3x faster.
+-//
+-// Priming only changes speed: if llama-server stops saving that checkpoint,
+-// rows are evaluated from the start and scores stay the same. It can be
+-// removed once llama-server can save a checkpoint at a requested position or
+-// score rows as one batch.
+-func (s *llamaServerRunner) primeSharedPrefix(ctx context.Context, rows []scoreRowTokens) (int, error) {
+-	if len(rows) < 2 {
+-		return 0, nil
+-	}
+-	first := rows[0].tokens
+-	shared := len(first)
+-	for _, row := range rows[1:] {
+-		shared = min(shared, len(row.tokens))
+-		for i := range shared {
+-			if row.tokens[i] != first[i] {
+-				shared = i
+-				break
+-			}
+-		}
+-	}
+-	// Nothing is shared, or the first row is too short to continue from the
+-	// primer.
+-	if shared == 0 || len(first) <= shared+scoreCheckpointOffset {
+-		return 0, nil
+-	}
+-	tokens := first[:shared+scoreCheckpointOffset]
+-	output, err := s.scoreCompletion(ctx, scoreCompletionRequest{Prompt: tokens, CachePrompt: true, NPredict: 0})
+-	if err != nil {
+-		return 0, err
+-	}
+-	if output.Truncated || output.TokensEvaluated != len(tokens) {
+-		return 0, fmt.Errorf("scoring did not evaluate the complete shared prefix")
+-	}
+-	return output.TokensPredicted, nil
+ }
+ 
+ // scoreCompletionRequest is the part of llama-server's /completion request
+@@ -205,7 +142,7 @@
+ 	var outputTokens int
+ 	for _, bias := range []float64{scoreBias, scoreRetryBias} {
+ 		req := scoreCompletionRequest{
+-			Prompt: row.tokens, CachePrompt: true, NPredict: 1,
++			Prompt: row.tokens, CachePrompt: false, NPredict: 1,
+ 			NProbs: len(row.candidates), PostSamplingProbs: true,
+ 			Samplers: []string{"top_k", "temperature"}, TopK: len(row.candidates), Temperature: 1,
+ 		}
+@@ -247,6 +184,7 @@
+ 
+ func (s *llamaServerRunner) scoreCompletion(ctx context.Context, input scoreCompletionRequest) (scoreCompletionResponse, error) {
+ 	var output scoreCompletionResponse
++	slog.Debug("experiment prompt request", "kind", "score", "prompt_tokens", len(input.Prompt), "cache_prompt", input.CachePrompt)
+ 	data, err := json.Marshal(input)
+ 	if err != nil {
+ 		return output, err
+--- a/llm/llama_server.go
++++ b/llm/llama_server.go
+@@ -1458,10 +1458,12 @@
+ 
+ 	body, err := json.Marshal(struct {
+ 		Prompt         [][]int         `json:"prompt"`
++		CachePrompt    bool            `json:"cache_prompt"`
+ 		NPredict       int             `json:"n_predict"`
+ 		JsonSchema     json.RawMessage `json:"json_schema"`
+ 		ResponseFields []string        `json:"response_fields"`
+ 	}{Prompt: [][]int{{}}, JsonSchema: schema, ResponseFields: []string{"generation_settings/grammar"}})
++	slog.Debug("experiment prompt request", "kind", "grammar", "prompt_tokens", 0, "cache_prompt", false)
+ 	if err != nil {
+ 		return "", fmt.Errorf("failed to marshal grammar request: %v", err)
+ 	}
+@@ -1654,7 +1656,7 @@
+ 	lsReq := llamaServerCompletionRequest{
+ 		Prompt:          prompt,
+ 		Stream:          true,
+-		CachePrompt:     true,
++		CachePrompt:     false,
+ 		NPredict:        req.Options.NumPredict,
+ 		NKeep:           req.Options.NumKeep,
+ 		Temperature:     req.Options.Temperature,
+@@ -1671,6 +1673,7 @@
+ 		PreservedTokens: llamaServerPreservedTokens(req.PreservedTokens, req.ToolCallTag),
+ 	}
+ 
++	slog.Debug("experiment prompt request", "kind", "completion", "cache_prompt", lsReq.CachePrompt)
+ 	if req.Logprobs {
+ 		lsReq.NProbs = max(req.TopLogprobs, 1)
+ 	}
+@@ -2013,6 +2016,7 @@
+ 		return fmt.Errorf("unexpected server status: %s", status)
+ 	}
+ 
++	slog.Debug("experiment prompt request", "kind", "chat", "cache_prompt", false)
+ 	lsReq, err := s.llamaServerChatRequest(req, true)
+ 	if err != nil {
+ 		return err
+@@ -2259,7 +2263,7 @@
+ 	body := map[string]any{
+ 		"messages":          messages,
+ 		"stream":            stream,
+-		"cache_prompt":      true,
++		"cache_prompt":      false,
+ 		"n_predict":         req.Options.NumPredict,
+ 		"n_keep":            req.Options.NumKeep,
+ 		"temperature":       req.Options.Temperature,

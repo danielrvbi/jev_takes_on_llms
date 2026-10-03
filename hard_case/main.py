@@ -30,12 +30,17 @@ def parse_args(argv=None):
     group.add_argument("--models", nargs="+", choices=MODELS, help="models to measure")
     parser.add_argument("--repetitions", type=positive_integer, default=30)
     parser.add_argument("--warmups", type=nonnegative_integer, default=2)
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--input-profile", choices=("compact",), default="compact",
                         help="optional compatibility flag; this suite always uses compact input")
     parser.add_argument("--systemone-context", type=positive_integer, choices=(262144,), default=None,
                         help="use verified stock Tev aliases with this context")
-    return parser.parse_args(argv)
+    parser.add_argument("--prefix-experiment", action="store_true", help="separate Mistral unique-prefix experiment")
+    parser.add_argument("--max-new-calls", type=positive_integer, default=None, help="cap new calls, including warm-ups")
+    args = parser.parse_args(argv)
+    if args.output_dir is None:
+        args.output_dir = DEFAULT_OUTPUT_DIR
+    return args
 
 
 def main(argv=None):
@@ -47,7 +52,8 @@ def main(argv=None):
         failures = run_hard_case_benchmark(models, args.repetitions, args.warmups,
                                            args.output_dir, console=console,
                                            input_profile=args.input_profile,
-                                           systemone_context=args.systemone_context)
+                                           systemone_context=args.systemone_context, prefix_experiment=args.prefix_experiment,
+                                           max_new_calls=args.max_new_calls)
         return 1 if failures else 0
     except KeyboardInterrupt:
         console.print("Interrupted. Saved successful repetitions will be reused on resume.")

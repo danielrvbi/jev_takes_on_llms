@@ -106,6 +106,8 @@ def read_rows(path, definition):
 
 
 def load_source(directory):
+    if any("contaminated" in part.lower() for part in Path(directory).resolve().parts):
+        raise ValueError("Quarantined results cannot be imported")
     metadata = json.loads((directory / "metadata.json").read_text(encoding="utf-8"))
     if metadata.get("kind") == "reconciled_evaluation":
         raise ValueError(f"Select an original benchmark source, not a reconciled directory: {directory}")
@@ -189,7 +191,7 @@ def ensure_destination(output, sources):
         raise ValueError(f"Output directory is not empty: {output}; choose a new --output-dir")
 
 
-def reconcile(suite_dir="results/suite", mistral_dir="results/mistral", output_dir="results/combined"):
+def reconcile(suite_dir, mistral_dir, output_dir):
     suite_dir, mistral_dir, output = (Path(path).resolve() for path in [suite_dir, mistral_dir, output_dir])
     if suite_dir == mistral_dir:
         raise ValueError("Select two distinct original result directories")
@@ -248,9 +250,9 @@ def load_source_for_verification(directory, definition):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--suite-dir", type=Path, default=Path("results/suite"))
-    parser.add_argument("--mistral-dir", type=Path, default=Path("results/mistral"))
-    parser.add_argument("--output-dir", type=Path, default=Path("results/combined"))
+    parser.add_argument("--suite-dir", type=Path, required=True)
+    parser.add_argument("--mistral-dir", type=Path, required=True)
+    parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args(argv)
     console = Console()
     try:

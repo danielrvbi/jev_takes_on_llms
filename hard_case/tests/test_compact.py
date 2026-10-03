@@ -1,3 +1,5 @@
+from execution import POLICY
+from runtime.testing import audited_result
 import copy
 from dataclasses import replace
 import hashlib
@@ -18,7 +20,7 @@ from hard_case.loader import (COMPACT_DIR, DATA_DIR, SOURCE_FILENAMES, ClaimPack
                               compact_records, load_claim_packet)
 from hard_case.main import parse_args
 from hard_case.providers import create_provider, model_configuration
-from hard_case.providers.base import StructuredChatProvider
+from runtime.testing import HardCaseChatFixture as StructuredChatProvider
 from hard_case.providers.context import (SYSTEMONE_REQUEST_BUDGET, inference_model,
                                          serialized_request, validate_alias, validate_request_budget)
 from hard_case.providers.ollama_systemone import SystemOneProvider
@@ -39,6 +41,16 @@ def model_info(blob='a' * 64, context=2050):
 
 class CompactTests(unittest.TestCase):
     def setUp(self):
+        patcher = patch("hard_case.runner.experiment_execution", return_value={"execution_policy": POLICY, "runtime": "offline-fixture"})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        from hard_case.runner import measured_row as production_measured_row
+        def fixture_row(model, repetition, response, latency):
+            actual = inference_model(model, 262144)
+            return production_measured_row(model, repetition, audited_result(response, actual, self.load().text), latency)
+        patcher = patch("hard_case.runner.measured_row", side_effect=fixture_row)
+        patcher.start()
+        self.addCleanup(patcher.stop)
         self.temp = tempfile.TemporaryDirectory()
         self.directory = Path(self.temp.name)
         self.data = self.directory / 'data'
@@ -103,12 +115,14 @@ class CompactTests(unittest.TestCase):
             factory = Mock()
             with self.subTest(packet_profile=packet.profile), self.assertRaises(ValueError):
                 run_hard_case_benchmark(['mistral-small-latest'], repetitions=1, warmups=0,
+
                                        packet=packet, provider_factory=factory, output_dir=output,
                                        console=Console(file=io.StringIO()))
             factory.assert_not_called()
             self.assertFalse(output.exists())
         with self.assertRaisesRegex(ValueError, 'Only the compact'):
             run_hard_case_benchmark(['mistral-small-latest'], packet=compact, input_profile='full',
+
                                    output_dir=output)
         self.assertFalse(output.exists())
 
@@ -130,8 +144,9 @@ class CompactTests(unittest.TestCase):
             (output / 'attempt_history.csv').write_text('historical history sentinel')
             snapshot = {p.name: p.read_bytes() for p in output.iterdir() if p.name != '.benchmark.lock'}
             factory = Mock()
-            with self.assertRaisesRegex(ValueError, 'historical non-compact'):
+            with self.assertRaisesRegex(ValueError, 'legacy measurements'):
                 run_hard_case_benchmark(['mistral-small-latest'], repetitions=1, warmups=0,
+
                                        packet=packet, definition=definition, provider_factory=factory,
                                        output_dir=output, console=Console(file=io.StringIO()))
             factory.assert_not_called()
@@ -141,7 +156,7 @@ class CompactTests(unittest.TestCase):
     def test_current_definition_retains_compact_metadata_layout_for_resume(self):
         packet = self.load()
         definition = experiment_definition(packet, ['mistral-small-latest'], {})
-        self.assertEqual(definition['format_version'], 1)
+        self.assertEqual(definition['format_version'], 2)
         self.assertEqual(definition['input_format'],
                          'reviewed compact evidence records with source line references; identical state for all backends')
         self.assertEqual(set(definition['case_input']), {
@@ -197,9 +212,9 @@ class CompactTests(unittest.TestCase):
         self.assertEqual(validate_request_budget(name, state), SYSTEMONE_REQUEST_BUDGET)
         with self.assertRaisesRegex(ValueError, '60 KiB'):
             validate_request_budget(name, state + 'x')
-        with patch('hard_case.providers.ollama_systemone.ollama.systemone') as native:
+        with patch('hard_case.providers.ollama_systemone.systemone_call') as native:
             with self.assertRaises(ValueError):
-                SystemOneProvider('tev1:4b').invoke(state + 'x' * 200)
+                SystemOneProvider('tev1:4b', audit_directory="fixture").invoke(state + 'x' * 200)
             native.assert_not_called()
         path = self.compact / 'packet.md'
         path.write_text(path.read_text().replace('PW01 | L1-24 | ', 'PW01 | L1-24 | ' + '€' * 18000))
@@ -232,8 +247,8 @@ class CompactTests(unittest.TestCase):
                                          'raw': AIMessage(content='fixture'), 'parsing_error': None}
         chat = Mock()
         chat.with_structured_output.return_value = structured
-        with patch('hard_case.providers.ollama_systemone.ollama.systemone', return_value=native_response) as native:
-            native_result = SystemOneProvider('tev1:4b').invoke(packet.text)
+        with patch('hard_case.providers.ollama_systemone.systemone_call', return_value=native_response) as native:
+            native_result = SystemOneProvider('tev1:4b', audit_directory="fixture").invoke(packet.text)
         chat_result = StructuredChatProvider(chat).invoke(packet.text)
         self.assertEqual(native.call_args.kwargs['state'], structured.invoke.call_args.args[0][1][1])
         self.assertEqual(native_result.output, chat_result.output)
@@ -245,10 +260,11 @@ class CompactTests(unittest.TestCase):
         definition = experiment_definition(packet, models, {}, systemone_context=262144)
         provider = Mock()
         from hard_case.providers.base import validate_result
-        provider.invoke.return_value = validate_result(values(), {'fixture': True}, 1, 6)
+        provider.invoke.return_value = audited_result(validate_result(values(), {'fixture': True}, 1, 6))
         factory = Mock(return_value=provider)
         kwargs = dict(output_dir=self.directory / 'results', packet=packet, definition=definition,
                       input_profile='compact', systemone_context=262144, warmups=0,
+
                       provider_factory=factory, console=Console(file=io.StringIO()))
         with patch('hard_case.runner.validate_alias'):
             self.assertEqual(run_hard_case_benchmark(models, repetitions=1, **kwargs), 0)
@@ -256,7 +272,7 @@ class CompactTests(unittest.TestCase):
         self.assertEqual(provider.invoke.call_count, 20)
         self.assertEqual({call.args[0] for call in factory.call_args_list}, set(models))
         for call in factory.call_args_list:
-            self.assertEqual(call.kwargs, {'systemone_context': 262144})
+            self.assertEqual(call.kwargs, {'systemone_context': 262144, 'audit_directory': self.directory.resolve() / 'results/hard_case/execution_audit'})
         for call in provider.invoke.call_args_list:
             self.assertEqual(call.args[0], packet.text)
 
@@ -293,8 +309,8 @@ class AliasTests(unittest.TestCase):
 
     def test_provider_uses_verified_alias_and_unchanged_questions(self):
         with patch('hard_case.providers.ollama_systemone.validate_alias') as verify, \
-             patch('hard_case.providers.ollama_systemone.ollama.systemone', return_value={}) as native:
-            create_provider('tev1:0.8b', systemone_context=262144).invoke('fixture packet')
+             patch('hard_case.providers.ollama_systemone.systemone_call', return_value={}) as native:
+            create_provider('tev1:0.8b', audit_directory="fixture", systemone_context=262144).invoke('fixture packet')
         verify.assert_called_once_with('tev1:0.8b', 262144)
         self.assertEqual(native.call_args.kwargs['model'], 'tev1-hard:0.8b-ctx262144')
         self.assertEqual(native.call_args.kwargs['state'], 'fixture packet')

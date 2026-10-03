@@ -1,13 +1,10 @@
 import csv
-import fcntl
 import hashlib
 import importlib.metadata
 import json
 import os
 import platform
-import tempfile
 import time
-from contextlib import contextmanager
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -23,29 +20,38 @@ from benchmark.prompts import SYSTEM_PROMPT, systemone_questions
 from benchmark.providers import MODELS, create_provider
 from benchmark.providers.base import ProviderResult
 from benchmark.schemas import DecisionOutput
+from execution import (POLICY, atomic_write, output_lock, suite_directory, experiment_execution,
+                       enforce_result, audit_fields, revalidate_row, model_identity, failed_audit)
+from validation import validation_on_exit
+from run_control import PREFIX_STRATEGY, experiment_settings
 
 
 def utc_now():
     return datetime.now(timezone.utc).isoformat()
 
 
-def experiment_definition():
+def experiment_definition(models=MODELS):
     dependencies = {}
     for package in ["ollama", "langchain-core", "langchain-ollama", "langchain-mistralai",
-                    "pydantic", "pandas", "numpy", "matplotlib", "rich", "python-dotenv"]:
+                    "pydantic", "pandas", "numpy", "matplotlib", "rich", "python-dotenv", "httpx",
+                    *(['langchain-typesafe', 'httpx2'] if 'jev-1.13.0' in models else [])]:
         try:
             dependencies[package] = importlib.metadata.version(package)
         except importlib.metadata.PackageNotFoundError:
             dependencies[package] = "not-installed"
     return {
-        "format_version": 1, "cases": [asdict(case) for case in CASES],
+        **experiment_execution(models), "suite_source_sha256": hashlib.sha256("".join(
+            str(p.relative_to(Path(__file__).resolve().parent)) + hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(Path(__file__).resolve().parent.rglob("*.py")) if "tests" not in p.parts).encode()).hexdigest(),
+        "format_version": 2, "cases": [asdict(case) for case in CASES],
         "schema": DecisionOutput.model_json_schema(),
         "prompts": {"llm_system": SYSTEM_PROMPT, "systemone_questions": systemone_questions()},
         "model_configuration": {
-            model: {"provider": "systemone" if model.startswith("tev1:") else "langchain",
+            model: (__import__('jev_execution').configuration() if model == 'jev-1.13.0' else {"provider": "systemone" if model.startswith("tev1:") else "langchain",
                     "temperature": None if model.startswith("tev1:") else 0,
                     "structured_method": "native" if model.startswith("tev1:") else "json_schema",
-                    "seed": None, "automatic_retries": 0} for model in MODELS
+                    "seed": None, "automatic_retries": 0,
+                    **({"local_model": model_identity(model)} if model.startswith(("tev1:", "gemma4:")) else {})}) for model in models
         },
         "derivation": {"binary_threshold": 0.5, "entropy_base": 2,
                        "distribution_normalization": "derived calculations only", "std_ddof": 1},
@@ -53,20 +59,6 @@ def experiment_definition():
                         "ollama_host": os.environ.get("OLLAMA_HOST", "http://localhost:11434"),
                         "dependencies": dependencies},
     }
-
-
-def atomic_write(path, write):
-    path = Path(path)
-    descriptor, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
-    try:
-        with os.fdopen(descriptor, "w", newline="", encoding="utf-8") as handle:
-            write(handle)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
 
 
 def compatible_definition(previous, current):
@@ -95,24 +87,13 @@ def row_key(row):
     return row["model"], int(row["case_id"]), int(row["repetition"])
 
 
-@contextmanager
-def output_lock(directory):
-    directory.mkdir(parents=True, exist_ok=True)
-    with (directory / ".benchmark.lock").open("a") as handle:
-        try:
-            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError as exc:
-            raise ValueError("Another benchmark is writing to this output directory") from exc
-        try:
-            yield
-        finally:
-            fcntl.flock(handle, fcntl.LOCK_UN)
-
-
 class ResultStore:
     """History is authoritative; raw.csv is the latest row for each repetition."""
 
     def __init__(self, directory, definition):
+        if definition.get("execution_policy") != POLICY:
+            raise ValueError("Incompatible resume: mandatory cache-free metadata required")
+        self.definition = definition
         self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=True)
         manifest = self.directory / "metadata.json"
@@ -120,6 +101,8 @@ class ResultStore:
         fingerprint = hashlib.sha256(encoded.encode()).hexdigest()
         if manifest.exists():
             previous = json.loads(manifest.read_text())
+            if previous.get("fingerprint") != hashlib.sha256(json.dumps(previous.get("experiment"), sort_keys=True, ensure_ascii=False).encode()).hexdigest():
+                raise ValueError("Invalid benchmark metadata fingerprint")
             if previous.get("kind") == "reconciled_evaluation":
                 raise ValueError(
                     "This is an evaluation-only reconciled dataset. "
@@ -149,6 +132,8 @@ class ResultStore:
                     previous = self.latest.get(key)
                     if int(row["attempt"]) != (int(previous["attempt"]) + 1 if previous else 1):
                         raise ValueError("Invalid attempt sequence in history")
+                    if is_success(row["validation_success"]):
+                        revalidate_row(row, self.definition)
                     self.history.append(row)
                     self.latest[key] = row
         elif (self.directory / "raw.csv").exists():
@@ -167,6 +152,8 @@ class ResultStore:
         previous = self.latest.get(key)
         if previous and is_success(previous["validation_success"]):
             raise ValueError("Cannot duplicate a completed repetition")
+        if is_success(row["validation_success"]):
+            revalidate_row(row, self.definition)
         row = {column: row.get(column) for column in RAW_COLUMNS}
         row["attempt"] = int(previous["attempt"]) + 1 if previous else 1
         needs_header = not self.history_path.exists() or self.history_path.stat().st_size == 0
@@ -190,6 +177,7 @@ def measured_row(model, case, repetition, result, latency_ms):
         "validation_success": result.output is not None and not result.error,
         "error": result.error,
         "raw_response_json": json.dumps(result.raw_response, ensure_ascii=False, default=str),
+        **audit_fields(result),
         **flatten_values(result.values),
     }
     if row["validation_success"]:
@@ -223,11 +211,22 @@ def report(store, console):
 
 
 def run_benchmark(models, cases, repetitions=30, warmups=2, output_dir="results",
-                  provider_factory=create_provider, console=None, definition=None):
+                  provider_factory=create_provider, console=None, definition=None, *, prefix_experiment=False, max_new_calls=None):
     console = console or Console()
-    directory = Path(output_dir)
-    with output_lock(directory):
-        store = ResultStore(directory, definition if definition is not None else experiment_definition())
+    models = list(dict.fromkeys(models))
+    if not models or not cases or repetitions < 1 or warmups < 0:
+        raise ValueError("Select models/cases, positive repetitions and nonnegative warm-ups")
+    output_dir, guard = experiment_settings(output_dir, models, prefix_experiment, max_new_calls)
+    if 'jev-1.13.0' in models:
+        from jev_execution import validate_selection
+        validate_selection(output_dir, models, warmups, max_new_calls)
+    directory = suite_directory(output_dir, "benchmark")
+    definition = {**(definition if definition is not None else experiment_definition(models)), "execution_policy": POLICY}
+    if prefix_experiment:
+        definition = {**definition, "prefix_strategy": PREFIX_STRATEGY}
+    console.print("Mandatory cache-free calls. Local latency includes private startup and teardown.")
+    with validation_on_exit(Path(output_dir)), output_lock(directory):
+        store = ResultStore(directory, definition)
         pending = [(model, case, repetition) for model in models for case in cases
                    for repetition in range(1, repetitions + 1)
                    if store.pending(model, case.case_id, repetition)]
@@ -241,38 +240,50 @@ def run_benchmark(models, cases, repetitions=30, warmups=2, output_dir="results"
                         continue
                     initialization_error = ""
                     try:
-                        provider = provider_factory(model)
+                        provider = provider_factory(model, audit_directory=directory / "execution_audit")
                     except Exception as exc:
                         initialization_error = f"Provider initialization failed: {type(exc).__name__}: {exc}"
                         console.print(initialization_error, markup=False)
                     if not initialization_error:
                         progress.update(task, description=f"Warming up {model}")
+                        provider.prefix_experiment = prefix_experiment
+                        provider.purpose = "warmup"
                         for _ in range(warmups):
+                            guard.before_call()
                             try:
-                                result = provider.invoke(cases[0].message)
+                                result = enforce_result(provider.invoke(cases[0].message), model, {"state": cases[0].message}, directory / "execution_audit")
                                 if result.error:
                                     console.print(f"Warm-up failed ({model}): {result.error}", markup=False)
                             except Exception as exc:
+                                failed_audit(model, {"state": cases[0].message}, directory / "execution_audit", exc, "warmup")
+                                result = ProviderResult(error=f"{type(exc).__name__}: {exc}")
                                 console.print(f"Warm-up failed ({model}): {type(exc).__name__}: {exc}", markup=False)
+                            guard.after_result(model, result, console)
+                    if not initialization_error:
+                        provider.purpose = "measurement"
                     for case, repetition in work:
                         progress.update(task, description=f"{model} · case {case.case_id} · repetition {repetition}")
+                        guard.before_call()
                         started = time.perf_counter()
                         interrupted = False
                         try:
                             result = (ProviderResult(error=initialization_error) if initialization_error
                                       else provider.invoke(case.message))
-                        except KeyboardInterrupt:
+                        except KeyboardInterrupt as exc:
                             interrupted = True
-                            result = ProviderResult(error="KeyboardInterrupt: measurement interrupted")
+                            result = ProviderResult(raw_response={"execution_audit": exc.audit} if hasattr(exc, "audit") else None,
+                                                    error="KeyboardInterrupt: measurement interrupted")
                         except Exception as exc:
                             result = ProviderResult(error=f"{type(exc).__name__}: {exc}")
                         latency = (time.perf_counter() - started) * 1000
+                        result = enforce_result(result, model, {"state": case.message}, directory / "execution_audit")
                         store.record(measured_row(model, case, repetition, result, latency))
                         progress.advance(task)
                         if result.error:
                             console.print(f"Failed {model}, case {case.case_id}, repetition {repetition}: {result.error}", markup=False)
                         if interrupted:
                             raise KeyboardInterrupt
+                        guard.after_result(model, result, console)
         finally:
             report(store, console)
         return sum(not is_success(store.latest[(model, case.case_id, repetition)]["validation_success"])

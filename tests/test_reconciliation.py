@@ -1,3 +1,5 @@
+from execution import POLICY
+from runtime.testing import audited_result
 import copy
 import csv
 import hashlib
@@ -17,11 +19,17 @@ from reconcile_results import (
     MISTRAL_MODELS, SUITE_MODELS, definition_fingerprint, load_source, reconcile,
 )
 from show_evaluations import load_results
-from tests.test_benchmark import result
+from tests.test_benchmark import result, measured_row
 
 
 class ReconciliationTests(unittest.TestCase):
     def setUp(self):
+        patcher = patch("benchmark.runner.experiment_execution", return_value={"execution_policy": POLICY, "runtime": "offline-fixture"})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = patch("benchmark.runner.model_identity", side_effect=lambda m: {"model":m,"digest":"fixture"})
+        patcher.start()
+        self.addCleanup(patcher.stop)
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.suite, self.mistral, self.output = [self.root / name for name in ["suite", "mistral", "combined"]]
@@ -37,10 +45,12 @@ class ReconciliationTests(unittest.TestCase):
             store.record(measured_row("mistral-small-latest", CASES[6], 1, failure, 5))
         old = result()
         old.raw_response = {"run": "earlier suite Mistral"}
+        old = audited_result(old)
         suite.record(measured_row("mistral-large-latest", CASES[0], 1, old, 6))
         separate.record(measured_row("mistral-small-latest", CASES[0], 1, failure, 7))
         new = result()
         new.raw_response = {"run": "authoritative Mistral"}
+        new = audited_result(new)
         separate.record(measured_row("mistral-small-latest", CASES[0], 1, new, 30))
         separate.record(measured_row("mistral-large-latest", CASES[0], 1, new, 40))
         self.before = self.source_bytes()

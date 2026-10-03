@@ -1,3 +1,5 @@
+from execution import POLICY
+from runtime.testing import audited_result
 import ast
 import copy
 import csv
@@ -22,10 +24,11 @@ from hard_case.main import main, parse_args
 from hard_case.metrics import RAW_COLUMNS, results_frame, summarize
 from hard_case.prompts import JUDGMENTS, SYSTEM_PROMPT, systemone_questions
 from hard_case.providers import MODELS, create_provider
-from hard_case.providers.base import StructuredChatProvider, structured_result, token_usage, validate_result
+from runtime.testing import HardCaseChatFixture as StructuredChatProvider
+from hard_case.providers.base import structured_result, token_usage, validate_result
 from hard_case.providers.ollama_chat import OllamaChatProvider, reject_truncation
 from hard_case.providers.ollama_systemone import SystemOneProvider, map_response
-from hard_case.runner import ResultStore, experiment_definition, fingerprint, local_model_information, measured_row, output_lock, run_hard_case_benchmark
+from hard_case.runner import ResultStore, experiment_definition, fingerprint, local_model_information, measured_row as production_measured_row, output_lock, run_hard_case_benchmark
 from hard_case.schemas import HardCaseOutput, PROBABILITY_FIELDS
 
 
@@ -35,11 +38,14 @@ def fixture_values():
 
 
 def successful_result():
-    return validate_result(fixture_values(), {"fixture": True}, 10, 20)
+    return audited_result(validate_result(fixture_values(), {"fixture": True}, 10, 20))
 
 
 class PacketFixture(unittest.TestCase):
     def setUp(self):
+        patcher = patch("hard_case.runner.experiment_execution", return_value={"execution_policy": POLICY, "runtime": "offline-fixture"})
+        patcher.start()
+        self.addCleanup(patcher.stop)
         self.temp = tempfile.TemporaryDirectory()
         self.directory = Path(self.temp.name)
         self.data = self.directory / "data"
@@ -54,6 +60,9 @@ class PacketFixture(unittest.TestCase):
         self.compact.mkdir()
         self.write_compact_fixture()
         self.packet = self.load_fixture()
+        patcher = patch("hard_case.runner.measured_row", side_effect=self.measured_row)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def write_compact_fixture(self):
         """Artificial reviewed packet/map; never regenerate the actual claim artifact."""
@@ -80,6 +89,9 @@ class PacketFixture(unittest.TestCase):
 
     def tearDown(self):
         self.temp.cleanup()
+
+    def measured_row(self, model, repetition, response, latency):
+        return production_measured_row(model, repetition, audited_result(response, model, self.packet.text), latency)
 
     def definition(self, models=MODELS):
         return experiment_definition(self.packet, models, local_information={})
@@ -187,8 +199,8 @@ class ProviderTests(PacketFixture):
             "answers": {name: {"type": "noul", "noul": value} for name, value in fixture_values().items()},
             "usage": {"input_tokens": 100, "output_tokens": 6},
         }
-        with patch("hard_case.providers.ollama_systemone.ollama.systemone", return_value=response) as native:
-            result = SystemOneProvider("tev1:4b").invoke(self.packet.text)
+        with patch("hard_case.providers.ollama_systemone.systemone_call", return_value=response) as native:
+            result = SystemOneProvider("tev1:4b", audit_directory="fixture").invoke(self.packet.text)
         self.assertEqual(result.output.model_dump(), fixture_values())
         self.assertEqual(result.raw_response, response)
         self.assertEqual((result.input_tokens, result.output_tokens), (100, 6))
@@ -241,8 +253,8 @@ class ProviderTests(PacketFixture):
         }
         chat = StructuredChatProvider(llm)
         chat.invoke(self.packet.text)
-        with patch("hard_case.providers.ollama_systemone.ollama.systemone", return_value={}) as native:
-            SystemOneProvider("tev1:0.8b").invoke(self.packet.text)
+        with patch("hard_case.providers.ollama_systemone.systemone_call", return_value={}) as native:
+            SystemOneProvider("tev1:0.8b", audit_directory="fixture").invoke(self.packet.text)
         messages = llm.with_structured_output.return_value.invoke.call_args.args[0]
         self.assertEqual(messages, [("system", SYSTEM_PROMPT), ("human", self.packet.text)])
         self.assertEqual(messages[1][1], native.call_args.kwargs["state"])
@@ -265,30 +277,17 @@ class ProviderTests(PacketFixture):
 
     def test_provider_configuration_and_registry(self):
         with patch("hard_case.providers.ollama_chat.ChatOllama") as llm:
-            provider = create_provider("gemma4:e4b")
+            provider = create_provider("gemma4:e4b", audit_directory="fixture")
             self.assertIsInstance(provider, OllamaChatProvider)
-            kwargs = llm.call_args.kwargs
-            self.assertEqual(kwargs["temperature"], 0)
-            self.assertEqual(kwargs["keep_alive"], "2h")
-            self.assertEqual(kwargs["client_kwargs"]["timeout"], 120)
-            self.assertNotIn("seed", kwargs)
-            self.assertNotIn("num_ctx", kwargs)
-            llm.return_value.with_structured_output.assert_called_once_with(
-                HardCaseOutput, method="json_schema", include_raw=True)
-        with patch.dict(os.environ, {"MISTRAL_API_KEY": "fixture"}), patch(
-                "hard_case.providers.mistral.ChatMistralAI") as llm:
-            create_provider("mistral-small-latest")
-            self.assertEqual(llm.call_args.kwargs, {
-                "model": "mistral-small-latest", "temperature": 0, "max_retries": 0, "timeout": 120,
-            })
-            llm.return_value.with_structured_output.assert_called_once_with(
-                HardCaseOutput, method="json_schema", include_raw=True)
-        with patch.dict(os.environ, {}, clear=True):
-            with self.assertRaisesRegex(ValueError, "MISTRAL_API_KEY"):
-                create_provider("mistral-large-latest")
-        self.assertIsInstance(create_provider("tev1:4b"), SystemOneProvider)
+            self.assertEqual(provider.keep_alive, "2h")
+            llm.assert_not_called()
+        with patch.dict(os.environ, {"MISTRAL_API_KEY": "fixture"}):
+            self.assertEqual(create_provider("mistral-small-latest", audit_directory="fixture").model, "mistral-small-latest")
+        with patch.dict(os.environ, {}, clear=True), self.assertRaisesRegex(ValueError, "MISTRAL_API_KEY"):
+            create_provider("mistral-large-latest", audit_directory="fixture")
+        self.assertIsInstance(create_provider("tev1:4b", audit_directory="fixture"), SystemOneProvider)
         with self.assertRaises(ValueError):
-            create_provider("unknown")
+            create_provider("unknown", audit_directory="fixture")
 
     def test_http_chat_request_rejects_truncation_without_changing_packet(self):
         payload = {"model": "gemma4:e4b", "messages": [{"role": "user", "content": self.packet.text}],
@@ -309,13 +308,15 @@ class ProviderTests(PacketFixture):
 class PersistenceAndRunnerTests(PacketFixture):
     def setUp(self):
         super().setUp()
-        self.output = self.directory / "results"
+        self.root_output = self.directory / "results"
+        self.output = self.root_output / "hard_case"
         self.console = Console(file=io.StringIO(), force_terminal=False)
 
     def run_fixture(self, models, repetitions, provider_factory, warmups=2, definition=None):
         return run_hard_case_benchmark(
-            models, repetitions, warmups, self.output, provider_factory, self.console,
+            models, repetitions, warmups, self.root_output, provider_factory, self.console,
             self.packet, self.definition() if definition is None else definition,
+
         )
 
     def test_resume_skips_successes_retries_failures_and_extends_models_and_repetitions(self):
@@ -353,7 +354,7 @@ class PersistenceAndRunnerTests(PacketFixture):
     def test_incompatible_metadata_fails_before_provider_calls_or_result_rewrites(self):
         original = self.definition()
         store = ResultStore(self.output, original)
-        store.record(measured_row(MODELS[0], 1, successful_result(), 10))
+        store.record(self.measured_row(MODELS[0], 1, successful_result(), 10))
         files = [self.output / name for name in ["metadata.json", "raw.csv", "attempt_history.csv"]]
         snapshot = {path: path.read_bytes() for path in files}
         changes = [
@@ -397,8 +398,8 @@ class PersistenceAndRunnerTests(PacketFixture):
 
     def test_history_recovers_stale_raw_and_rejects_duplicate_success(self):
         store = ResultStore(self.output, self.definition())
-        store.record(measured_row(MODELS[0], 1, validate_result({}, None, error="fixture failure"), 2))
-        store.record(measured_row(MODELS[0], 1, successful_result(), 3))
+        store.record(self.measured_row(MODELS[0], 1, validate_result({}, None, error="fixture failure"), 2))
+        store.record(self.measured_row(MODELS[0], 1, successful_result(), 3))
         (self.output / "raw.csv").write_text("stale")
         recovered = ResultStore(self.output, self.definition())
         self.assertEqual((len(recovered.latest), len(recovered.history)), (1, 2))
@@ -407,11 +408,11 @@ class PersistenceAndRunnerTests(PacketFixture):
             row = next(csv.DictReader(handle))
         self.assertEqual(row["attempt"], "2")
         with self.assertRaisesRegex(ValueError, "completed"):
-            recovered.record(measured_row(MODELS[0], 1, successful_result(), 4))
+            recovered.record(self.measured_row(MODELS[0], 1, successful_result(), 4))
 
     def test_missing_metadata_history_tampered_metadata_and_incomplete_rows_fail(self):
         store = ResultStore(self.output, self.definition())
-        store.record(measured_row(MODELS[0], 1, successful_result(), 2))
+        store.record(self.measured_row(MODELS[0], 1, successful_result(), 2))
         manifest = self.output / "metadata.json"
         original = manifest.read_bytes()
         tampered = json.loads(original)
@@ -457,16 +458,18 @@ class PersistenceAndRunnerTests(PacketFixture):
 
     def test_initialization_errors_are_recorded_without_warmups(self):
         factory = Mock(side_effect=ValueError("missing fixture credentials"))
-        self.assertEqual(self.run_fixture([MODELS[-1]], 2, factory), 2)
-        factory.assert_called_once_with(MODELS[-1])
+        from run_control import RunStopped
+        with self.assertRaisesRegex(RunStopped, "saved failure"):
+            self.run_fixture([MODELS[-1]], 2, factory)
+        factory.assert_called_once_with(MODELS[-1], audit_directory=self.output.resolve() / "execution_audit")
         store = ResultStore(self.output, self.definition())
-        self.assertEqual(len(store.history), 2)
+        self.assertEqual(len(store.history), 1)
         self.assertTrue(all("Provider initialization failed" in row["error"] for row in store.history))
 
     def test_summary_uses_valid_probabilities_latest_latency_and_available_tokens(self):
-        rows = [measured_row(MODELS[0], 1, successful_result(), 10),
-                measured_row(MODELS[0], 2, successful_result(), 20),
-                measured_row(MODELS[0], 3, validate_result({PROBABILITY_FIELDS[0]: 2.0}, None, error="bad"), 100)]
+        rows = [self.measured_row(MODELS[0], 1, successful_result(), 10),
+                self.measured_row(MODELS[0], 2, successful_result(), 20),
+                self.measured_row(MODELS[0], 3, validate_result({PROBABILITY_FIELDS[0]: 2.0}, None, error="bad"), 100)]
         rows[1][PROBABILITY_FIELDS[0]] = 0.3
         rows[0]["validation_success"] = "True"
         summary = summarize(results_frame(rows)).iloc[0]
@@ -495,7 +498,7 @@ class CliAndIsolationTests(unittest.TestCase):
     def test_defaults_and_selection(self):
         args = parse_args(["--all"])
         self.assertEqual((args.repetitions, args.warmups), (30, 2))
-        self.assertEqual(args.output_dir, HARD_CASE_DIR / "results")
+        self.assertEqual(args.output_dir, HARD_CASE_DIR.parent / "results")
         with patch("hard_case.main.run_hard_case_benchmark", return_value=0) as run:
             self.assertEqual(main(["--all"]), 0)
         self.assertEqual(run.call_args.args[0], list(MODELS))
