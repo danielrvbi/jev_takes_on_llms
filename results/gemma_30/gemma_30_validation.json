@@ -1,0 +1,67 @@
+{
+  "policy": {
+    "version": 2,
+    "mode": "mandatory_cache_free",
+    "local_boundary": "fresh private server, worker and client for every call",
+    "local_verification": "every prompt including scoring retries: zero initial cache, full evaluation, no restore or truncation",
+    "within_request_prefix_reuse": false,
+    "hosted_verification": "fresh prompt_cache_key AND explicit numeric cached_tokens=0",
+    "langchain_cache": false,
+    "automatic_request_retries": 0,
+    "latency": "cold wall time includes startup, loading, verification and teardown",
+    "ollama_commit": "cc4069396f3ad2c370c53eed2e4a42ac13adab84"
+  },
+  "updated_at_utc": "2026-10-03T07:46:23.741574+00:00",
+  "experiment": "gemma_30",
+  "expected_measurements": 330,
+  "valid_measurements": 330,
+  "complete": true,
+  "suites": {
+    "benchmark": {
+      "expected_measurements": 300,
+      "valid_measurements": 300,
+      "attempts": 301,
+      "linked_attempts": 301,
+      "historical_rejections": [
+        {
+          "key": [
+            "gemma4:e4b",
+            5,
+            30
+          ],
+          "attempt": "1",
+          "reason": "Cache verification failed: Cache verification failed: ResponseError: timed out waiting for llama-server to start -  (status code: 500); Cache verification failed: timed out waiting for llama-server to start -  (status code: 500)"
+        }
+      ],
+      "prompt_tasks": 600,
+      "evaluated_prompt_tokens": 115290,
+      "failures": [],
+      "models": {
+        "gemma4:e4b": {
+          "valid_measurements": 300,
+          "input_tokens": 115290,
+          "output_tokens": 148080
+        }
+      },
+      "measurement_keys": 300
+    },
+    "hard_case": {
+      "expected_measurements": 30,
+      "valid_measurements": 30,
+      "attempts": 30,
+      "linked_attempts": 30,
+      "historical_rejections": [],
+      "prompt_tasks": 60,
+      "evaluated_prompt_tokens": 345900,
+      "failures": [],
+      "models": {
+        "gemma4:e4b": {
+          "valid_measurements": 30,
+          "input_tokens": 345900,
+          "output_tokens": 53850
+        }
+      },
+      "measurement_keys": 30
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "call_id": "474ec8904ba14b4f9113887c76e5aee1",
+  "policy": {
+    "mode": "isolated",
+    "boundary": "new private Ollama server and model worker per API request",
+    "verification": "empty server; zero initial cached tokens; full first prompt evaluation",
+    "within_request_prefix_reuse": true,
+    "latency": "includes server startup, model loading, verification and teardown",
+    "audit_format_version": 1
+  },
+  "model": "tev1-hard:0.8b-ctx262144",
+  "started_at_utc": "2026-10-02T18:47:54.264710+00:00",
+  "request_sha256": "7a2c4a1545950df2d7ce95ca38ad34501de7645840f56a01b2460c5251073877",
+  "log_path": "/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/hard_case/results/independent/execution_audit/474ec8904ba14b4f9113887c76e5aee1.log",
+  "audit_path": "/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/hard_case/results/independent/execution_audit/474ec8904ba14b4f9113887c76e5aee1.json",
+  "verified": true,
+  "ollama_executable": "/Applications/Ollama.app/Contents/Resources/ollama",
+  "host": "http://127.0.0.1:62363",
+  "server_pid": 77708,
+  "server_version": "0.35.0",
+  "models_before": [],
+  "models_after": [
+    {
+      "model": "tev1-hard:0.8b-ctx262144",
+      "name": "tev1-hard:0.8b-ctx262144",
+      "digest": "66d1f3fe58e67fdaaa4e7316caf17cfde90fe5b9275a7f6e592817de6e8177e4",
+      "expires_at": "2026-10-02T20:52:59.185334+02:00",
+      "size": 5755298118,
+      "size_vram": 5755298118,
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen35",
+        "families": [
+          "qwen35"
+        ],
+        "parameter_size": "752.39M",
+        "quantization_level": "Q8_0"
+      },
+      "context_length": 262144
+    }
+  ],
+  "server_returncode": 0,
+  "process_tree_stopped": true,
+  "initial_cached_tokens": 0,
+  "first_prompt_tokens": 12112,
+  "first_prompt_evaluated_tokens": 12112,
+  "systemone_requests": 1,
+  "stopped_worker_pid": 77715,
+  "log_sha256": "e740ba95c36dc9bdd7dadd6df15c0a11d0e99752e63a0876bd3342bb7a1ab9f3",
+  "finished_at_utc": "2026-10-02T18:47:59.227913+00:00",
+  "response": {
+    "model": "tev1-hard:0.8b-ctx262144",
+    "answers": {
+      "requires_clarification": {
+        "type": "noul",
+        "noul": 0.9420519275256657
+      },
+      "requires_human_review": {
+        "type": "noul",
+        "noul": 0.9601004033470322
+      },
+      "policy_grounding_required": {
+        "type": "noul",
+        "noul": 0.961264266515941
+      },
+      "safety_compliance_concern": {
+        "type": "noul",
+        "noul": 0.8158832019475305
+      },
+      "coverage_likely": {
+        "type": "noul",
+        "noul": 0.9838015142507991
+      },
+      "potential_fraud_signal": {
+        "type": "noul",
+        "noul": 0.8245899613819422
+      }
+    },
+    "usage": {
+      "input_tokens": 72732,
+      "output_tokens": 7
+    }
+  }
+}

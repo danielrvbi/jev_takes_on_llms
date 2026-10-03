@@ -1,0 +1,55 @@
+{
+  "kind": "isolated_smoke_validation",
+  "measurements": [
+    {
+      "model": "tev1:0.8b",
+      "case_id": null,
+      "repetition": 1,
+      "call_id": "474ec8904ba14b4f9113887c76e5aee1",
+      "server_pid": 77708,
+      "worker_pid": 77715,
+      "initial_cached_tokens": 0,
+      "first_prompt_tokens": 12112,
+      "maximum_answer_numeric_difference_from_historical": 0.0,
+      "exact_answer_match_to_historical": true
+    },
+    {
+      "model": "tev1:0.8b",
+      "case_id": null,
+      "repetition": 2,
+      "call_id": "14c357e0c70b43868dfb6798ad8ef3b5",
+      "server_pid": 77727,
+      "worker_pid": 77730,
+      "initial_cached_tokens": 0,
+      "first_prompt_tokens": 12112,
+      "maximum_answer_numeric_difference_from_historical": 0.0,
+      "exact_answer_match_to_historical": true
+    },
+    {
+      "model": "tev1:4b",
+      "case_id": null,
+      "repetition": 1,
+      "call_id": "3d90f76ddfb744cbb2f73ad4ce929a52",
+      "server_pid": 77741,
+      "worker_pid": 77744,
+      "initial_cached_tokens": 0,
+      "first_prompt_tokens": 12112,
+      "maximum_answer_numeric_difference_from_historical": 0.0,
+      "exact_answer_match_to_historical": true
+    },
+    {
+      "model": "tev1:4b",
+      "case_id": null,
+      "repetition": 2,
+      "call_id": "54614fe644954793bdd32c037b1e6a9b",
+      "server_pid": 77775,
+      "worker_pid": 77778,
+      "initial_cached_tokens": 0,
+      "first_prompt_tokens": 12112,
+      "maximum_answer_numeric_difference_from_historical": 0.0,
+      "exact_answer_match_to_historical": true
+    }
+  ],
+  "all_audits_verified": true,
+  "note": "Small validation sample, not a replacement for the full historical experiment."
+}
