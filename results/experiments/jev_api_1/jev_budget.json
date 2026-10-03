@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "budget_usd": "0.10",
+  "max_calls": 11,
+  "input_price_usd": "4.2E-8",
+  "reservations": [
+    {
+      "call_id": "3cd72a70fbce442f912cc5951bd92a03",
+      "charge_usd": "0.000033054",
+      "state": "rejected",
+      "input_tokens": 787
+    }
+  ],
+  "blocked_reason": "Jev launcher stopped after a failed attempt"
+}

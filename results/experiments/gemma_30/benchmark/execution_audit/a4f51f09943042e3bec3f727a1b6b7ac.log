@@ -1,0 +1,128 @@
+time=2026-10-03T05:20:34.757+02:00 level=INFO source=routes.go:2099 msg="server config" env="map[HTTPS_PROXY: HTTP_PROXY: LLAMA_ARG_FIT: LLAMA_ARG_FIT_TARGET: NO_PROXY: OLLAMA_CONTEXT_LENGTH:0 OLLAMA_CREATE_REMOTE:false OLLAMA_DEBUG:DEBUG OLLAMA_DEBUG_LOG_REQUESTS:false OLLAMA_EDITOR: OLLAMA_FLASH_ATTENTION:false OLLAMA_GO_TEMPLATE:true OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://127.0.0.1:52934 OLLAMA_IGPU_ENABLE: OLLAMA_KEEP_ALIVE:5m0s OLLAMA_KV_CACHE_TYPE: OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MAX_TRANSFER_STREAMS:4 OLLAMA_MODELS:/Users/danielrvbi/.ollama/models OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:true OLLAMA_NO_CLOUD:true OLLAMA_NUM_PARALLEL:1 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://* vscode-webview://* vscode-file://*] OLLAMA_REMOTES:[ollama.com] OLLAMA_SCHED_SPREAD:false http_proxy: https_proxy: no_proxy:]"
+time=2026-10-03T05:20:34.758+02:00 level=INFO source=routes.go:2101 msg="Ollama cloud disabled: true"
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] HEAD   /                         --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.func1 (5 handlers)
+[GIN-debug] GET    /                         --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.func2 (5 handlers)
+[GIN-debug] HEAD   /api/version              --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.func3 (5 handlers)
+[GIN-debug] GET    /api/version              --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.func4 (5 handlers)
+[GIN-debug] GET    /api/status               --> github.com/ollama/ollama/server.(*Server).StatusHandler-fm (5 handlers)
+[GIN-debug] GET    /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] POST   /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] PUT    /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] PATCH  /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] HEAD   /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] OPTIONS /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] DELETE /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] CONNECT /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] TRACE  /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] POST   /api/pull                 --> github.com/ollama/ollama/server.(*Server).PullHandler-fm (5 handlers)
+[GIN-debug] POST   /api/push                 --> github.com/ollama/ollama/server.(*Server).PushHandler-fm (5 handlers)
+[GIN-debug] HEAD   /api/tags                 --> github.com/ollama/ollama/server.(*Server).ListHandler-fm (5 handlers)
+[GIN-debug] GET    /api/tags                 --> github.com/ollama/ollama/server.(*Server).ListHandler-fm (5 handlers)
+[GIN-debug] POST   /api/show                 --> github.com/ollama/ollama/server.(*Server).ShowHandler-fm (5 handlers)
+[GIN-debug] DELETE /api/delete               --> github.com/ollama/ollama/server.(*Server).DeleteHandler-fm (5 handlers)
+[GIN-debug] POST   /api/me                   --> github.com/ollama/ollama/server.(*Server).WhoamiHandler-fm (5 handlers)
+[GIN-debug] POST   /api/signout              --> github.com/ollama/ollama/server.(*Server).SignoutHandler-fm (5 handlers)
+[GIN-debug] DELETE /api/user/keys/:encodedKey --> github.com/ollama/ollama/server.(*Server).SignoutHandler-fm (5 handlers)
+[GIN-debug] POST   /api/create               --> github.com/ollama/ollama/server.(*Server).CreateHandler-fm (5 handlers)
+[GIN-debug] POST   /api/blobs/:digest        --> github.com/ollama/ollama/server.(*Server).CreateBlobHandler-fm (5 handlers)
+[GIN-debug] HEAD   /api/blobs/:digest        --> github.com/ollama/ollama/server.(*Server).HeadBlobHandler-fm (5 handlers)
+[GIN-debug] POST   /api/copy                 --> github.com/ollama/ollama/server.(*Server).CopyHandler-fm (5 handlers)
+[GIN-debug] POST   /api/experimental/web_search --> github.com/ollama/ollama/server.(*Server).WebSearchExperimentalHandler-fm (5 handlers)
+[GIN-debug] POST   /api/experimental/web_fetch --> github.com/ollama/ollama/server.(*Server).WebFetchExperimentalHandler-fm (5 handlers)
+[GIN-debug] GET    /api/experimental/model-recommendations --> github.com/ollama/ollama/server.(*Server).ModelRecommendationsExperimentalHandler-fm (5 handlers)
+[GIN-debug] GET    /api/ps                   --> github.com/ollama/ollama/server.(*Server).PsHandler-fm (5 handlers)
+[GIN-debug] POST   /api/generate             --> github.com/ollama/ollama/server.(*Server).GenerateHandler-fm (5 handlers)
+[GIN-debug] POST   /api/chat                 --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (5 handlers)
+[GIN-debug] POST   /api/embed                --> github.com/ollama/ollama/server.(*Server).EmbedHandler-fm (5 handlers)
+[GIN-debug] POST   /api/embeddings           --> github.com/ollama/ollama/server.(*Server).EmbeddingsHandler-fm (5 handlers)
+[GIN-debug] POST   /v1/systemone             --> github.com/ollama/ollama/server.(*Server).SystemOneHandler-fm (5 handlers)
+[GIN-debug] POST   /v1/chat/completions      --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (7 handlers)
+[GIN-debug] POST   /v1/completions           --> github.com/ollama/ollama/server.(*Server).GenerateHandler-fm (7 handlers)
+[GIN-debug] POST   /v1/embeddings            --> github.com/ollama/ollama/server.(*Server).EmbedHandler-fm (7 handlers)
+[GIN-debug] GET    /v1/models                --> github.com/ollama/ollama/server.(*Server).ListHandler-fm (6 handlers)
+[GIN-debug] GET    /v1/models/:model         --> github.com/ollama/ollama/server.(*Server).ShowHandler-fm (7 handlers)
+[GIN-debug] POST   /v1/responses             --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (8 handlers)
+[GIN-debug] POST   /v1/responses/compact     --> github.com/ollama/ollama/server.(*Server).ResponsesCompactHandler-fm (5 handlers)
+[GIN-debug] POST   /v1/audio/transcriptions  --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (6 handlers)
+[GIN-debug] POST   /v1/messages              --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (7 handlers)
+time=2026-10-03T05:20:34.761+02:00 level=DEBUG source=model_recommendations.go:57 msg="starting model recommendations cache" default_recommendations=6 refresh_interval=4h0m0s fetch_timeout=3s
+time=2026-10-03T05:20:34.761+02:00 level=DEBUG source=model_show_cache.go:128 msg="starting model show cache"
+time=2026-10-03T05:20:34.761+02:00 level=INFO source=routes.go:2159 msg="Listening on 127.0.0.1:52934 (version 0.35.0)"
+time=2026-10-03T05:20:34.761+02:00 level=DEBUG source=model_show_cache.go:140 msg="skipping model show cloud cache hydration because cloud is disabled"
+time=2026-10-03T05:20:34.761+02:00 level=DEBUG source=sched.go:220 msg="starting llm scheduler"
+time=2026-10-03T05:20:34.762+02:00 level=DEBUG source=model_recommendations.go:265 msg="loaded model recommendations snapshot" path=/Users/danielrvbi/.ollama/cache/model-recommendations.json count=5
+time=2026-10-03T05:20:34.762+02:00 level=INFO source=runner.go:60 msg="discovering available GPUs..."
+time=2026-10-03T05:20:34.762+02:00 level=DEBUG source=model_recommendations.go:165 msg="skipping model recommendations refresh because cloud is disabled"
+time=2026-10-03T05:20:34.762+02:00 level=INFO source=model_recommendations.go:177 msg="model recommendations cache sleep scheduled" wait=4h27m24.738702822s consecutive_failures=0
+time=2026-10-03T05:20:34.815+02:00 level=DEBUG source=llama_server.go:121 msg="llama-server discovery: stopped subprocess after collecting GPU info" exit=unknown libDirs=[/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama]
+time=2026-10-03T05:20:34.869+02:00 level=DEBUG source=llama_server.go:285 msg="skipping pseudo-device with zero memory" name=BLAS description=Accelerate
+time=2026-10-03T05:20:34.869+02:00 level=DEBUG source=llama_server.go:52 msg="llama-server device discovery took" duration=107.193333ms libDirs=[/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama]
+time=2026-10-03T05:20:34.869+02:00 level=DEBUG source=runner.go:494 msg="bootstrap discovery took" duration=107.451333ms OLLAMA_LIBRARY_PATH=[/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama] extra_envs=map[]
+time=2026-10-03T05:20:34.869+02:00 level=DEBUG source=runner.go:131 msg="evaluating which, if any, devices to filter out" initial_count=1
+time=2026-10-03T05:20:34.869+02:00 level=DEBUG source=runner.go:200 msg="adjusting filtering IDs" FilterID=0 new_ID=0
+time=2026-10-03T05:20:34.869+02:00 level=DEBUG source=runner.go:42 msg="GPU bootstrap discovery took" duration=107.885041ms
+time=2026-10-03T05:20:34.869+02:00 level=INFO source=types.go:32 msg="inference compute" id=0 filter_id=0 library=Metal compute=0.0 name=MTL0 description="Apple M3 Max" libdirs=ollama driver=0.0 pci_id="" type=iGPU total="28.1 GiB" available="28.1 GiB"
+time=2026-10-03T05:20:34.869+02:00 level=INFO source=routes.go:2209 msg="vram-based default context" total_vram="28.1 GiB" default_num_ctx=32768
+[GIN] 2026/10/03 - 05:20:34 | 200 |      52.125µs |       127.0.0.1 | GET      "/api/version"
+[GIN] 2026/10/03 - 05:20:34 | 200 |      90.166µs |       127.0.0.1 | GET      "/api/ps"
+time=2026-10-03T05:20:34.883+02:00 level=DEBUG source=runner.go:42 msg="overall device VRAM discovery took" duration=1.292µs
+time=2026-10-03T05:20:34.883+02:00 level=DEBUG source=sched.go:295 msg="updating default concurrency" OLLAMA_MAX_LOADED_MODELS=3 gpu_count=1
+time=2026-10-03T05:20:34.883+02:00 level=DEBUG source=sched.go:304 msg="loading first model" model=/Users/danielrvbi/.ollama/models/blobs/sha256-370c2879f17648d337b0ab4e208fdce348e24d1060064e93d7645daafd56d39c
+time=2026-10-03T05:20:34.925+02:00 level=INFO source=server.go:100 msg="using llama-server for model" model=/Users/danielrvbi/.ollama/models/blobs/sha256-370c2879f17648d337b0ab4e208fdce348e24d1060064e93d7645daafd56d39c
+time=2026-10-03T05:20:34.969+02:00 level=INFO source=llama_server.go:436 msg="starting llama-server" cmd="/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama/llama-server --model /Users/danielrvbi/.ollama/models/blobs/sha256-370c2879f17648d337b0ab4e208fdce348e24d1060064e93d7645daafd56d39c --port 52938 --host 127.0.0.1 --no-webui --offline -c 32768 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --mmproj /Users/danielrvbi/.ollama/models/blobs/sha256-4cb21b935cd7e79daed76f3154e82f2f160ad7a9d8d22cb5f14c7b93d5fb38ba --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-backend-sampling --spec-draft-model /Users/danielrvbi/.ollama/models/blobs/sha256-05612e54110f8f68bade01dfcc546cdc6914d11dde0b650a65f263f0f87bbbd2 --flash-attn auto -b 1024 -ub 1024 --context-shift --keep 4"
+time=2026-10-03T05:20:34.969+02:00 level=DEBUG source=llama_server.go:437 msg=subprocess PATH=/Users/danielrvbi/Desktop/PythonStuff/agents/.venv/bin:/Users/danielrvbi/.local/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/danielrvbi/.local/bin:/Users/danielrvbi/.antigravity-ide/antigravity-ide/bin:/Users/danielrvbi/.local/state/fnm_multishells/90088_1790972572437/bin:/Users/danielrvbi/.opencode/bin:/opt/homebrew/opt/vim/bin:/Users/danielrvbi/.elan/bin:/Users/danielrvbi/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/danielrvbi/.local/bin:/Users/danielrvbi/.codex/tmp/arg0/codex-arg0XbccsN:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/danielrvbi/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/danielrvbi/.antigravity-ide/antigravity-ide/bin:/Users/danielrvbi/.local/state/fnm_multishells/202_1790885201923/bin:/Users/danielrvbi/.opencode/bin:/opt/homebrew/opt/vim/bin:/Users/danielrvbi/.elan/bin:/opt/homebrew/sbin:/Users/danielrvbi/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS DYLD_LIBRARY_PATH=/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama
+time=2026-10-03T05:20:34.971+02:00 level=INFO source=sched.go:618 msg="system memory" total="36.0 GiB" free="16.1 GiB" free_swap="0 B"
+time=2026-10-03T05:20:34.971+02:00 level=INFO source=sched.go:625 msg="gpu memory" id=0 library=Metal available="27.6 GiB" free="28.1 GiB" minimum="512.0 MiB" overhead="0 B"
+time=2026-10-03T05:20:34.971+02:00 level=INFO source=llama_server.go:1054 msg="loading model via llama-server" model=/Users/danielrvbi/.ollama/models/blobs/sha256-370c2879f17648d337b0ab4e208fdce348e24d1060064e93d7645daafd56d39c
+time=2026-10-03T05:20:34.971+02:00 level=INFO source=llama_server.go:1307 msg="waiting for llama-server to start responding"
+time=2026-10-03T05:20:34.971+02:00 level=INFO source=llama_server.go:1362 msg="waiting for llama-server to become available" status="llm server not responding"
+0.00.000.066 I srv  llama_server: initializing ...
+cmn  common_param: common_params_print_info: build 1 (161755f29) with AppleClang 21.0.0.21000099 for Darwin arm64
+cmn  common_param: common_params_print_info: verbosity = 4 (adjust with the `-lv N` CLI arg)
+cmn  common_param: device_info:
+cmn  common_param:   - MTL0    : Apple M3 Max (28753 MiB, 28753 MiB free)
+cmn  common_param:   - BLAS    : Accelerate (0 MiB, 0 MiB free)
+cmn  common_param:   - CPU     : Apple M3 Max (36864 MiB, 36864 MiB free)
+cmn  common_param: system_info: n_threads = 10 (n_threads_batch = 10) / 14 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | DOTPROD = 1 | LLAMAFILE = 1 | ACCELERATE = 1 | REPACK = 1 | 
+srv          init: using 13 threads for HTTP server
+srv          init: The UI is disabled
+srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+srv         start: binding port with default address family
+srv    load_model: loading model '/Users/danielrvbi/.ollama/models/blobs/sha256-370c2879f17648d337b0ab4e208fdce348e24d1060064e93d7645daafd56d39c'
+srv    load_model: local path '/Users/danielrvbi/.ollama/models/blobs/sha256-370c2879f17648d337b0ab4e208fdce348e24d1060064e93d7645daafd56d39c'
+ggml_metal_init: allocating
+ggml_metal_init: found device: Apple M3 Max
+ggml_metal_init: picking default device: Apple M3 Max
+ggml_metal_init: use fusion         = true
+ggml_metal_init: use concurrency    = true
+ggml_metal_init: use graph optimize = true
+ggml_metal_init: allocating
+ggml_metal_init: found device: Apple M3 Max
+ggml_metal_init: picking default device: Apple M3 Max
+ggml_metal_init: use fusion         = true
+ggml_metal_init: use concurrency    = true
+ggml_metal_init: use graph optimize = true
+ggml_metal_free: deallocating
+ggml_metal_free: deallocating
+srv    load_model: [mtmd] estimated worst-case memory usage of mmproj is 1158.57 MiB (took 46.48 ms)
+cmn  common_init_: fitting params to device memory ...
+cmn  common_init_: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+common_params_fit_impl: getting device memory data for initial parameters:
+time=2026-10-03T05:20:35.224+02:00 level=INFO source=llama_server.go:1362 msg="waiting for llama-server to become available" status="llm server loading model"
+common_memory_breakdown_print: | memory breakdown [MiB]  | total    free    self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - MTL0 (Apple M3 Max) | 28753 = 28753 + (3920 =  3018 +     572 +     329) +       -3920 |
+common_memory_breakdown_print: |   - Host                |                  2988 =  2730 +       0 +     258                |
+operator(): getting device memory data for the extra model at a context size of 32768:
+time=2026-10-03T05:35:36.567+02:00 level=INFO source=sched.go:646 msg="Load failed" model=/Users/danielrvbi/.ollama/models/blobs/sha256-370c2879f17648d337b0ab4e208fdce348e24d1060064e93d7645daafd56d39c error="timed out waiting for llama-server to start - "
+time=2026-10-03T05:35:36.567+02:00 level=DEBUG source=llama_server.go:2691 msg="stopping llama-server" pid=19013
+time=2026-10-03T05:35:36.567+02:00 level=DEBUG source=llama_server.go:2696 msg="waiting for llama-server to exit" pid=19013
+time=2026-10-03T05:35:36.577+02:00 level=DEBUG source=llama_server.go:2699 msg="llama-server stopped" pid=19013
+[GIN] 2026/10/03 - 05:35:36 | 500 |  888.552333ms |       127.0.0.1 | POST     "/api/chat"
+time=2026-10-03T05:35:36.584+02:00 level=DEBUG source=sched.go:236 msg="shutting down scheduler pending loop"

@@ -1,0 +1,91 @@
+{
+  "experiment": "prefix_pilot",
+  "policy": {
+    "version": 2,
+    "mode": "mandatory_cache_free",
+    "local_boundary": "fresh private server, worker and client for every call",
+    "local_verification": "every prompt including scoring retries: zero initial cache, full evaluation, no restore or truncation",
+    "within_request_prefix_reuse": false,
+    "hosted_verification": "fresh prompt_cache_key AND explicit numeric cached_tokens=0",
+    "langchain_cache": false,
+    "automatic_request_retries": 0,
+    "latency": "cold wall time includes startup, loading, verification and teardown",
+    "ollama_commit": "cc4069396f3ad2c370c53eed2e4a42ac13adab84"
+  },
+  "updated_at_utc": "2026-10-02T20:48:11.799190+00:00",
+  "complete": true,
+  "expected_measurements": 8,
+  "valid_measurements": 8,
+  "suites": {
+    "benchmark": {
+      "expected_keys": 4,
+      "measurement_keys": 4,
+      "passed": 4,
+      "failures": [],
+      "missing": [],
+      "attempts": 4,
+      "linked_attempts": 4,
+      "token_usage": [
+        {
+          "call_id": "0446c2e020cc49a88556499d0d3f5f95",
+          "input_tokens": 406,
+          "output_tokens": 124,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "c1078b638b744fd1b0dfc71e2fb10ca8",
+          "input_tokens": 407,
+          "output_tokens": 100,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "e0356c99b54c45daafa6df1ce4ab07d3",
+          "input_tokens": 406,
+          "output_tokens": 151,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "a3aa1cdb2c56485e8bf73b4757b8ba1a",
+          "input_tokens": 403,
+          "output_tokens": 137,
+          "cached_tokens": 0
+        }
+      ]
+    },
+    "hard_case": {
+      "expected_keys": 4,
+      "measurement_keys": 4,
+      "passed": 4,
+      "failures": [],
+      "missing": [],
+      "attempts": 4,
+      "linked_attempts": 4,
+      "token_usage": [
+        {
+          "call_id": "810adefc24f0495e97a70ab8d11454b7",
+          "input_tokens": 11713,
+          "output_tokens": 69,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "960c679e66bb47ea8899a9ab121f54e5",
+          "input_tokens": 11712,
+          "output_tokens": 65,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "d1ea53738c8d4cf488b5aaae4617b3f4",
+          "input_tokens": 11713,
+          "output_tokens": 85,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "2a532ba5f5e74d208bd7dad11526c126",
+          "input_tokens": 11714,
+          "output_tokens": 85,
+          "cached_tokens": 0
+        }
+      ]
+    }
+  }
+}

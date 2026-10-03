@@ -1,0 +1,443 @@
+time=2026-10-02T23:27:59.089+02:00 level=INFO source=routes.go:2099 msg="server config" env="map[HTTPS_PROXY: HTTP_PROXY: LLAMA_ARG_FIT: LLAMA_ARG_FIT_TARGET: NO_PROXY: OLLAMA_CONTEXT_LENGTH:0 OLLAMA_CREATE_REMOTE:false OLLAMA_DEBUG:DEBUG OLLAMA_DEBUG_LOG_REQUESTS:false OLLAMA_EDITOR: OLLAMA_FLASH_ATTENTION:false OLLAMA_GO_TEMPLATE:true OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://127.0.0.1:57509 OLLAMA_IGPU_ENABLE: OLLAMA_KEEP_ALIVE:5m0s OLLAMA_KV_CACHE_TYPE: OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MAX_TRANSFER_STREAMS:4 OLLAMA_MODELS:/Users/danielrvbi/.ollama/models OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:true OLLAMA_NO_CLOUD:true OLLAMA_NUM_PARALLEL:1 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://* vscode-webview://* vscode-file://*] OLLAMA_REMOTES:[ollama.com] OLLAMA_SCHED_SPREAD:false http_proxy: https_proxy: no_proxy:]"
+time=2026-10-02T23:27:59.089+02:00 level=INFO source=routes.go:2101 msg="Ollama cloud disabled: true"
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] HEAD   /                         --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.func1 (5 handlers)
+[GIN-debug] GET    /                         --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.func2 (5 handlers)
+[GIN-debug] HEAD   /api/version              --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.func3 (5 handlers)
+[GIN-debug] GET    /api/version              --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.func4 (5 handlers)
+[GIN-debug] GET    /api/status               --> github.com/ollama/ollama/server.(*Server).StatusHandler-fm (5 handlers)
+[GIN-debug] GET    /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] POST   /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] PUT    /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] PATCH  /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] HEAD   /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] OPTIONS /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] DELETE /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] CONNECT /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] TRACE  /api/codex/*path          --> github.com/ollama/ollama/server.(*Server).GenerateRoutes.WrapH.func6 (5 handlers)
+[GIN-debug] POST   /api/pull                 --> github.com/ollama/ollama/server.(*Server).PullHandler-fm (5 handlers)
+[GIN-debug] POST   /api/push                 --> github.com/ollama/ollama/server.(*Server).PushHandler-fm (5 handlers)
+[GIN-debug] HEAD   /api/tags                 --> github.com/ollama/ollama/server.(*Server).ListHandler-fm (5 handlers)
+[GIN-debug] GET    /api/tags                 --> github.com/ollama/ollama/server.(*Server).ListHandler-fm (5 handlers)
+[GIN-debug] POST   /api/show                 --> github.com/ollama/ollama/server.(*Server).ShowHandler-fm (5 handlers)
+[GIN-debug] DELETE /api/delete               --> github.com/ollama/ollama/server.(*Server).DeleteHandler-fm (5 handlers)
+[GIN-debug] POST   /api/me                   --> github.com/ollama/ollama/server.(*Server).WhoamiHandler-fm (5 handlers)
+[GIN-debug] POST   /api/signout              --> github.com/ollama/ollama/server.(*Server).SignoutHandler-fm (5 handlers)
+[GIN-debug] DELETE /api/user/keys/:encodedKey --> github.com/ollama/ollama/server.(*Server).SignoutHandler-fm (5 handlers)
+[GIN-debug] POST   /api/create               --> github.com/ollama/ollama/server.(*Server).CreateHandler-fm (5 handlers)
+[GIN-debug] POST   /api/blobs/:digest        --> github.com/ollama/ollama/server.(*Server).CreateBlobHandler-fm (5 handlers)
+[GIN-debug] HEAD   /api/blobs/:digest        --> github.com/ollama/ollama/server.(*Server).HeadBlobHandler-fm (5 handlers)
+[GIN-debug] POST   /api/copy                 --> github.com/ollama/ollama/server.(*Server).CopyHandler-fm (5 handlers)
+[GIN-debug] POST   /api/experimental/web_search --> github.com/ollama/ollama/server.(*Server).WebSearchExperimentalHandler-fm (5 handlers)
+[GIN-debug] POST   /api/experimental/web_fetch --> github.com/ollama/ollama/server.(*Server).WebFetchExperimentalHandler-fm (5 handlers)
+[GIN-debug] GET    /api/experimental/model-recommendations --> github.com/ollama/ollama/server.(*Server).ModelRecommendationsExperimentalHandler-fm (5 handlers)
+[GIN-debug] GET    /api/ps                   --> github.com/ollama/ollama/server.(*Server).PsHandler-fm (5 handlers)
+[GIN-debug] POST   /api/generate             --> github.com/ollama/ollama/server.(*Server).GenerateHandler-fm (5 handlers)
+[GIN-debug] POST   /api/chat                 --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (5 handlers)
+[GIN-debug] POST   /api/embed                --> github.com/ollama/ollama/server.(*Server).EmbedHandler-fm (5 handlers)
+[GIN-debug] POST   /api/embeddings           --> github.com/ollama/ollama/server.(*Server).EmbeddingsHandler-fm (5 handlers)
+[GIN-debug] POST   /v1/systemone             --> github.com/ollama/ollama/server.(*Server).SystemOneHandler-fm (5 handlers)
+[GIN-debug] POST   /v1/chat/completions      --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (7 handlers)
+[GIN-debug] POST   /v1/completions           --> github.com/ollama/ollama/server.(*Server).GenerateHandler-fm (7 handlers)
+[GIN-debug] POST   /v1/embeddings            --> github.com/ollama/ollama/server.(*Server).EmbedHandler-fm (7 handlers)
+[GIN-debug] GET    /v1/models                --> github.com/ollama/ollama/server.(*Server).ListHandler-fm (6 handlers)
+[GIN-debug] GET    /v1/models/:model         --> github.com/ollama/ollama/server.(*Server).ShowHandler-fm (7 handlers)
+[GIN-debug] POST   /v1/responses             --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (8 handlers)
+[GIN-debug] POST   /v1/responses/compact     --> github.com/ollama/ollama/server.(*Server).ResponsesCompactHandler-fm (5 handlers)
+[GIN-debug] POST   /v1/audio/transcriptions  --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (6 handlers)
+[GIN-debug] POST   /v1/messages              --> github.com/ollama/ollama/server.(*Server).ChatHandler-fm (7 handlers)
+time=2026-10-02T23:27:59.093+02:00 level=DEBUG source=model_recommendations.go:57 msg="starting model recommendations cache" default_recommendations=6 refresh_interval=4h0m0s fetch_timeout=3s
+time=2026-10-02T23:27:59.093+02:00 level=DEBUG source=model_show_cache.go:128 msg="starting model show cache"
+time=2026-10-02T23:27:59.093+02:00 level=INFO source=routes.go:2159 msg="Listening on 127.0.0.1:57509 (version 0.35.0)"
+time=2026-10-02T23:27:59.093+02:00 level=DEBUG source=model_show_cache.go:140 msg="skipping model show cloud cache hydration because cloud is disabled"
+time=2026-10-02T23:27:59.093+02:00 level=DEBUG source=sched.go:220 msg="starting llm scheduler"
+time=2026-10-02T23:27:59.093+02:00 level=DEBUG source=model_recommendations.go:265 msg="loaded model recommendations snapshot" path=/Users/danielrvbi/.ollama/cache/model-recommendations.json count=5
+time=2026-10-02T23:27:59.093+02:00 level=DEBUG source=model_recommendations.go:165 msg="skipping model recommendations refresh because cloud is disabled"
+time=2026-10-02T23:27:59.093+02:00 level=INFO source=model_recommendations.go:177 msg="model recommendations cache sleep scheduled" wait=4h24m29.868013871s consecutive_failures=0
+time=2026-10-02T23:27:59.094+02:00 level=INFO source=runner.go:60 msg="discovering available GPUs..."
+time=2026-10-02T23:27:59.147+02:00 level=DEBUG source=llama_server.go:121 msg="llama-server discovery: stopped subprocess after collecting GPU info" exit=unknown libDirs=[/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama]
+time=2026-10-02T23:27:59.205+02:00 level=DEBUG source=llama_server.go:285 msg="skipping pseudo-device with zero memory" name=BLAS description=Accelerate
+time=2026-10-02T23:27:59.205+02:00 level=DEBUG source=llama_server.go:52 msg="llama-server device discovery took" duration=111.351334ms libDirs=[/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama]
+time=2026-10-02T23:27:59.205+02:00 level=DEBUG source=runner.go:494 msg="bootstrap discovery took" duration=111.456625ms OLLAMA_LIBRARY_PATH=[/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama] extra_envs=map[]
+time=2026-10-02T23:27:59.205+02:00 level=DEBUG source=runner.go:131 msg="evaluating which, if any, devices to filter out" initial_count=1
+time=2026-10-02T23:27:59.205+02:00 level=DEBUG source=runner.go:200 msg="adjusting filtering IDs" FilterID=0 new_ID=0
+time=2026-10-02T23:27:59.205+02:00 level=DEBUG source=runner.go:42 msg="GPU bootstrap discovery took" duration=112.157792ms
+time=2026-10-02T23:27:59.205+02:00 level=INFO source=types.go:32 msg="inference compute" id=0 filter_id=0 library=Metal compute=0.0 name=MTL0 description="Apple M3 Max" libdirs=ollama driver=0.0 pci_id="" type=iGPU total="28.1 GiB" available="28.1 GiB"
+time=2026-10-02T23:27:59.205+02:00 level=INFO source=routes.go:2209 msg="vram-based default context" total_vram="28.1 GiB" default_num_ctx=32768
+[GIN] 2026/10/02 - 23:27:59 | 200 |       38.25µs |       127.0.0.1 | GET      "/api/version"
+[GIN] 2026/10/02 - 23:27:59 | 200 |       77.25µs |       127.0.0.1 | GET      "/api/ps"
+time=2026-10-02T23:27:59.214+02:00 level=DEBUG source=runner.go:42 msg="overall device VRAM discovery took" duration=875ns
+time=2026-10-02T23:27:59.214+02:00 level=DEBUG source=sched.go:295 msg="updating default concurrency" OLLAMA_MAX_LOADED_MODELS=3 gpu_count=1
+time=2026-10-02T23:27:59.214+02:00 level=DEBUG source=sched.go:304 msg="loading first model" model=/Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e
+time=2026-10-02T23:27:59.242+02:00 level=INFO source=server.go:100 msg="using llama-server for model" model=/Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e
+time=2026-10-02T23:27:59.245+02:00 level=INFO source=llama_server.go:436 msg="starting llama-server" cmd="/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama/llama-server --model /Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e --port 57513 --host 127.0.0.1 --no-webui --offline -c 2050 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --flash-attn auto -b 512 -ub 512 --context-shift --keep 4"
+time=2026-10-02T23:27:59.245+02:00 level=DEBUG source=llama_server.go:437 msg=subprocess PATH=/Users/danielrvbi/Desktop/PythonStuff/agents/.venv/bin:/Users/danielrvbi/.local/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/danielrvbi/.local/bin:/Users/danielrvbi/.antigravity-ide/antigravity-ide/bin:/Users/danielrvbi/.local/state/fnm_multishells/90088_1790972572437/bin:/Users/danielrvbi/.opencode/bin:/opt/homebrew/opt/vim/bin:/Users/danielrvbi/.elan/bin:/Users/danielrvbi/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/danielrvbi/.local/bin:/Users/danielrvbi/.codex/tmp/arg0/codex-arg0XbccsN:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/danielrvbi/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/danielrvbi/.antigravity-ide/antigravity-ide/bin:/Users/danielrvbi/.local/state/fnm_multishells/202_1790885201923/bin:/Users/danielrvbi/.opencode/bin:/opt/homebrew/opt/vim/bin:/Users/danielrvbi/.elan/bin:/opt/homebrew/sbin:/Users/danielrvbi/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS DYLD_LIBRARY_PATH=/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/.runtime/bin/lib/ollama
+time=2026-10-02T23:27:59.246+02:00 level=INFO source=sched.go:618 msg="system memory" total="36.0 GiB" free="15.5 GiB" free_swap="0 B"
+time=2026-10-02T23:27:59.246+02:00 level=INFO source=sched.go:625 msg="gpu memory" id=0 library=Metal available="27.6 GiB" free="28.1 GiB" minimum="512.0 MiB" overhead="0 B"
+time=2026-10-02T23:27:59.246+02:00 level=INFO source=llama_server.go:1054 msg="loading model via llama-server" model=/Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e
+time=2026-10-02T23:27:59.246+02:00 level=INFO source=llama_server.go:1307 msg="waiting for llama-server to start responding"
+time=2026-10-02T23:27:59.247+02:00 level=INFO source=llama_server.go:1362 msg="waiting for llama-server to become available" status="llm server not responding"
+0.00.000.065 I srv  llama_server: initializing ...
+cmn  common_param: common_params_print_info: build 1 (161755f29) with AppleClang 21.0.0.21000099 for Darwin arm64
+cmn  common_param: common_params_print_info: verbosity = 4 (adjust with the `-lv N` CLI arg)
+cmn  common_param: device_info:
+cmn  common_param:   - MTL0    : Apple M3 Max (28753 MiB, 28753 MiB free)
+cmn  common_param:   - BLAS    : Accelerate (0 MiB, 0 MiB free)
+cmn  common_param:   - CPU     : Apple M3 Max (36864 MiB, 36864 MiB free)
+cmn  common_param: system_info: n_threads = 10 (n_threads_batch = 10) / 14 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | DOTPROD = 1 | LLAMAFILE = 1 | ACCELERATE = 1 | REPACK = 1 | 
+srv          init: using 13 threads for HTTP server
+srv          init: The UI is disabled
+srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+srv         start: binding port with default address family
+srv    load_model: loading model '/Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e'
+srv    load_model: local path '/Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e'
+cmn  common_init_: fitting params to device memory ...
+cmn  common_init_: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+common_params_fit_impl: getting device memory data for initial parameters:
+time=2026-10-02T23:27:59.500+02:00 level=INFO source=llama_server.go:1362 msg="waiting for llama-server to become available" status="llm server loading model"
+common_memory_breakdown_print: | memory breakdown [MiB]  | total    free    self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - MTL0 (Apple M3 Max) | 28753 = 28703 + (4468 =  4264 +     122 +      82) +       -4418 |
+common_memory_breakdown_print: |   - Host                |                   668 =   644 +       0 +      24                |
+common_params_fit_impl: projected to use 4468 MiB of device memory vs. 28703 MiB of free device memory
+common_params_fit_impl: will leave 24234 >= 1024 MiB of free device memory, no changes needed
+common_fit_params: successfully fit params to free device memory
+common_fit_params: fitting params to free memory took 0.24 seconds
+llama_model_loader: loaded meta data with 41 key-value pairs and 426 tensors from /Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = qwen35
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = Tev1 4B Experimental
+llama_model_loader: - kv   3:                           general.finetune str              = experimental
+llama_model_loader: - kv   4:                           general.basename str              = Tev1
+llama_model_loader: - kv   5:                         general.size_label str              = 4B
+llama_model_loader: - kv   6:                   general.base_model.count u32              = 1
+llama_model_loader: - kv   7:                  general.base_model.0.name str              = Qwen3.5 4B
+llama_model_loader: - kv   8:          general.base_model.0.organization str              = Qwen
+llama_model_loader: - kv   9:              general.base_model.0.repo_url str              = https://huggingface.co/Qwen/Qwen3.5-4B
+llama_model_loader: - kv  10:                               general.tags arr[str,5]       = ["together-ai", "qwen3.5", "decision-...
+llama_model_loader: - kv  11:                         qwen35.block_count u32              = 32
+llama_model_loader: - kv  12:                      qwen35.context_length u32              = 262144
+llama_model_loader: - kv  13:                    qwen35.embedding_length u32              = 2560
+llama_model_loader: - kv  14:                 qwen35.feed_forward_length u32              = 9216
+llama_model_loader: - kv  15:                qwen35.attention.head_count u32              = 16
+llama_model_loader: - kv  16:             qwen35.attention.head_count_kv u32              = 4
+llama_model_loader: - kv  17:             qwen35.rope.dimension_sections arr[i32,4]       = [11, 11, 10, 0]
+llama_model_loader: - kv  18:                      qwen35.rope.freq_base f32              = 10000000.000000
+llama_model_loader: - kv  19:    qwen35.attention.layer_norm_rms_epsilon f32              = 0.000001
+llama_model_loader: - kv  20:                qwen35.attention.key_length u32              = 256
+llama_model_loader: - kv  21:              qwen35.attention.value_length u32              = 256
+llama_model_loader: - kv  22:                     qwen35.ssm.conv_kernel u32              = 4
+llama_model_loader: - kv  23:                      qwen35.ssm.state_size u32              = 128
+llama_model_loader: - kv  24:                     qwen35.ssm.group_count u32              = 16
+llama_model_loader: - kv  25:                  qwen35.ssm.time_step_rank u32              = 32
+llama_model_loader: - kv  26:                      qwen35.ssm.inner_size u32              = 4096
+llama_model_loader: - kv  27:          qwen35.attention.recurrent_layers arr[bool,32]     = [true, true, true, false, true, true,...
+llama_model_loader: - kv  28:             qwen35.full_attention_interval u32              = 4
+llama_model_loader: - kv  29:                qwen35.rope.dimension_count u32              = 64
+llama_model_loader: - kv  30:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  31:                         tokenizer.ggml.pre str              = qwen35
+llama_model_loader: - kv  32:                      tokenizer.ggml.tokens arr[str,248320]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+llama_model_loader: - kv  33:                  tokenizer.ggml.token_type arr[i32,248320]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+llama_model_loader: - kv  34:                      tokenizer.ggml.merges arr[str,247587]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+llama_model_loader: - kv  35:                tokenizer.ggml.eos_token_id u32              = 248046
+llama_model_loader: - kv  36:            tokenizer.ggml.padding_token_id u32              = 248044
+llama_model_loader: - kv  37:               tokenizer.ggml.add_bos_token bool             = false
+llama_model_loader: - kv  38:                    tokenizer.chat_template str              = {%- set image_count = namespace(value...
+llama_model_loader: - kv  39:               general.quantization_version u32              = 2
+llama_model_loader: - kv  40:                          general.file_type u32              = 7
+llama_model_loader: - type  f32:  177 tensors
+llama_model_loader: - type q8_0:  249 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = Q8_0
+print_info: file size   = 4.16 GiB (8.51 BPW) 
+llama_prepare_model_devices: using device MTL0 (Apple M3 Max) (unknown id) - 28753 MiB free
+load: 0 unused tokens
+load: printing all EOG tokens:
+load:   - 248044 ('<|endoftext|>')
+load:   - 248046 ('<|im_end|>')
+load:   - 248063 ('<|fim_pad|>')
+load:   - 248064 ('<|repo_name|>')
+load:   - 248065 ('<|file_sep|>')
+load: special tokens cache size = 33
+load: token to piece cache size = 1.7581 MB
+print_info: arch                  = qwen35
+print_info: vocab_only            = 0
+print_info: no_alloc              = 0
+print_info: n_ctx_train           = 262144
+print_info: n_embd_inp            = 2560
+print_info: n_embd                = 2560
+print_info: n_embd_out            = 2560
+print_info: n_layer               = 32
+print_info: n_layer_all           = 32
+print_info: n_head                = 16
+print_info: n_head_kv             = 4
+print_info: n_rot                 = 64
+print_info: n_swa                 = 0
+print_info: is_swa_any            = 0
+print_info: non_causal_type       = 0
+print_info: n_embd_head_k         = 256
+print_info: n_embd_head_v         = 256
+print_info: n_gqa                 = 4
+print_info: n_embd_k_gqa          = 1024
+print_info: n_embd_v_gqa          = 1024
+print_info: f_norm_eps            = 0.0e+00
+print_info: f_norm_rms_eps        = 1.0e-06
+print_info: f_clamp_kqv           = 0.0e+00
+print_info: f_max_alibi_bias      = 0.0e+00
+print_info: f_logit_scale         = 0.0e+00
+print_info: f_attn_scale          = 0.0e+00
+print_info: f_attn_value_scale    = 0.0000
+print_info: n_ff                  = 9216
+print_info: n_expert              = 0
+print_info: n_expert_used         = 0
+print_info: n_expert_groups       = 0
+print_info: n_group_used          = 0
+print_info: causal attn           = 1
+print_info: pooling type          = -1
+print_info: rope type             = 40
+print_info: rope scaling          = linear
+print_info: freq_base_train       = 10000000.0
+print_info: freq_scale_train      = 1
+print_info: n_ctx_orig_yarn       = 262144
+print_info: rope_yarn_log_mul     = 0.0000
+print_info: rope_finetuned        = unknown
+print_info: mrope sections        = [11, 11, 10, 0]
+print_info: ssm_d_conv            = 4
+print_info: ssm_d_inner           = 4096
+print_info: ssm_d_state           = 128
+print_info: ssm_dt_rank           = 32
+print_info: ssm_n_group           = 16
+print_info: ssm_dt_b_c_rms        = 0
+print_info: model type            = 4B
+print_info: model params          = 4.21 B
+print_info: general.name          = Tev1 4B Experimental
+print_info: vocab type            = BPE
+print_info: n_vocab               = 248320
+print_info: n_merges              = 247587
+print_info: BOS token             = 11 ','
+print_info: EOS token             = 248046 '<|im_end|>'
+print_info: EOT token             = 248046 '<|im_end|>'
+print_info: PAD token             = 248044 '<|endoftext|>'
+print_info: LF token              = 198 'Ċ'
+print_info: FIM PRE token         = 248060 '<|fim_prefix|>'
+print_info: FIM SUF token         = 248062 '<|fim_suffix|>'
+print_info: FIM MID token         = 248061 '<|fim_middle|>'
+print_info: FIM PAD token         = 248063 '<|fim_pad|>'
+print_info: FIM REP token         = 248064 '<|repo_name|>'
+print_info: FIM SEP token         = 248065 '<|file_sep|>'
+print_info: EOG token             = 248044 '<|endoftext|>'
+print_info: EOG token             = 248046 '<|im_end|>'
+print_info: EOG token             = 248063 '<|fim_pad|>'
+print_info: EOG token             = 248064 '<|repo_name|>'
+print_info: EOG token             = 248065 '<|file_sep|>'
+print_info: max token length      = 256
+load_tensors: loading model tensors, this can take a while... (load_mode = mmap)
+load_tensors: offloading output layer to GPU
+load_tensors: offloading 31 repeating layers to GPU
+load_tensors: offloaded 33/33 layers to GPU
+load_tensors:   CPU_Mapped model buffer size =   644.14 MiB
+load_tensors:  MTL0_Mapped model buffer size =  4264.29 MiB
+cmn  common_init_: added <|endoftext|> logit bias = -inf
+cmn  common_init_: added <|im_end|> logit bias = -inf
+cmn  common_init_: added <|fim_pad|> logit bias = -inf
+cmn  common_init_: added <|repo_name|> logit bias = -inf
+cmn  common_init_: added <|file_sep|> logit bias = -inf
+llama_context: constructing llama_context
+llama_context: n_seq_max             = 1
+llama_context: n_ctx                 = 2304
+llama_context: n_ctx_seq             = 2304
+llama_context: n_batch               = 512
+llama_context: n_ubatch              = 512
+llama_context: causal_attn           = 1
+llama_context: flash_attn            = auto
+llama_context: kv_unified            = false
+llama_context: freq_base             = 10000000.0
+llama_context: freq_scale            = 1
+llama_context: n_rs_seq              = 0
+llama_context: n_outputs_max         = 1
+llama_context: n_outputs_max_per_seq = 1
+llama_context: n_ctx_seq (2304) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+ggml_metal_init: allocating
+ggml_metal_init: found device: Apple M3 Max
+ggml_metal_init: picking default device: Apple M3 Max
+ggml_metal_init: use fusion         = true
+ggml_metal_init: use concurrency    = true
+ggml_metal_init: use graph optimize = true
+llama_context:        CPU  output buffer size =     0.95 MiB
+llama_kv_cache:       MTL0 KV buffer size =    72.00 MiB
+llama_kv_cache: size =   72.00 MiB (  2304 cells,   8 layers,  1/1 seqs), K (f16):   36.00 MiB, V (f16):   36.00 MiB
+llama_kv_cache: attn_rot_k = 0, n_embd_head_k_all = 256
+llama_kv_cache: attn_rot_v = 0, n_embd_head_k_all = 256
+llama_memory_recurrent:       MTL0 RS buffer size =    50.25 MiB
+llama_memory_recurrent: size =   50.25 MiB (     1 cells,  32 layers,  1 seqs  0 rs_seq), R (f32):    2.25 MiB, S (f32):   48.00 MiB, P (f32):    0.00 MiB
+sched_reserve: reserving ...
+resolve_fused_ops: Flash Attention enabled
+resolve_fused_ops: resolving fused DeepSeek V4 HC support:
+resolve_fused_ops: fused DeepSeek V4 HC pre enabled
+resolve_fused_ops: fused DeepSeek V4 HC comb enabled
+resolve_fused_ops: fused DeepSeek V4 HC post enabled
+sched_reserve:       MTL0 compute buffer size =    82.36 MiB
+sched_reserve:        CPU compute buffer size =    12.27 MiB
+sched_reserve: graph nodes  = 1879
+sched_reserve: graph splits = 2
+sched_reserve: reserve took 8.57 ms, sched copies = 1
+cmn          init: llama threadpool init, n_threads = 10
+cmn  common_init_: KV cache shifting is not supported for this context, disabling KV cache shifting
+cmn  common_init_: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+cmn  common_conte: the context does not support partial sequence removal
+srv    load_model: speculative decoding will use checkpoints
+srv    load_model: initializing, n_slots = 1, n_ctx_slot = 2304, kv_unified = 'false'
+spec common_specu: no implementations specified for speculative decoding
+slot   load_model: id  0 | task -1 | new slot, n_ctx = 2304
+srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+srv    load_model: use `--cache-ram 0` to disable the prompt cache
+srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+srv    load_model: context checkpoints enabled, max = 32, min spacing = 8192
+srv          init: idle slots will be saved to prompt cache upon starting a new task
+srv          init: init: chat template, example_format: '<|im_start|>system
+You are a helpful assistant<|im_end|>
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+Hi there<|im_end|>
+<|im_start|>user
+How are you?<|im_end|>
+<|im_start|>assistant
+<think>
+'
+srv          init: init: chat template, thinking = 1
+srv          init: preserve_reasoning kwarg: not supported by template
+srv  llama_server: model loaded
+srv  llama_server: listening on http://127.0.0.1:57513
+srv  update_slots: all slots are idle
+time=2026-10-02T23:28:00.005+02:00 level=INFO source=llama_server.go:1374 msg="llama-server started in 0.76 seconds"
+time=2026-10-02T23:28:00.005+02:00 level=INFO source=images.go:383 msg="template selection" model=registry.ollama.ai/library/tev1:4b selected=gguf_chat_template renderer="" parser="" go_template=null chat_template="[decision tools thinking completion]" harmony=null renderer_parser=null
+time=2026-10-02T23:28:00.005+02:00 level=INFO source=sched.go:733 msg="loaded runners" count=1
+time=2026-10-02T23:28:00.005+02:00 level=INFO source=llama_server.go:1307 msg="waiting for llama-server to start responding"
+time=2026-10-02T23:28:00.005+02:00 level=INFO source=llama_server.go:1374 msg="llama-server started in 0.76 seconds"
+time=2026-10-02T23:28:00.005+02:00 level=DEBUG source=sched.go:745 msg="finished setting up" runner.size="4.4 GiB" runner.vram="4.4 GiB" runner.parallel=1 runner.model=/Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e
+time=2026-10-02T23:28:00.029+02:00 level=DEBUG source=llama_server_score.go:187 msg="experiment prompt request" kind=score prompt_tokens=638 cache_prompt=false
+srv  server_strea: conv_id= (empty=1)
+slot get_availabl: id  0 | task -1 |  - skipping, slot is empty
+slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+srv  get_availabl: updating prompt cache
+srv          load:  - looking for better prompt, base f_keep = -1.000, f_sim = 0.000
+srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 2304 tokens, 8589934592 est)
+srv  get_availabl: prompt cache update took 0.00 ms
+slot launch_slot_: id  0 | task -1 | sampler chain: logits -> logit-bias -> top-k -> ?temp-ext -> dist 
+slot launch_slot_: id  0 | task -1 | sampler params: 
+	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+	top_k = 2, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 1.000
+	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+slot   operator(): id  0 | task 0 | new prompt, n_ctx_slot = 2304, n_keep = 4, task.n_tokens = 638
+slot   operator(): id  0 | task 0 | cached n_tokens = 0, memory_seq_rm [0, end)
+slot   operator(): id  0 | task 0 | cached n_tokens = 126, memory_seq_rm [126, end)
+slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 125, pos_max = 125, n_tokens = 126, size = 50.251 MiB)
+slot   operator(): id  0 | task 0 | cached n_tokens = 634, memory_seq_rm [634, end)
+slot init_sampler: id  0 | task 0 | init sampler, took 0.06 ms, tokens: text = 638, total = 638
+slot create_check: id  0 | task 0 | created context checkpoint 2 of 32 (pos_min = 633, pos_max = 633, n_tokens = 634, size = 50.251 MiB)
+slot print_timing: id  0 | task 0 | prompt eval time =     860.03 ms /   638 tokens (    1.35 ms per token,   741.84 tokens per second)
+slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token,     0.00 tokens per second)
+slot print_timing: id  0 | task 0 |       total time =     860.03 ms /   639 tokens
+slot print_timing: id  0 | task 0 |    graphs reused =          1
+slot      release: id  0 | task 0 | stop processing: n_tokens = 638, truncated = 0
+srv  update_slots: all slots are idle
+time=2026-10-02T23:28:00.890+02:00 level=DEBUG source=llama_server_score.go:187 msg="experiment prompt request" kind=score prompt_tokens=638 cache_prompt=false
+srv  server_strea: conv_id= (empty=1)
+slot get_availabl: id  0 | task -1 |  - checking sim = 0.981 (626/638) > 0.100
+slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.981 (> 0.100 thold), f_keep = 0.981
+slot launch_slot_: id  0 | task -1 | sampler chain: logits -> logit-bias -> top-k -> ?temp-ext -> dist 
+slot launch_slot_: id  0 | task -1 | sampler params: 
+	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+	top_k = 2, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 1.000
+	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+slot launch_slot_: id  0 | task 4 | processing task, is_child = 0
+slot   operator(): id  0 | task 4 | new prompt, n_ctx_slot = 2304, n_keep = 4, task.n_tokens = 638
+slot   operator(): id  0 | task 4 | erased invalidated context checkpoint (pos_min = 125, pos_max = 125, n_tokens = 126, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+slot   operator(): id  0 | task 4 | erased invalidated context checkpoint (pos_min = 633, pos_max = 633, n_tokens = 634, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+slot   operator(): id  0 | task 4 | cached n_tokens = 0, memory_seq_rm [0, end)
+slot   operator(): id  0 | task 4 | cached n_tokens = 126, memory_seq_rm [126, end)
+slot create_check: id  0 | task 4 | created context checkpoint 1 of 32 (pos_min = 125, pos_max = 125, n_tokens = 126, size = 50.251 MiB)
+slot   operator(): id  0 | task 4 | cached n_tokens = 634, memory_seq_rm [634, end)
+slot init_sampler: id  0 | task 4 | init sampler, took 0.06 ms, tokens: text = 638, total = 638
+slot create_check: id  0 | task 4 | created context checkpoint 2 of 32 (pos_min = 633, pos_max = 633, n_tokens = 634, size = 50.251 MiB)
+slot print_timing: id  0 | task 4 | prompt eval time =     821.19 ms /   638 tokens (    1.29 ms per token,   776.92 tokens per second)
+slot print_timing: id  0 | task 4 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token,     0.00 tokens per second)
+slot print_timing: id  0 | task 4 |       total time =     821.19 ms /   639 tokens
+slot print_timing: id  0 | task 4 |    graphs reused =          1
+slot      release: id  0 | task 4 | stop processing: n_tokens = 638, truncated = 0
+srv  update_slots: all slots are idle
+time=2026-10-02T23:28:01.712+02:00 level=DEBUG source=llama_server_score.go:187 msg="experiment prompt request" kind=score prompt_tokens=637 cache_prompt=false
+srv  server_strea: conv_id= (empty=1)
+slot get_availabl: id  0 | task -1 |  - checking sim = 0.983 (626/637) > 0.100
+slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.983 (> 0.100 thold), f_keep = 0.981
+slot launch_slot_: id  0 | task -1 | sampler chain: logits -> logit-bias -> top-k -> ?temp-ext -> dist 
+slot launch_slot_: id  0 | task -1 | sampler params: 
+	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+	top_k = 4, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 1.000
+	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+slot launch_slot_: id  0 | task 8 | processing task, is_child = 0
+slot   operator(): id  0 | task 8 | new prompt, n_ctx_slot = 2304, n_keep = 4, task.n_tokens = 637
+slot   operator(): id  0 | task 8 | erased invalidated context checkpoint (pos_min = 125, pos_max = 125, n_tokens = 126, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+slot   operator(): id  0 | task 8 | erased invalidated context checkpoint (pos_min = 633, pos_max = 633, n_tokens = 634, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+slot   operator(): id  0 | task 8 | cached n_tokens = 0, memory_seq_rm [0, end)
+slot   operator(): id  0 | task 8 | cached n_tokens = 125, memory_seq_rm [125, end)
+slot create_check: id  0 | task 8 | created context checkpoint 1 of 32 (pos_min = 124, pos_max = 124, n_tokens = 125, size = 50.251 MiB)
+slot   operator(): id  0 | task 8 | cached n_tokens = 633, memory_seq_rm [633, end)
+slot init_sampler: id  0 | task 8 | init sampler, took 0.06 ms, tokens: text = 637, total = 637
+slot create_check: id  0 | task 8 | created context checkpoint 2 of 32 (pos_min = 632, pos_max = 632, n_tokens = 633, size = 50.251 MiB)
+slot print_timing: id  0 | task 8 | prompt eval time =     836.05 ms /   637 tokens (    1.31 ms per token,   761.92 tokens per second)
+slot print_timing: id  0 | task 8 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token,     0.00 tokens per second)
+slot print_timing: id  0 | task 8 |       total time =     836.05 ms /   638 tokens
+slot print_timing: id  0 | task 8 |    graphs reused =          1
+slot      release: id  0 | task 8 | stop processing: n_tokens = 637, truncated = 0
+srv  update_slots: all slots are idle
+time=2026-10-02T23:28:02.549+02:00 level=DEBUG source=llama_server_score.go:187 msg="experiment prompt request" kind=score prompt_tokens=638 cache_prompt=false
+srv  server_strea: conv_id= (empty=1)
+slot get_availabl: id  0 | task -1 |  - checking sim = 0.981 (626/638) > 0.100
+slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.981 (> 0.100 thold), f_keep = 0.983
+slot launch_slot_: id  0 | task -1 | sampler chain: logits -> logit-bias -> top-k -> ?temp-ext -> dist 
+slot launch_slot_: id  0 | task -1 | sampler params: 
+	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+	top_k = 6, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 1.000
+	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+slot launch_slot_: id  0 | task 12 | processing task, is_child = 0
+slot   operator(): id  0 | task 12 | new prompt, n_ctx_slot = 2304, n_keep = 4, task.n_tokens = 638
+slot   operator(): id  0 | task 12 | erased invalidated context checkpoint (pos_min = 124, pos_max = 124, n_tokens = 125, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+slot   operator(): id  0 | task 12 | erased invalidated context checkpoint (pos_min = 632, pos_max = 632, n_tokens = 633, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+slot   operator(): id  0 | task 12 | cached n_tokens = 0, memory_seq_rm [0, end)
+slot   operator(): id  0 | task 12 | cached n_tokens = 126, memory_seq_rm [126, end)
+slot create_check: id  0 | task 12 | created context checkpoint 1 of 32 (pos_min = 125, pos_max = 125, n_tokens = 126, size = 50.251 MiB)
+slot   operator(): id  0 | task 12 | cached n_tokens = 634, memory_seq_rm [634, end)
+slot init_sampler: id  0 | task 12 | init sampler, took 0.06 ms, tokens: text = 638, total = 638
+slot create_check: id  0 | task 12 | created context checkpoint 2 of 32 (pos_min = 633, pos_max = 633, n_tokens = 634, size = 50.251 MiB)
+slot print_timing: id  0 | task 12 | prompt eval time =     863.61 ms /   638 tokens (    1.35 ms per token,   738.76 tokens per second)
+slot print_timing: id  0 | task 12 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token,     0.00 tokens per second)
+slot print_timing: id  0 | task 12 |       total time =     863.61 ms /   639 tokens
+slot print_timing: id  0 | task 12 |    graphs reused =          1
+slot      release: id  0 | task 12 | stop processing: n_tokens = 638, truncated = 0
+srv  update_slots: all slots are idle
+[GIN] 2026/10/02 - 23:28:03 | 200 |  4.203300834s |       127.0.0.1 | POST     "/v1/systemone"
+time=2026-10-02T23:28:03.414+02:00 level=DEBUG source=sched.go:753 msg="context for request finished"
+time=2026-10-02T23:28:03.414+02:00 level=DEBUG source=sched.go:399 msg="runner with non-zero duration has gone idle, adding timer" runner.size="4.4 GiB" runner.vram="4.4 GiB" runner.parallel=1 runner.model=/Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e duration=5m0s
+time=2026-10-02T23:28:03.414+02:00 level=DEBUG source=sched.go:417 msg="after processing request finished event" runner.size="4.4 GiB" runner.vram="4.4 GiB" runner.parallel=1 runner.model=/Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e refCount=0
+[GIN] 2026/10/02 - 23:28:03 | 200 |        20.5µs |       127.0.0.1 | GET      "/api/ps"
+srv    operator(): operator(): cleaning up before exit...
+time=2026-10-02T23:28:03.418+02:00 level=DEBUG source=sched.go:377 msg="shutting down scheduler completed loop"
+time=2026-10-02T23:28:03.418+02:00 level=DEBUG source=sched.go:236 msg="shutting down scheduler pending loop"
+time=2026-10-02T23:28:03.418+02:00 level=DEBUG source=sched.go:1722 msg="shutting down runner" model=/Users/danielrvbi/.ollama/models/blobs/sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e
+time=2026-10-02T23:28:03.418+02:00 level=DEBUG source=llama_server.go:2691 msg="stopping llama-server" pid=7185
+time=2026-10-02T23:28:03.418+02:00 level=DEBUG source=llama_server.go:2696 msg="waiting for llama-server to exit" pid=7185
+time=2026-10-02T23:28:03.445+02:00 level=DEBUG source=llama_server.go:2699 msg="llama-server stopped" pid=7185
+time=2026-10-02T23:28:03.445+02:00 level=DEBUG source=model_recommendations.go:181 msg="stopping model recommendations cache"

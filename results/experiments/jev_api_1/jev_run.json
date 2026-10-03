@@ -1,0 +1,111 @@
+{
+  "started_at_utc": "2026-10-03T08:31:21.377365+00:00",
+  "run_plan_sha256": "ebd851b120d4eafa8c807d7de546feae36e91736d5a9cf10cf45f0d96dd323fa",
+  "status": "stopped",
+  "reason": "RunStopped",
+  "finished_at_utc": "2026-10-03T08:31:21.945980+00:00",
+  "validation": {
+    "experiment": "jev_api",
+    "policy": {
+      "version": 2,
+      "mode": "mandatory_cache_free",
+      "local_boundary": "fresh private server, worker and client for every call",
+      "local_verification": "every prompt including scoring retries: zero initial cache, full evaluation, no restore or truncation",
+      "within_request_prefix_reuse": false,
+      "hosted_verification": "fresh prompt_cache_key AND explicit numeric cached_tokens=0",
+      "langchain_cache": false,
+      "automatic_request_retries": 0,
+      "latency": "cold wall time includes startup, loading, verification and teardown",
+      "ollama_commit": "cc4069396f3ad2c370c53eed2e4a42ac13adab84"
+    },
+    "updated_at_utc": "2026-10-03T08:31:21.946256+00:00",
+    "complete": false,
+    "expected_measurements": 11,
+    "valid_measurements": 0,
+    "suites": {
+      "benchmark": {
+        "expected_keys": 10,
+        "measurement_keys": 1,
+        "passed": 0,
+        "failures": [
+          {
+            "key": [
+              "jev-1.13.0",
+              1,
+              1
+            ],
+            "kind": "cache_verification",
+            "reason": "Cache verification failed: Cache verification failed: TypeSafe has no supported cache-disable and explicit zero-cache evidence contract; Cache verification failed: TypeSafe has no supported cache-disable and explicit zero-cache evidence contract"
+          }
+        ],
+        "missing": [
+          [
+            "jev-1.13.0",
+            2,
+            1
+          ],
+          [
+            "jev-1.13.0",
+            3,
+            1
+          ],
+          [
+            "jev-1.13.0",
+            4,
+            1
+          ],
+          [
+            "jev-1.13.0",
+            5,
+            1
+          ],
+          [
+            "jev-1.13.0",
+            6,
+            1
+          ],
+          [
+            "jev-1.13.0",
+            7,
+            1
+          ],
+          [
+            "jev-1.13.0",
+            8,
+            1
+          ],
+          [
+            "jev-1.13.0",
+            9,
+            1
+          ],
+          [
+            "jev-1.13.0",
+            10,
+            1
+          ]
+        ],
+        "attempts": 1,
+        "linked_attempts": 1,
+        "token_usage": [
+          {
+            "call_id": "3cd72a70fbce442f912cc5951bd92a03",
+            "input_tokens": 787,
+            "output_tokens": 109,
+            "cached_tokens": null
+          }
+        ]
+      },
+      "hard_case": {
+        "expected_keys": 1,
+        "measurement_keys": 0,
+        "passed": 0,
+        "failures": [],
+        "missing": [],
+        "attempts": 0,
+        "linked_attempts": 0,
+        "token_usage": []
+      }
+    }
+  }
+}

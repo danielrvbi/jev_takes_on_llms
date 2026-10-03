@@ -1,0 +1,6 @@
+# Preserve original measurement, response, and evidence bytes across checkouts.
+results/** -text -whitespace
+src/jev_bench/suites/hard_case/data/** -text -whitespace
+src/jev_bench/suites/hard_case/compact/** -text -whitespace
+# Diff context whitespace is part of the checksum-pinned runtime patch.
+src/jev_bench/runtime/no-cache.patch -whitespace

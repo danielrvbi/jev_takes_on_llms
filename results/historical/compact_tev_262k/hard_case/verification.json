@@ -1,0 +1,184 @@
+{
+  "started_utc": "2026-10-02T12:55:39.688053+00:00",
+  "original_documents_unchanged_from_HEAD": {
+    "policy_wording.md": "0071e32559ee3fbd974b3bb8522a00593fe27bdcca453bfe389fcca39b18a3ad",
+    "fnol.md": "25a7bdec3a8af79462149ded6a4151b4633dd6c68035dc5fdfad6cc26f7a8655",
+    "customer_emails.md": "687f375b852de30f26717fab45a897c79511f64efa80b9e202e7c80086b34286",
+    "adjuster_notes.md": "260a0b21135db848cb7c2e2847bca46a3d4a17880e7e064a78a81c7167e3f2c3",
+    "repair_invoices.md": "4edb7c2047952d04e32ae240262a675156d78441e7bccc7ab3454e9e286e0a9d",
+    "police_report.md": "6dd350c2aa00bd89f7182247173968caf1c35a5529912c409e7ec41951bf146e",
+    "previous_claims.md": "83a02a5c72e66df357fc42ff46548408a1d8ee58160aa8bc09baf84e0fd211cf",
+    "internal_guidelines.md": "d453be7010b55afef30846f581535bfc3eb15aeb436c6c003bd5559a6703c87d",
+    "timeline.md": "9e2a443034af0fc7dd9a1a5baa5871dd5b9309fea490b6a10bd9225019811b88"
+  },
+  "previous_results_baseline": {
+    "hard_case/results/smoke/summary.csv": "56c000edb3f624904f2480b9f4c84c834ff71389105bb4eb48711361d10ee2c8",
+    "hard_case/results/smoke/metadata.json": "b569cf09c98bde8f594cdd69094e9a8b580038a7e905fce038b364f542368964",
+    "hard_case/results/smoke/raw.csv": "8381bb615115b16baae1fcd62691fa7e305d1256e69067cbec2a216927affed7",
+    "hard_case/results/smoke/attempt_history.csv": "b58f504f8e9765ef29081325eca0ed14fd427f0ba6ee2ef38a02592ea3408a35",
+    "hard_case/results/tev_10/summary.csv": "0f15b6e744088d4ce9d955b191917d71d68aa731c6c51fd8c7ce8f68fa225f79",
+    "hard_case/results/tev_10/metadata.json": "36915cfa061e2a62e237735114aec9832cccc0cb39e4558e63b36834b0f8264e",
+    "hard_case/results/tev_10/raw.csv": "d73111528d0627222bb13487aa1c1faffd7ca507a5ca0edf52d74cb34c485d1c",
+    "hard_case/results/tev_10/attempt_history.csv": "d73111528d0627222bb13487aa1c1faffd7ca507a5ca0edf52d74cb34c485d1c"
+  },
+  "packet": {
+    "source_filenames": [
+      "policy_wording.md",
+      "fnol.md",
+      "customer_emails.md",
+      "adjuster_notes.md",
+      "repair_invoices.md",
+      "police_report.md",
+      "previous_claims.md",
+      "internal_guidelines.md",
+      "timeline.md"
+    ],
+    "sha256": "f33ea0b301fe514830f3e79cc02f8c25c2d3193b2fa3dd87ee1418417055c881",
+    "character_count": 44355,
+    "word_count": 5419,
+    "utf8_byte_count": 44632,
+    "profile": "compact",
+    "original_source_sha256": "93f2e05df4e5c882f8bd7f4e0a263391f6020be646a84f68e1ccd3a46da9d261",
+    "compact_packet_sha256": "f33ea0b301fe514830f3e79cc02f8c25c2d3193b2fa3dd87ee1418417055c881",
+    "source_map_sha256": "3958163a9779936ff9abf9fe3fca438f9a218b117dcaa109e2d5fc88960a0fe3",
+    "json_encoded_bytes": 44731
+  },
+  "aliases": [
+    {
+      "inference_model": "tev1-hard:0.8b-ctx262144",
+      "weight_blob": "sha256-fa9732e3924db99f614181a7a28384a0891ae17f478db228a47c989462b2405a",
+      "num_ctx": 262144
+    },
+    {
+      "inference_model": "tev1-hard:4b-ctx262144",
+      "weight_blob": "sha256-35f9281a3df58b566b24091572467001906a5a6aac879fe8005c4db19c8d4a2e",
+      "num_ctx": 262144
+    }
+  ],
+  "request_bytes": {
+    "tev1-hard:0.8b-ctx262144": 50083,
+    "tev1-hard:4b-ctx262144": 50081
+  },
+  "tests": {
+    "original": 38,
+    "hard_case": 43
+  },
+  "ollama_ps_observations": [
+    {
+      "timestamp_utc": "2026-10-02T12:55:52.139321+00:00",
+      "cli": "NAME                      ID              SIZE     PROCESSOR    CONTEXT    UNTIL              \ntev1-hard:4b-ctx262144    002ef01e490d    14 GB    100% GPU     262144     4 minutes from now    \n",
+      "api": {
+        "models": [
+          {
+            "model": "tev1-hard:4b-ctx262144",
+            "name": "tev1-hard:4b-ctx262144",
+            "digest": "002ef01e490db9175b08be55597ab714b9aa33d2bc4c670022ab71ce8c7ffd4b",
+            "expires_at": "2026-10-02T15:00:43.543553+02:00",
+            "size": 14522767114,
+            "size_vram": 14522767114,
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen35",
+              "families": [
+                "qwen35"
+              ],
+              "parameter_size": "4.2B",
+              "quantization_level": "Q8_0"
+            },
+            "context_length": 262144
+          }
+        ]
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-02T12:56:24.850473+00:00",
+      "cli": "NAME    ID    SIZE    PROCESSOR    CONTEXT    UNTIL \n",
+      "api": {
+        "models": []
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-02T12:56:36.379037+00:00",
+      "cli": "NAME    ID    SIZE    PROCESSOR    CONTEXT    UNTIL \n",
+      "api": {
+        "models": []
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-02T12:56:50.580641+00:00",
+      "cli": "NAME                      ID              SIZE     PROCESSOR    CONTEXT    UNTIL              \ntev1-hard:4b-ctx262144    002ef01e490d    14 GB    100% GPU     262144     4 minutes from now    \n",
+      "api": {
+        "models": [
+          {
+            "model": "tev1-hard:4b-ctx262144",
+            "name": "tev1-hard:4b-ctx262144",
+            "digest": "002ef01e490db9175b08be55597ab714b9aa33d2bc4c670022ab71ce8c7ffd4b",
+            "expires_at": "2026-10-02T15:01:50.554036+02:00",
+            "size": 14522767114,
+            "size_vram": 14522767114,
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen35",
+              "families": [
+                "qwen35"
+              ],
+              "parameter_size": "4.2B",
+              "quantization_level": "Q8_0"
+            },
+            "context_length": 262144
+          }
+        ]
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-02T12:58:53.260444+00:00",
+      "purpose": "post-run load-only allocation verification; no claim inference/extra measured repetition",
+      "cli": "NAME                        ID              SIZE      PROCESSOR    CONTEXT    UNTIL              \ntev1-hard:0.8b-ctx262144    66d1f3fe58e6    5.8 GB    100% GPU     262144     4 minutes from now    \n",
+      "api": {
+        "models": [
+          {
+            "model": "tev1-hard:0.8b-ctx262144",
+            "name": "tev1-hard:0.8b-ctx262144",
+            "digest": "66d1f3fe58e67fdaaa4e7316caf17cfde90fe5b9275a7f6e592817de6e8177e4",
+            "expires_at": "2026-10-02T15:03:53.233546+02:00",
+            "size": 5755298118,
+            "size_vram": 5755298118,
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen35",
+              "families": [
+                "qwen35"
+              ],
+              "parameter_size": "752.39M",
+              "quantization_level": "Q8_0"
+            },
+            "context_length": 262144
+          }
+        ]
+      }
+    }
+  ],
+  "completed_utc": "2026-10-02T12:59:40.735239+00:00",
+  "measured_repetitions": 20,
+  "successful_repetitions": 20,
+  "failures": 0,
+  "resume_verification": "Repeat ten-repetition command: zero pending calls, unchanged 20-row attempt history.",
+  "preservation_verification": "Nine originals match HEAD byte-for-byte; designer README, root benchmark/CLI/tests and all previous result files unchanged.",
+  "context_allocation_verified": {
+    "tev1-hard:0.8b-ctx262144": true,
+    "tev1-hard:4b-ctx262144": true
+  },
+  "limitations": [
+    "Manual compression is reviewed but semantic equivalence cannot be proved by line coverage; presentation may affect judgments.",
+    "Native token usage aggregates six scoring questions.",
+    "Identical native scores across repetitions; latency includes load/prefill on first call of each invocation and uses shared-prefix cache on later calls.",
+    "262144 is verified allocated capacity, not measured evidence length or accuracy."
+  ],
+  "final_test_results": {
+    "original_suite": "38 tests passed",
+    "hard_case_suite": "43 tests passed"
+  }
+}

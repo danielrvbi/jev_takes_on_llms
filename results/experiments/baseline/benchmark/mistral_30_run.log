@@ -1,0 +1,1149 @@
+Mandatory cache-free calls. Local latency includes private startup and teardown.
+593 pending measurements; successful repetitions are skipped.
+Failed mistral-small-latest, case 1, repetition 3: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 4: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 5: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 6: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 7: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 8: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 9: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 10: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 11: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 12: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 13: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 14: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 15: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 16: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 17: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 18: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 19: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 20: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 22: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 23: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 24: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 25: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 26: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 27: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 28: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 29: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 1, repetition 30: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 2: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 3: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 4: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 5: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 6: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 7: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 8: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 10: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 11: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 12: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 13: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 14: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 15: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 16: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 17: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 18: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 19: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 20: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 21: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 22: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 23: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 24: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 25: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 26: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 27: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 28: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 29: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 2, repetition 30: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 2: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 3: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 4: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 5: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 6: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 7: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 8: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 9: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 10: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 11: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 12: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 13: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 14: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 15: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 16: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 17: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 18: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 19: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 20: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 21: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 22: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 23: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 24: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 25: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 26: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 27: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 28: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 29: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 30: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 2: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 3: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 4: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 5: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 6: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 7: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 8: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 9: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 10: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 11: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 12: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 13: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 14: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 15: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 16: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 17: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 18: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 19: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 20: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 21: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 22: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 23: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 24: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 25: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 26: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 27: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 28: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 29: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 30: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 2: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 3: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 4: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 5: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 6: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 7: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 8: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 9: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 10: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 11: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 12: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 13: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 14: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 15: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 16: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 17: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 18: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 19: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 20: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 21: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 22: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 23: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 24: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 25: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 26: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 27: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 28: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 29: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 30: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 2: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 3: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 4: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 5: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 6: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 7: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 8: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 9: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 10: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 11: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 12: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 13: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 14: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 15: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 16: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 17: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 18: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 19: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 20: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 21: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 22: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 23: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 24: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 25: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 26: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 27: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 28: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 29: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 30: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 7, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 7, repetition 2: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 3: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 4: OutputParserException: Failed
+to parse DecisionOutput from completion {"requires_web_probability": 0.0, 
+"is_safe_probability": 0.0, "route_probabilities": {"answer_directly": 0.0, 
+"web_search": 0.0, "refuse": 1.0, "ask_clarification": 0.0}, 
+"freshness_probabilities": {"0": 0.0, "1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0, 
+"5": 0.0}}. Got: 1 validation error for DecisionOutput
+freshness_probabilities
+  Value error, A distribution must have a positive total probability 
+[type=value_error, input_value={'0': 0.0, '1': 0.0, '2':...0.0, '4': 0.0, '5': 
+0.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/value_error
+For troubleshooting, visit: 
+https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+Failed mistral-small-latest, case 7, repetition 5: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 6: OutputParserException: Failed
+to parse DecisionOutput from completion {"requires_web_probability": 0, 
+"is_safe_probability": 0, "route_probabilities": {"answer_directly": 0, 
+"web_search": 0, "refuse": 1, "ask_clarification": 0}, 
+"freshness_probabilities": {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0}}. 
+Got: 1 validation error for DecisionOutput
+freshness_probabilities
+  Value error, A distribution must have a positive total probability 
+[type=value_error, input_value={'0': 0, '1': 0, '2': 0, '3': 0, '4': 0, '5': 0},
+input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/value_error
+For troubleshooting, visit: 
+https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+Failed mistral-small-latest, case 7, repetition 7: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 8: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 7, repetition 9: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 10: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 11: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 12: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 13: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 14: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 15: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 16: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 17: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 18: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 19: OutputParserException: 
+Failed to parse DecisionOutput from completion {"requires_web_probability": 0.0,
+"is_safe_probability": 0.0, "route_probabilities": {"answer_directly": 0.0, 
+"web_search": 0.0, "refuse": 1.0, "ask_clarification": 0.0}, 
+"freshness_probabilities": {"0": 0.0, "1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0, 
+"5": 0.0}}. Got: 1 validation error for DecisionOutput
+freshness_probabilities
+  Value error, A distribution must have a positive total probability 
+[type=value_error, input_value={'0': 0.0, '1': 0.0, '2':...0.0, '4': 0.0, '5': 
+0.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/value_error
+For troubleshooting, visit: 
+https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+Failed mistral-small-latest, case 7, repetition 20: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 21: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 22: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 23: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 24: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 25: OutputParserException: 
+Failed to parse DecisionOutput from completion {"requires_web_probability": 0, 
+"is_safe_probability": 0, "route_probabilities": {"answer_directly": 0, 
+"web_search": 0, "refuse": 1, "ask_clarification": 0}, 
+"freshness_probabilities": {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0}}. 
+Got: 1 validation error for DecisionOutput
+freshness_probabilities
+  Value error, A distribution must have a positive total probability 
+[type=value_error, input_value={'0': 0, '1': 0, '2': 0, '3': 0, '4': 0, '5': 0},
+input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/value_error
+For troubleshooting, visit: 
+https://docs.langchain.com/oss/python/langchain/errors/OUTPUT_PARSING_FAILURE 
+Failed mistral-small-latest, case 7, repetition 26: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 27: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 28: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 29: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 7, repetition 30: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 364; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 364
+Failed mistral-small-latest, case 8, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 2: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 3: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 4: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 5: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 6: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 7: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 8: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 9: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 10: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 11: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 12: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 13: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 14: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 15: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 16: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 17: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 18: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 19: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 20: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 21: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 22: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 23: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 24: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 25: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 26: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 27: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 28: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 29: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 30: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 2: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 3: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 4: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 5: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 6: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 7: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 8: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 9: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 10: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 11: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 12: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 13: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 14: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 15: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 16: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 17: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 18: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 19: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 20: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 21: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 22: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 23: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 24: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 25: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 26: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 27: Cache verification failed: 
+Cache verification failed: KeyboardInterrupt: ; KeyboardInterrupt: measurement 
+interrupted
+mistral-small-latest · case 9 · repetition 27 ━━━━━━━━━              45% 0:04:47
+                Structured decision repeatability / distribution                
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━┓
+┃ Model                ┃ Case ┃ Valid ┃   Web ┃  Safe ┃ Fresh ┃ Route ┃ p95 ms ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━┩
+│ tev1:0.8b            │    1 │   1/1 │ 0.349 │ 0.572 │ 0.824 │  100% │ 1591.8 │
+│ tev1:0.8b            │    2 │   1/1 │ 0.550 │ 0.588 │ 1.552 │  100% │ 1554.1 │
+│ tev1:0.8b            │    3 │   1/1 │ 0.837 │ 0.826 │ 2.090 │  100% │ 1558.7 │
+│ tev1:0.8b            │    4 │   1/1 │ 0.587 │ 0.937 │ 0.862 │  100% │ 1542.7 │
+│ tev1:0.8b            │    5 │   1/1 │ 0.597 │ 0.783 │ 1.375 │  100% │ 1556.9 │
+│ tev1:0.8b            │    6 │   1/1 │ 0.417 │ 0.616 │ 1.488 │  100% │ 1561.6 │
+│ tev1:0.8b            │    7 │   1/1 │ 0.576 │ 0.021 │ 2.384 │  100% │ 1562.1 │
+│ tev1:0.8b            │    8 │   1/1 │ 0.391 │ 0.826 │ 0.881 │  100% │ 1558.3 │
+│ tev1:0.8b            │    9 │   1/1 │ 0.658 │ 0.820 │ 1.920 │  100% │ 1555.8 │
+│ tev1:0.8b            │   10 │   1/1 │ 0.474 │ 0.846 │ 1.073 │  100% │ 1571.4 │
+│ tev1:4b              │    1 │   1/1 │ 0.094 │ 0.933 │ 0.327 │  100% │ 4104.9 │
+│ tev1:4b              │    2 │   1/1 │ 0.899 │ 0.925 │ 2.981 │  100% │ 3815.5 │
+│ tev1:4b              │    3 │   1/1 │ 0.991 │ 0.980 │ 4.168 │  100% │ 3824.1 │
+│ tev1:4b              │    4 │   1/1 │ 0.180 │ 0.882 │ 0.284 │  100% │ 3827.1 │
+│ tev1:4b              │    5 │   1/1 │ 0.974 │ 0.974 │ 3.533 │  100% │ 3892.9 │
+│ tev1:4b              │    6 │   1/1 │ 0.839 │ 0.944 │ 2.084 │  100% │ 4251.5 │
+│ tev1:4b              │    7 │   1/1 │ 0.291 │ 0.003 │ 0.997 │  100% │ 4321.9 │
+│ tev1:4b              │    8 │   1/1 │ 0.113 │ 0.915 │ 0.325 │  100% │ 4359.1 │
+│ tev1:4b              │    9 │   1/1 │ 0.916 │ 0.978 │ 2.906 │  100% │ 4379.2 │
+│ tev1:4b              │   10 │   1/1 │ 0.984 │ 0.989 │ 3.988 │  100% │ 4370.4 │
+│ gemma4:e4b           │    1 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 11035… │
+│ gemma4:e4b           │    2 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 11705… │
+│ gemma4:e4b           │    3 │   1/1 │ 1.000 │ 1.000 │ 5.000 │  100% │ 11839… │
+│ gemma4:e4b           │    4 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 9305.9 │
+│ gemma4:e4b           │    5 │   1/1 │ 1.000 │ 1.000 │ 5.000 │  100% │ 12195… │
+│ gemma4:e4b           │    6 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 12675… │
+│ gemma4:e4b           │    7 │   1/1 │ 0.000 │ 0.000 │ 0.000 │  100% │ 13678… │
+│ gemma4:e4b           │    8 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 9980.4 │
+│ gemma4:e4b           │    9 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 12715… │
+│ gemma4:e4b           │   10 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 11976… │
+│ mistral-small-latest │    1 │  3/30 │ 0.000 │ 1.000 │ 0.000 │  100% │ 1030.5 │
+│ mistral-small-latest │    2 │  1/30 │ 1.000 │ 1.000 │ 3.000 │  100% │ 1491.0 │
+│ mistral-small-latest │    3 │  0/30 │     — │     — │     — │     — │  887.8 │
+│ mistral-small-latest │    4 │  0/30 │     — │     — │     — │     — │ 1567.0 │
+│ mistral-small-latest │    5 │  0/30 │     — │     — │     — │     — │ 1321.0 │
+│ mistral-small-latest │    6 │  0/30 │     — │     — │     — │     — │ 1169.6 │
+│ mistral-small-latest │    7 │  0/30 │     — │     — │     — │     — │ 1200.0 │
+│ mistral-small-latest │    8 │  0/30 │     — │     — │     — │     — │ 1179.8 │
+│ mistral-small-latest │    9 │  0/27 │     — │     — │     — │     — │ 1213.1 │
+│ mistral-small-latest │   10 │   0/1 │     — │     — │     — │     — │  867.6 │
+│ mistral-large-latest │    1 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 1893.7 │
+│ mistral-large-latest │    2 │   1/1 │ 0.950 │ 1.000 │ 3.900 │  100% │ 1866.3 │
+│ mistral-large-latest │    3 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 1582.6 │
+│ mistral-large-latest │    4 │   0/1 │     — │     — │     — │     — │ 1544.5 │
+│ mistral-large-latest │    5 │   1/1 │ 0.950 │ 1.000 │ 4.000 │  100% │ 2027.8 │
+│ mistral-large-latest │    6 │   0/1 │     — │     — │     — │     — │ 2426.5 │
+│ mistral-large-latest │    7 │   1/1 │ 0.000 │ 0.000 │ 0.000 │  100% │ 2772.3 │
+│ mistral-large-latest │    8 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 1410.9 │
+│ mistral-large-latest │    9 │   0/1 │     — │     — │     — │     — │ 1808.0 │
+│ mistral-large-latest │   10 │   0/1 │     — │     — │     — │     — │ 1858.4 │
+└──────────────────────┴──────┴───────┴───────┴───────┴───────┴───────┴────────┘
+Web/Safe/Fresh: means; Route: consistency; Valid: valid/attempted.
+Latest failures: 268; historical failures: 276. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/benchmark
+Interrupted. Saved repetitions will be reused on resume.

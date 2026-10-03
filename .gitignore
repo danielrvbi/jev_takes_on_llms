@@ -1,0 +1,36 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# uv
+# (uv.lock is committed on purpose)
+
+# Quarantined measurements and private compiler/runtime downloads
+results_contaminated_dont_use/
+.runtime/
+results/quarantine/
+results/.migration_backup/
+results/.migration_staging/
+*.lock

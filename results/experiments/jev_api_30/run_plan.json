@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "kind": "jev_api",
+  "models": [
+    "jev-1.13.0"
+  ],
+  "repetitions": 30,
+  "case_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "suites": [
+    "benchmark",
+    "hard_case"
+  ],
+  "warmups": 0,
+  "budget_usd": "0.10",
+  "max_new_calls": 330,
+  "jev_cache_exception": {
+    "version": 1,
+    "model": "jev-1.13.0",
+    "server_caching": "unverified",
+    "accept_valid_responses": true
+  }
+}
