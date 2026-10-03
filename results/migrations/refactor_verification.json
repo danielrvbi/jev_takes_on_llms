@@ -1,0 +1,26 @@
+{
+  "original_files_verified": 3454,
+  "suite_statistics_match_baseline": true,
+  "valid_measurements": {
+    "tev1:0.8b": {
+      "benchmark": 300,
+      "hard_case": 30
+    },
+    "tev1:4b": {
+      "benchmark": 300,
+      "hard_case": 30
+    },
+    "gemma4:e4b": {
+      "benchmark": 300,
+      "hard_case": 30
+    },
+    "jev-1.13.0": {
+      "benchmark": 300,
+      "hard_case": 30
+    }
+  },
+  "offline_tests": 138,
+  "paid_calls_during_refactor": 0,
+  "originals_backup": "results/.migration_backup/original",
+  "comparison_report": "results/reports/comparison/evaluation.md"
+}

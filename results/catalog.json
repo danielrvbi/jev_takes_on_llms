@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "datasets": {
+    "experiments/baseline": {
+      "archived": true,
+      "category": "experiments",
+      "original_location": "results/validation.json"
+    },
+    "experiments/tev_30": {
+      "archived": true,
+      "category": "experiments",
+      "original_location": "results/jev_30"
+    },
+    "experiments/gemma_30": {
+      "archived": true,
+      "category": "experiments",
+      "original_location": "results/gemma_30"
+    },
+    "experiments/jev_api_30": {
+      "archived": true,
+      "category": "experiments",
+      "original_location": "results/jev_api_10"
+    },
+    "experiments/jev_api_1": {
+      "archived": true,
+      "category": "experiments",
+      "original_location": "results/jev_api_1"
+    },
+    "experiments/prefix_pilot": {
+      "archived": true,
+      "category": "experiments",
+      "original_location": "results/prefix_pilot"
+    },
+    "historical/compact_gemma_2h": {
+      "archived": true,
+      "category": "historical",
+      "original_location": "hard_case/results/compact_gemma_2h"
+    },
+    "historical/compact_mistral": {
+      "archived": true,
+      "category": "historical",
+      "original_location": "hard_case/results/compact_mistral"
+    },
+    "historical/compact_tev_262k": {
+      "archived": true,
+      "category": "historical",
+      "original_location": "hard_case/results/compact_tev_262k"
+    },
+    "historical/independent": {
+      "archived": true,
+      "category": "historical",
+      "original_location": "hard_case/results/independent"
+    },
+    "historical/smoke": {
+      "archived": true,
+      "category": "historical",
+      "original_location": "hard_case/results/smoke"
+    },
+    "historical/tev_10": {
+      "archived": true,
+      "category": "historical",
+      "original_location": "hard_case/results/tev_10"
+    },
+    "quarantine/contaminated_dont_use": {
+      "archived": true,
+      "category": "quarantine",
+      "original_location": "results_contaminated_dont_use"
+    }
+  }
+}
