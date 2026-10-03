@@ -1,5 +1,6 @@
 """Single model registry with explicit suite-specific configuration."""
 from importlib import import_module
+from jev_bench.providers.azure_config import AZURE_MODELS
 
 LEGACY_MODELS = ("tev1:0.8b", "tev1:4b", "gemma4:e4b",
                  "mistral-small-latest", "mistral-large-latest")
@@ -7,6 +8,9 @@ MODELS = (*LEGACY_MODELS[:3], "jev-1.13.0", *LEGACY_MODELS[3:])
 
 
 def model_configuration(model, *, suite="benchmark", systemone_context=None):
+    if model in AZURE_MODELS:
+        from jev_bench.providers.azure_config import configuration
+        return configuration(model)
     if model not in MODELS:
         raise ValueError(f"Unsupported model: {model}")
     if model == "jev-1.13.0":
@@ -32,6 +36,9 @@ def model_configuration(model, *, suite="benchmark", systemone_context=None):
 
 def create_provider(model, *, suite="benchmark", audit_directory=None, systemone_context=None):
     model_configuration(model, suite=suite, systemone_context=systemone_context)
+    if model in AZURE_MODELS:
+        from jev_bench.providers.azure import AzureProvider
+        return AzureProvider(model, suite=suite, audit_directory=audit_directory)
     module, class_name = (("jev", "JevProvider") if model == "jev-1.13.0" else
                           ("ollama_systemone", "SystemOneProvider") if model.startswith("tev1:") else
                           ("ollama_chat", "OllamaChatProvider") if model.startswith("gemma4:") else

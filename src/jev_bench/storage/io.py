@@ -1,6 +1,6 @@
 """Atomic persistence and cross-process writer locks."""
 from contextlib import contextmanager
-import fcntl
+from jev_bench.storage.locking import fcntl
 import os
 from pathlib import Path
 import tempfile

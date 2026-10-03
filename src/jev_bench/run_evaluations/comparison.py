@@ -109,7 +109,7 @@ def load_source(directory, suite):
                 for field, value in values.items():
                     if value is not None and math.isfinite(value) and (not row[field] or float(row[field]) != value):
                         raise ValueError('Rejected Jev probabilities differ from audited response')
-                from jev_bench.providers.jev import count
+                from jev_bench.providers.jev_contract import count
                 usage = raw.get('usage') if isinstance(raw.get('usage'), dict) else {}
                 for field in ('input_tokens', 'output_tokens'):
                     expected = count(usage.get(field))
@@ -173,7 +173,8 @@ def build_combined_report(roots, suite='all', models=None, case_ids=None, includ
             if name in identities and identity != identities[name]:
                 raise ValueError('Source semantic prompts, schema, or inputs differ: ' + name)
             identities[name] = identity
-            variant = 'prefix_pilot' if source['definition'].get('prefix_strategy') else 'original'
+            variant = ('azure_prefix' if source['definition'].get('execution_policy', {}).get('provider_scope') == 'azure-prefix'
+                       else 'prefix_pilot') if source['definition'].get('prefix_strategy') else 'original'
             variant_id = fingerprint(source['definition'].get('prefix_strategy'))
             frame, history = source['frame'], source['history']
             if models:
@@ -203,7 +204,8 @@ def build_combined_report(roots, suite='all', models=None, case_ids=None, includ
             summary = (benchmark_summary if name == 'benchmark' else hard_summary)(frame, history)
             lines.extend([f'## {name} / {variant}', ''])
             if variant != 'original':
-                lines.extend(['Altered-prompt Mistral pilot; shown separately and never pooled with original-prompt measurements.', ''])
+                lines.extend(['Altered-prompt prefix experiment; shown separately and never pooled with original-prompt measurements. '
+                              'Azure latency is hosted wall time, not local cold-start latency.', ''])
             table(lines, ['Source', 'Models', 'Latest rows', 'Historical attempts'],
                   [[str(s['directory']), ', '.join(s['frame'].model.unique()), len(s['frame']), len(s['history'])] for s in sources])
             provenance = {'kind': 'combined_report', 'sources': [

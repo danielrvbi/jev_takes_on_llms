@@ -4,7 +4,28 @@ Audited structured judgment and repeatability experiments for Tev, Gemma, hosted
 Jev, and Mistral. Two suites measure output distributions; neither supplies gold
 labels or makes accuracy claims.
 
-## Install in the existing environment
+## Azure work-computer handoff
+
+Read [the complete Azure handoff guide](docs/azure_handoff.md). The GPT and Claude
+LangChain adapters are implemented: configure the local deployments and API keys,
+run the 16-call prefix pilot for the four configured models, then run both existing
+suites with 30 repetitions.
+Results use the same storage and evaluations, in a separate Azure prefix dataset.
+
+## Install from a fresh clone
+
+Python 3.12 and `uv` are required. Dependencies and their lockfile live in this repo.
+
+```bash
+uv sync --frozen --extra azure
+uv run --frozen --extra azure python -m jev_bench.run azure --help
+```
+
+Extras `local`, `mistral`, and `jev` install the respective integrations when needed.
+For all offline tests: `uv sync --frozen --extra azure --group test`, then run
+`.venv/bin/python -m unittest discover -s tests -p 'test_*.py'` (Unix).
+
+The prior parent environment is still usable:
 
 ```bash
 uv pip install --python ../.venv/bin/python --no-deps -e .
@@ -13,10 +34,8 @@ python -m jev_bench.run --help
 python -m jev_bench.run_evaluations --help
 ```
 
-The parent environment supplies dependencies. The editable installation adds only
-this package; there is no separate environment or lockfile. Commands and packaged
-suite inputs work from other working directories. Root `.env` loading preserves
-existing environment variables.
+Commands and packaged suite inputs work from other working directories. Root
+`.env` loading preserves existing environment variables.
 
 ## Repository layout
 

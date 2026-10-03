@@ -136,7 +136,7 @@ def migrate(root=PROJECT_ROOT, *, apply=False):
     backup = root / 'results/.migration_backup/original'
     with output_lock(migration_dir), ExitStack() as stack:
         # Respect orchestration, budget, and suite writers before snapshotting.
-        import fcntl
+        from jev_bench.storage.locking import fcntl
         for item in plan['moves']:
             source = root / item['source']
             if source.is_dir():

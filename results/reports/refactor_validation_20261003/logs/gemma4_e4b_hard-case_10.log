@@ -1,0 +1,13 @@
+Mandatory cache-free calls. Local latency includes private startup and teardown.
+9 pending measurements; successful repetitions are skipped.
+gemma4:e4b · repetition 10 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+                   Hard-case insurance judgment repeatability                   
+┏━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┓
+┃            ┃       ┃                 ┃ Historical        ┃         ┃         ┃
+┃ Model      ┃ Valid ┃ Latest failures ┃ failures          ┃ p50 ms  ┃ p95 ms  ┃
+┡━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━┩
+│ gemma4:e4b │ 10/10 │ 0               │ 0                 │ 72782.2 │ 75964.3 │
+└────────────┴───────┴─────────────────┴───────────────────┴─────────┴─────────┘
+Six independent probability distributions saved in summary.csv. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/experimen
+ts/refactor_validation_20261003_gemma4_e4b/hard_case

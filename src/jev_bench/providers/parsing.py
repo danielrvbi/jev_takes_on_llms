@@ -18,8 +18,12 @@ def raw_values(raw):
     """Recover JSON fields for auditing only; never repair or accept parsing failures."""
     if raw is None:
         return {}
-    calls = getattr(raw, "tool_calls", None) or []
-    candidate = calls[0].get("args") if calls else getattr(raw, "content", None)
+    calls = (raw.get("tool_calls") if isinstance(raw, dict) else getattr(raw, "tool_calls", None)) or []
+    candidate = calls[0].get("args") if calls else (raw.get("content") if isinstance(raw, dict) else getattr(raw, "content", None))
+    if isinstance(candidate, list):
+        texts = [block.get("text", "") for block in candidate
+                 if isinstance(block, dict) and block.get("type") == "text"]
+        candidate = "".join(texts) if texts else None
     if isinstance(candidate, dict):
         return candidate
     try:

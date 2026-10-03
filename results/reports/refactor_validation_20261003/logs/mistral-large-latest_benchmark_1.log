@@ -1,0 +1,36 @@
+Mandatory cache-free calls. Local latency includes private startup and teardown.
+10 pending measurements; successful repetitions are skipped.
+mistral-large-latest: input=372, output=122, cached=0; new calls=1
+mistral-large-latest: input=374, output=135, cached=0; new calls=2
+mistral-large-latest: input=374, output=122, cached=0; new calls=3
+mistral-large-latest: input=371, output=130, cached=0; new calls=4
+mistral-large-latest: input=373, output=137, cached=0; new calls=5
+mistral-large-latest: input=374, output=139, cached=0; new calls=6
+mistral-large-latest: input=382, output=146, cached=0; new calls=7
+Failed mistral-large-latest, repetition 1: Cache verification failed: Cache 
+verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 296; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 296
+mistral-large-latest: input=380, output=122, cached=296; new calls=8
+mistral-large-latest · repetition 1 ━━━━━━━━━━━━━━━━━━━━━━━━╸        80% 0:00:04
+                Structured decision repeatability / distribution                
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━┓
+┃ Model                ┃ Case ┃ Valid ┃   Web ┃  Safe ┃ Fresh ┃ Route ┃ p95 ms ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━┩
+│ mistral-large-latest │    1 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 1658.3 │
+│ mistral-large-latest │    2 │   1/1 │ 0.950 │ 1.000 │ 3.200 │  100% │ 1826.7 │
+│ mistral-large-latest │    3 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 1838.9 │
+│ mistral-large-latest │    4 │   1/1 │ 0.010 │ 1.000 │ 0.060 │  100% │ 2455.3 │
+│ mistral-large-latest │    5 │   1/1 │ 0.950 │ 1.000 │ 4.000 │  100% │ 2639.0 │
+│ mistral-large-latest │    6 │   1/1 │ 0.950 │ 1.000 │ 2.700 │  100% │ 1780.3 │
+│ mistral-large-latest │    7 │   1/1 │ 0.000 │ 0.000 │ 0.000 │  100% │ 1841.0 │
+│ mistral-large-latest │    8 │   0/1 │     — │     — │     — │     — │ 1499.0 │
+└──────────────────────┴──────┴───────┴───────┴───────┴───────┴───────┴────────┘
+Web/Safe/Fresh: means; Route: consistency; Valid: valid/attempted.
+Latest failures: 1; historical failures: 1. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/experimen
+ts/refactor_validation_20261003_mistral-large-latest/benchmark
+Benchmark error: RunStopped: Stopped after saved failure: Cache verification 
+failed: Cache verification failed: ValueError: Mistral cached_tokens must be 
+explicitly numeric zero; received 296; Cache verification failed: Mistral 
+cached_tokens must be explicitly numeric zero; received 296
