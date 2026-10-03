@@ -1,4 +1,4 @@
-"""Hosted Jev execution. Typed results never bypass the strict cache gate."""
+"""Hosted Jev execution with opt-in, explicitly unverified server caching."""
 import asyncio
 from contextlib import contextmanager
 from decimal import Decimal, InvalidOperation
@@ -13,7 +13,7 @@ from langchain_typesafe import Choice, Noul, NoulCriteria, Score, TypeSafeClassi
 from langsmith import tracing_context
 
 from execution import (atomic_write, disable_client_cache, fingerprint, new_audit,
-                       save_audit, verify_request_binding)
+                       save_audit, verify_request_binding, JEV_CACHE_EXCEPTION)
 from run_control import RunStopped
 
 JEV_MODEL = 'jev-1.13.0'
@@ -31,6 +31,18 @@ def configuration():
             'temperature': None, 'seed': None, 'structured_method': 'native',
             'automatic_retries': 0, 'timeout_seconds': TIMEOUT, 'base_url': BASE_URL,
             'context_override': None, 'truncation_policy': 'reject'}
+
+
+def cache_exception_for_root(root):
+    path = Path(root) / 'run_plan.json'
+    if not path.exists():
+        return None
+    plan = json.loads(path.read_text())
+    exception = plan.get('jev_cache_exception')
+    if exception is not None and (exception != JEV_CACHE_EXCEPTION
+            or plan.get('kind') != 'jev_api' or plan.get('models') != [JEV_MODEL]):
+        raise ValueError('Invalid Jev cache exception in target manifest')
+    return exception
 
 
 def typed_questions(questions):
@@ -135,6 +147,8 @@ def validate_selection(root, models, warmups, max_new_calls):
     if warmups != 0 or max_new_calls is None:
         raise ValueError('Jev requires --warmups 0 and an explicit --max-new-calls limit')
     root = Path(root)
+    if cache_exception_for_root(root) and models != [JEV_MODEL]:
+        raise ValueError('The server-cache exception supports Jev-only runs')
     # Neither direct entrypoint may silently retry a rejected run from another suite.
     for suite in ('benchmark', 'hard_case'):
         history = root / suite / 'attempt_history.csv'
@@ -170,6 +184,7 @@ class JevProvider:
         self.questions = questions
         self.mapper = mapper
         self.budget = budget or JevBudget.for_root(self.audit_directory.parent.parent)
+        self.cache_exception = cache_exception_for_root(self.audit_directory.parent.parent)
         self.transport_factory = transport_factory or (
             lambda: httpx2.HTTPTransport(retries=0, trust_env=False))
         self.purpose = 'measurement'
@@ -187,14 +202,21 @@ class JevProvider:
             raise ValueError('Jev request exceeds the reviewed 60 KiB payload budget')
         audit = new_audit(self.model, payload, self.audit_directory, 'typesafe', self.purpose)
         audit['langchain_cache'] = False
+        audit['cache_status'] = 'unverified'
+        if self.cache_exception:
+            audit['cache_exception'] = self.cache_exception
         audit['runtime'] = {'provider': 'TypeSafe hosted', 'integration': 'langchain-typesafe',
                             'configuration': configuration(), 'evidence_boundary': CACHE_REJECTION}
+        if self.cache_exception:
+            audit['runtime']['cache_exception'] = self.cache_exception
         audit['runtime_sha256'] = fingerprint(audit['runtime'])
         started = time.perf_counter()
         reservation = False
         classifier = None
+        interruption = None
 
         def record_request(actual):
+            nonlocal reservation
             if audit.get('requests'):
                 raise RunStopped('Jev permits only one HTTP send per measurement')
             if actual.method != 'POST' or str(actual.url) != ENDPOINT:
@@ -206,7 +228,6 @@ class JevProvider:
             audit['request_sha256'] = fingerprint(body)
             verify_request_binding(audit)
             self.budget.reserve(audit['call_id'])
-            nonlocal reservation
             reservation = True
 
         def record_response(response):
@@ -231,6 +252,7 @@ class JevProvider:
             audit['provider_error'] = type(error).__name__
             if isinstance(error, (KeyboardInterrupt, SystemExit)):
                 audit['interrupted'] = True
+                interruption = error
         finally:
             if classifier is not None and classifier.async_client is not None:
                 try:
@@ -243,23 +265,36 @@ class JevProvider:
             audit['model_identity'] = {'requested_model': self.model,
                 'resolved_model': raw.get('model'), 'request_id': audit.get('request_id')}
             audit['model_sha256'] = fingerprint(audit['model_identity'])
-            audit['error'] = CACHE_REJECTION
             audit['cold_latency_ms'] = (time.perf_counter() - started) * 1000
             audit['response'] = raw
-            if reservation:
-                self.budget.finish(audit['call_id'], usage.get('input_tokens'), CACHE_REJECTION)
-            else:
-                self.budget.block(CACHE_REJECTION)
+            result = self.mapper({**raw, 'usage': {
+                'input_tokens': count(usage.get('input_tokens')),
+                'output_tokens': count(usage.get('output_tokens'))}})
+            errors = [result.error] if result.error else []
+            if audit.get('provider_error'):
+                errors.append('Provider error: ' + audit['provider_error'])
+            if audit.get('http_status') != 200:
+                errors.append('Jev request did not return HTTP 200')
+            if raw.get('model') != self.model:
+                errors.append('Resolved Jev model differs from requested model')
+            if not self.cache_exception:
+                errors.insert(0, 'Cache verification failed: ' + CACHE_REJECTION)
+            audit['error'] = '; '.join(errors)
+            try:
+                if reservation:
+                    self.budget.finish(audit['call_id'], usage.get('input_tokens'), audit['error'])
+                else:
+                    self.budget.block(audit['error'] or 'Jev request was not sent')
+            except Exception as error:
+                # An unresolved reservation remains charged and blocks resumption.
+                # Still retain response evidence if ledger persistence fails.
+                audit['budget_error'] = type(error).__name__
+                audit['error'] += ('; ' if audit['error'] else '') + 'Spending ledger error: ' + type(error).__name__
+            audit['accepted'] = bool(self.cache_exception and not audit['error'] and result.output is not None)
             linked = save_audit(audit)
-        result = self.mapper({**raw, 'usage': {
-            'input_tokens': count(usage.get('input_tokens')),
-            'output_tokens': count(usage.get('output_tokens'))}})
         result.raw_response = {**raw, 'execution_audit': linked}
-        result.error = 'Cache verification failed: ' + CACHE_REJECTION + (
-            '; provider error: ' + audit['provider_error'] if audit.get('provider_error') else '') + (
-            '; ' + result.error if result.error else '')
-        if audit.get('interrupted'):
-            error = KeyboardInterrupt()
-            error.audit = linked
-            raise error
+        result.error = audit['error']
+        if interruption is not None:
+            interruption.audit = linked
+            raise interruption
         return result

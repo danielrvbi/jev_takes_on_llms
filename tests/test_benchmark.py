@@ -355,6 +355,7 @@ class CliTests(unittest.TestCase):
             self.assertEqual(main(["--all"]), 0)
         models = runner.call_args.args[0]
         self.assertEqual(len(models), 6)
+        self.assertIn('jev-1.13.0', models)
         self.assertIn("gemma4:e4b", models)
         self.assertNotIn("gemma4:12b", models)
 

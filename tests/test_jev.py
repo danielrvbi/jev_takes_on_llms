@@ -1,7 +1,6 @@
 import copy
 import csv
 from decimal import Decimal
-import hashlib
 import io
 import json
 import math
@@ -19,7 +18,8 @@ from benchmark.providers.jev import JevProvider
 from benchmark.runner import ResultStore, measured_row, run_benchmark
 from benchmark.schemas import DecisionOutput
 from combined_reporting import build_combined_report
-from execution import POLICY, file_hash, fingerprint, revalidate_audit
+from execution import (POLICY, JEV_CACHE_EXCEPTION, file_hash, fingerprint,
+                       revalidate_audit, revalidate_row, enforce_result)
 from hard_case.loader import load_claim_packet
 from hard_case.providers.jev import JevProvider as HardJevProvider
 from hard_case.runner import ResultStore as HardStore, measured_row as hard_row, run_hard_case_benchmark
@@ -276,6 +276,127 @@ class JevTests(JevFixture):
                 budget.reserve('too-expensive')
 
 
+class JevCacheExceptionTests(JevFixture):
+    def enable(self):
+        self.root.mkdir(parents=True, exist_ok=True)
+        (self.root / 'run_plan.json').write_text(json.dumps({
+            'kind': 'jev_api', 'models': [JEV_MODEL], 'jev_cache_exception': JEV_CACHE_EXCEPTION}))
+
+    def test_ten_repetitions_both_suites_resume_reports_and_exact_columns(self):
+        requests = []
+        transports = []
+        def factory(**kwargs):
+            self.assertEqual(kwargs, {'retries': 0, 'trust_env': False})
+            def handle(request):
+                body = json.loads(request.content)
+                requests.append(body)
+                return httpx2.Response(200, json=response_body('route' not in body['questions']))
+            transport = TrackingTransport(handle)
+            transports.append(transport)
+            return transport
+        with patch('jev_execution.httpx2.HTTPTransport', side_effect=factory), \
+             patch('benchmark.runner.experiment_definition', return_value=definition()), \
+             patch('hard_case.runner.experiment_definition', return_value=definition('hard_case')), \
+             patch('benchmark.runner.report'), patch('hard_case.runner.report'):
+            self.assertEqual(run_jev(self.root, 10, 110, console=self.console,
+                                    allow_unverified_server_cache=True), 0)
+            self.assertEqual(len(requests), 110)
+            self.assertEqual(run_jev(self.root, 10, 110, console=self.console,
+                                    allow_unverified_server_cache=True), 0)
+            self.assertEqual(len(requests), 110)
+            with self.assertRaisesRegex(RunStopped, 'manifest changed'):
+                run_jev(self.root, 10, 110, console=self.console)
+        self.assertTrue(all(t.closed for t in transports))
+        for hard in (False, True):
+            suite = 'hard_case' if hard else 'benchmark'
+            columns = __import__('hard_case.metrics' if hard else 'benchmark.metrics',
+                                 fromlist=['RAW_COLUMNS']).RAW_COLUMNS
+            data = json.loads((self.root / suite / 'metadata.json').read_text())['experiment']
+            self.assertEqual(data['jev_cache_exception'], JEV_CACHE_EXCEPTION)
+            with (self.root / suite / 'raw.csv').open() as stream:
+                reader = csv.DictReader(stream)
+                self.assertEqual(reader.fieldnames, columns)
+                rows = list(reader)
+            self.assertEqual(len(rows), 10 if hard else 100)
+            for row in rows:
+                self.assertEqual(row['validation_success'], 'True')
+                self.assertEqual(row['cache_verified'], 'False')
+                self.assertEqual(row['failure_kind'], '')
+                revalidate_row(row, data)
+            raw = json.loads(rows[0]['raw_response_json'])
+            with self.assertRaisesRegex(ValueError, 'Cache verification failed'):
+                revalidate_audit(raw['execution_audit'], raw)
+            audit = revalidate_audit(raw['execution_audit'], raw, allow_unverified_jev=True)
+            self.assertFalse(audit['verified'])
+            self.assertEqual(audit['cache_status'], 'unverified')
+            self.assertEqual(requests[100 if hard else 0]['questions'],
+                             __import__('hard_case.prompts' if hard else 'benchmark.prompts',
+                                        fromlist=['systemone_questions']).systemone_questions())
+            if hard:
+                self.assertEqual(requests[100]['state'], load_claim_packet().text)
+            else:
+                self.assertEqual(requests[0]['state'], CASES[0].message)
+            bad_row = {**rows[0], 'cache_verified': 'True'}
+            with self.assertRaisesRegex(ValueError, 'cache status'):
+                revalidate_row(bad_row, data)
+            with self.assertRaisesRegex(ValueError, 'Cache verification failed'):
+                revalidate_row(rows[0], {k: v for k, v in data.items() if k != 'jev_cache_exception'})
+            for field, value in [('input_tokens', '1'),
+                                 (PROBABILITY_FIELDS[0] if hard else 'requires_web_probability', '.01')]:
+                with self.assertRaisesRegex(ValueError, 'differ'):
+                    revalidate_row({**rows[0], field: value}, data)
+        manifest = update_validation(self.root)
+        self.assertTrue(manifest['complete'])
+        self.assertEqual(manifest['valid_measurements'], 110)
+        self.assertFalse(manifest['cache_verified'])
+        ledger = json.loads((self.root / 'jev_budget.json').read_text())
+        self.assertIsNone(ledger['blocked_reason'])
+        self.assertEqual(len(ledger['reservations']), 110)
+        self.assertTrue(all(r['state'] == 'completed' for r in ledger['reservations']))
+        report, _ = build_combined_report([self.root])
+        self.assertIn('server caching unverified', report)
+        self.assertIn('requires_web_probability_mean', report)
+        self.assertIn('requires_human_review_mean', report)
+        self.assertIn('cache_verified remains false', report)
+
+    def test_exception_still_stops_after_provider_schema_and_model_errors(self):
+        invalid = response_body()
+        invalid['answers']['is_safe']['noul'] = 2
+        wrong_model = {**response_body(), 'model': 'jev-other'}
+        for status, body in [(401, {'error': 'fixture-secret-key'}), (302, {}),
+                             (200, {'answers': {}}), (200, invalid), (200, wrong_model)]:
+            with self.subTest(status=status, body=body), tempfile.TemporaryDirectory() as root:
+                self.root = Path(root)
+                self.enable()
+                provider = self.provider(body=body, status=status)
+                result = provider.invoke(CASES[0].message)
+                self.assertTrue(result.error)
+                self.assertFalse(result.raw_response['execution_audit']['accepted'])
+                self.assertNotIn('fixture-secret-key', json.dumps(result.raw_response))
+                with self.assertRaises(RunStopped):
+                    provider.invoke(CASES[0].message)
+                self.assertEqual(len(self.requests), 1)
+
+    def test_missing_usage_retains_maximum_charge_and_acceptance_needs_opt_in(self):
+        self.enable()
+        result = self.provider(body=response_body(usage=False)).invoke(CASES[0].message)
+        self.assertEqual(result.error, '')
+        self.assertIsNone(result.input_tokens)
+        ledger = json.loads((self.root / 'jev_budget.json').read_text())
+        self.assertEqual(Decimal(ledger['reservations'][0]['charge_usd']), MAX_REQUEST_CHARGE)
+        allowed = enforce_result(copy.deepcopy(result), JEV_MODEL, {}, self.root,
+                                 allow_unverified_jev=True)
+        self.assertEqual(allowed.error, '')
+        strict = enforce_result(copy.deepcopy(result), JEV_MODEL, {}, self.root)
+        self.assertTrue(strict.error.startswith('Cache verification failed:'))
+
+    def test_saved_strict_rejection_cannot_be_retried_with_exception(self):
+        self.provider().invoke(CASES[0].message)
+        with self.assertRaisesRegex(RunStopped, 'rejected attempt'):
+            run_jev(self.root, console=self.console, allow_unverified_server_cache=True)
+        self.assertEqual(len(self.requests), 1)
+
+
 class CombinedReportTests(JevFixture):
     def create_source(self, root, model='tev1:0.8b', hard=False, rejected=False, prefix=False):
         suite = 'hard_case' if hard else 'benchmark'
@@ -288,6 +409,24 @@ class CombinedReportTests(JevFixture):
         if rejected:
             self.root = root
             measured = self.provider(hard).invoke(load_claim_packet().text if hard else CASES[0].message)
+        elif prefix:
+            import httpx
+            from langchain_mistralai import ChatMistralAI
+            from benchmark.providers.mistral import MistralProvider
+            def handle(request):
+                return httpx.Response(200, json={'id': 'prefix-fixture', 'model': model,
+                    'choices': [{'index': 0, 'finish_reason': 'stop', 'message': {
+                        'role': 'assistant', 'content': json.dumps(values())}}],
+                    'usage': {'prompt_tokens': 100, 'completion_tokens': 30,
+                              'prompt_tokens_details': {'cached_tokens': 0}}})
+            def factory(**settings):
+                return ChatMistralAI(**settings, client=httpx.Client(
+                    base_url='https://fixture/v1', transport=httpx.MockTransport(handle)))
+            with patch.dict('os.environ', {'MISTRAL_API_KEY': 'fixture'}), \
+                 patch('benchmark.providers.mistral.ChatMistralAI', side_effect=factory):
+                provider = MistralProvider(model, audit_directory=root / suite / 'execution_audit')
+                provider.prefix_experiment = True
+                measured = provider.invoke(CASES[0].message)
         elif hard:
             from hard_case.providers.base import validate_result
             measured = audited_result(validate_result({f: .5 for f in PROBABILITY_FIELDS}, {}), model, load_claim_packet().text)
@@ -295,6 +434,34 @@ class CombinedReportTests(JevFixture):
             measured = audited_result(successful_result(), model, CASES[0].message)
         store.record(hard_row(model, 1, measured, 10) if hard else measured_row(model, CASES[0], 1, measured, 10))
         return store
+
+    def test_mistral_prefix_pilot_is_reported_separately(self):
+        original, prefix = self.root / 'original', self.root / 'prefix'
+        self.create_source(original)
+        self.create_source(prefix, model='mistral-small-latest', prefix=True)
+        report, _ = build_combined_report([original, prefix])
+        self.assertIn('## benchmark / original', report)
+        self.assertIn('## benchmark / prefix_pilot', report)
+        self.assertIn('never pooled', report)
+
+    def test_rejected_values_and_usage_cannot_be_changed_in_csv(self):
+        for field in ('requires_web_probability', 'input_tokens'):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as root:
+                root = Path(root)
+                self.create_source(root, model=JEV_MODEL, rejected=True)
+                for name in ('raw.csv', 'attempt_history.csv'):
+                    path = root / 'benchmark' / name
+                    with path.open() as stream:
+                        reader = csv.DictReader(stream)
+                        columns = reader.fieldnames
+                        rows = list(reader)
+                    rows[0][field] = '0.1' if field.endswith('probability') else '1'
+                    with path.open('w') as stream:
+                        writer = csv.DictWriter(stream, fieldnames=columns)
+                        writer.writeheader()
+                        writer.writerows(rows)
+                with self.assertRaisesRegex(ValueError, 'differ'):
+                    build_combined_report([root])
 
     def test_combined_report_parity_rejections_plots_and_sources_unchanged(self):
         sources = [self.root / 'local', self.root / 'hosted']

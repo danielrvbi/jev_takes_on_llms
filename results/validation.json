@@ -1,0 +1,156 @@
+{
+  "policy": {
+    "version": 2,
+    "mode": "mandatory_cache_free",
+    "local_boundary": "fresh private server, worker and client for every call",
+    "local_verification": "every prompt including scoring retries: zero initial cache, full evaluation, no restore or truncation",
+    "within_request_prefix_reuse": false,
+    "hosted_verification": "fresh prompt_cache_key AND explicit numeric cached_tokens=0",
+    "langchain_cache": false,
+    "automatic_request_retries": 0,
+    "latency": "cold wall time includes startup, loading, verification and teardown",
+    "ollama_commit": "cc4069396f3ad2c370c53eed2e4a42ac13adab84"
+  },
+  "updated_at_utc": "2026-10-02T20:37:39.056679+00:00",
+  "complete": false,
+  "expected_measurements": 55,
+  "valid_measurements": 42,
+  "suites": {
+    "benchmark": {
+      "expected_keys": 50,
+      "measurement_keys": 50,
+      "passed": 37,
+      "failures": [
+        {
+          "key": [
+            "mistral-large-latest",
+            4,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 296; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 296"
+        },
+        {
+          "key": [
+            "mistral-large-latest",
+            6,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 296; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 296"
+        },
+        {
+          "key": [
+            "mistral-large-latest",
+            9,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 296; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 296"
+        },
+        {
+          "key": [
+            "mistral-large-latest",
+            10,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 296; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 296"
+        },
+        {
+          "key": [
+            "mistral-small-latest",
+            2,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 348; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 348"
+        },
+        {
+          "key": [
+            "mistral-small-latest",
+            3,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 348; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 348"
+        },
+        {
+          "key": [
+            "mistral-small-latest",
+            4,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 348; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 348"
+        },
+        {
+          "key": [
+            "mistral-small-latest",
+            5,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 348; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 348"
+        },
+        {
+          "key": [
+            "mistral-small-latest",
+            6,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 348; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 348"
+        },
+        {
+          "key": [
+            "mistral-small-latest",
+            7,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 348; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 348"
+        },
+        {
+          "key": [
+            "mistral-small-latest",
+            8,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 348; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 348"
+        },
+        {
+          "key": [
+            "mistral-small-latest",
+            9,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 348; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 348"
+        },
+        {
+          "key": [
+            "mistral-small-latest",
+            10,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 348; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 348"
+        }
+      ],
+      "missing": [],
+      "attempts": 316,
+      "linked_attempts": 316
+    },
+    "hard_case": {
+      "expected_keys": 5,
+      "measurement_keys": 5,
+      "passed": 5,
+      "failures": [],
+      "missing": [],
+      "attempts": 5,
+      "linked_attempts": 5
+    }
+  }
+}

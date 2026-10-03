@@ -1,0 +1,113 @@
+Mandatory cache-free calls. Local latency includes private startup and teardown.
+50 pending measurements; successful repetitions are skipped.
+Failed mistral-small-latest, case 2, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 3, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 4, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 5, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 6, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 7, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 8, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 9, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-small-latest, case 10, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+Failed mistral-large-latest, case 4, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 296; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 296
+Failed mistral-large-latest, case 6, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 296; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 296
+Failed mistral-large-latest, case 9, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 296; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 296
+Failed mistral-large-latest, case 10, repetition 1: Cache verification failed: 
+Cache verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 296; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 296
+mistral-large-latest · case 10 · repetition 1 ━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+                Structured decision repeatability / distribution                
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━┓
+┃ Model                ┃ Case ┃ Valid ┃   Web ┃  Safe ┃ Fresh ┃ Route ┃ p95 ms ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━┩
+│ tev1:0.8b            │    1 │   1/1 │ 0.349 │ 0.572 │ 0.824 │  100% │ 1591.8 │
+│ tev1:0.8b            │    2 │   1/1 │ 0.550 │ 0.588 │ 1.552 │  100% │ 1554.1 │
+│ tev1:0.8b            │    3 │   1/1 │ 0.837 │ 0.826 │ 2.090 │  100% │ 1558.7 │
+│ tev1:0.8b            │    4 │   1/1 │ 0.587 │ 0.937 │ 0.862 │  100% │ 1542.7 │
+│ tev1:0.8b            │    5 │   1/1 │ 0.597 │ 0.783 │ 1.375 │  100% │ 1556.9 │
+│ tev1:0.8b            │    6 │   1/1 │ 0.417 │ 0.616 │ 1.488 │  100% │ 1561.6 │
+│ tev1:0.8b            │    7 │   1/1 │ 0.576 │ 0.021 │ 2.384 │  100% │ 1562.1 │
+│ tev1:0.8b            │    8 │   1/1 │ 0.391 │ 0.826 │ 0.881 │  100% │ 1558.3 │
+│ tev1:0.8b            │    9 │   1/1 │ 0.658 │ 0.820 │ 1.920 │  100% │ 1555.8 │
+│ tev1:0.8b            │   10 │   1/1 │ 0.474 │ 0.846 │ 1.073 │  100% │ 1571.4 │
+│ tev1:4b              │    1 │   1/1 │ 0.094 │ 0.933 │ 0.327 │  100% │ 4104.9 │
+│ tev1:4b              │    2 │   1/1 │ 0.899 │ 0.925 │ 2.981 │  100% │ 3815.5 │
+│ tev1:4b              │    3 │   1/1 │ 0.991 │ 0.980 │ 4.168 │  100% │ 3824.1 │
+│ tev1:4b              │    4 │   1/1 │ 0.180 │ 0.882 │ 0.284 │  100% │ 3827.1 │
+│ tev1:4b              │    5 │   1/1 │ 0.974 │ 0.974 │ 3.533 │  100% │ 3892.9 │
+│ tev1:4b              │    6 │   1/1 │ 0.839 │ 0.944 │ 2.084 │  100% │ 4251.5 │
+│ tev1:4b              │    7 │   1/1 │ 0.291 │ 0.003 │ 0.997 │  100% │ 4321.9 │
+│ tev1:4b              │    8 │   1/1 │ 0.113 │ 0.915 │ 0.325 │  100% │ 4359.1 │
+│ tev1:4b              │    9 │   1/1 │ 0.916 │ 0.978 │ 2.906 │  100% │ 4379.2 │
+│ tev1:4b              │   10 │   1/1 │ 0.984 │ 0.989 │ 3.988 │  100% │ 4370.4 │
+│ gemma4:e4b           │    1 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 11035… │
+│ gemma4:e4b           │    2 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 11705… │
+│ gemma4:e4b           │    3 │   1/1 │ 1.000 │ 1.000 │ 5.000 │  100% │ 11839… │
+│ gemma4:e4b           │    4 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 9305.9 │
+│ gemma4:e4b           │    5 │   1/1 │ 1.000 │ 1.000 │ 5.000 │  100% │ 12195… │
+│ gemma4:e4b           │    6 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 12675… │
+│ gemma4:e4b           │    7 │   1/1 │ 0.000 │ 0.000 │ 0.000 │  100% │ 13678… │
+│ gemma4:e4b           │    8 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 9980.4 │
+│ gemma4:e4b           │    9 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 12715… │
+│ gemma4:e4b           │   10 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 11976… │
+│ mistral-small-latest │    1 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │  854.3 │
+│ mistral-small-latest │    2 │   0/1 │     — │     — │     — │     — │  805.0 │
+│ mistral-small-latest │    3 │   0/1 │     — │     — │     — │     — │ 2473.5 │
+│ mistral-small-latest │    4 │   0/1 │     — │     — │     — │     — │  900.3 │
+│ mistral-small-latest │    5 │   0/1 │     — │     — │     — │     — │  832.0 │
+│ mistral-small-latest │    6 │   0/1 │     — │     — │     — │     — │ 1322.0 │
+│ mistral-small-latest │    7 │   0/1 │     — │     — │     — │     — │  811.7 │
+│ mistral-small-latest │    8 │   0/1 │     — │     — │     — │     — │  813.8 │
+│ mistral-small-latest │    9 │   0/1 │     — │     — │     — │     — │  864.7 │
+│ mistral-small-latest │   10 │   0/1 │     — │     — │     — │     — │  867.6 │
+│ mistral-large-latest │    1 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 1893.7 │
+│ mistral-large-latest │    2 │   1/1 │ 0.950 │ 1.000 │ 3.900 │  100% │ 1866.3 │
+│ mistral-large-latest │    3 │   1/1 │ 1.000 │ 1.000 │ 4.000 │  100% │ 1582.6 │
+│ mistral-large-latest │    4 │   0/1 │     — │     — │     — │     — │ 1544.5 │
+│ mistral-large-latest │    5 │   1/1 │ 0.950 │ 1.000 │ 4.000 │  100% │ 2027.8 │
+│ mistral-large-latest │    6 │   0/1 │     — │     — │     — │     — │ 2426.5 │
+│ mistral-large-latest │    7 │   1/1 │ 0.000 │ 0.000 │ 0.000 │  100% │ 2772.3 │
+│ mistral-large-latest │    8 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │ 1410.9 │
+│ mistral-large-latest │    9 │   0/1 │     — │     — │     — │     — │ 1808.0 │
+│ mistral-large-latest │   10 │   0/1 │     — │     — │     — │     — │ 1858.4 │
+└──────────────────────┴──────┴───────┴───────┴───────┴───────┴───────┴────────┘
+Web/Safe/Fresh: means; Route: consistency; Valid: valid/attempted.
+Latest failures: 13; historical failures: 13. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/benchmark

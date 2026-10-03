@@ -10,14 +10,14 @@ from rich.console import Console
 from benchmark.cases import CASES
 from benchmark.runner import run_benchmark
 from hard_case.runner import run_hard_case_benchmark
-from execution import atomic_write, fingerprint, now, output_lock
+from execution import atomic_write, fingerprint, now, output_lock, JEV_CACHE_EXCEPTION
 from jev_execution import JEV_MODEL, JevBudget
 from run_control import RunStopped
 from validation import update_validation
 
 
 def run_jev(output_dir=Path('results/jev_api_30'), repetitions=30, max_new_calls=330,
-            budget_usd='0.10', console=None):
+            budget_usd='0.10', console=None, *, allow_unverified_server_cache=False):
     console = console or Console()
     root = Path(output_dir).resolve()
     if type(repetitions) is not int or not 1 <= repetitions <= 30:
@@ -27,6 +27,8 @@ def run_jev(output_dir=Path('results/jev_api_30'), repetitions=30, max_new_calls
             'repetitions': repetitions, 'case_ids': [case.case_id for case in CASES],
             'suites': ['benchmark', 'hard_case'], 'warmups': 0,
             'budget_usd': str(budget.limit), 'max_new_calls': max_new_calls}
+    if allow_unverified_server_cache:
+        plan['jev_cache_exception'] = JEV_CACHE_EXCEPTION
     if not (root / 'run_plan.json').exists() and any(
         (root / suite / 'metadata.json').exists() for suite in plan['suites']):
         raise RunStopped('Existing results have no Jev target manifest; select a new root')
@@ -81,10 +83,13 @@ def main(argv=None):
     parser.add_argument('--repetitions', type=int, default=30)
     parser.add_argument('--max-new-calls', type=int, default=330)
     parser.add_argument('--budget-usd', default='0.10')
+    parser.add_argument('--allow-unverified-server-cache', action='store_true',
+                        help='Accept valid Jev probabilities while marking server caching unverified')
     args = parser.parse_args(argv)
     load_dotenv(Path(__file__).resolve().parent / '.env', override=False)
     try:
-        return run_jev(args.output_dir, args.repetitions, args.max_new_calls, args.budget_usd)
+        return run_jev(args.output_dir, args.repetitions, args.max_new_calls, args.budget_usd,
+                       allow_unverified_server_cache=args.allow_unverified_server_cache)
     except KeyboardInterrupt:
         return 130
     except (ValueError, OSError, RunStopped):

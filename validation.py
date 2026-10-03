@@ -33,6 +33,8 @@ def _build_validation(root):
         repetitions = range(1, run_plan['repetitions'] + 1)
         expected = {'benchmark': {(JEV_MODEL, c, r) for c in run_plan['case_ids'] for r in repetitions},
                     'hard_case': {(JEV_MODEL, r) for r in repetitions}}
+        from jev_execution import cache_exception_for_root
+        cache_exception_for_root(root)
     prefix = any(json.loads((root / suite / 'metadata.json').read_text()).get('experiment', {}).get('prefix_strategy')
                  for suite in expected if (root / suite / 'metadata.json').exists())
     if prefix:
@@ -42,6 +44,9 @@ def _build_validation(root):
     target = sum(map(len, expected.values()))
     manifest = {'experiment': 'jev_api' if run_plan else 'prefix_pilot' if prefix else 'original', 'policy': POLICY, 'updated_at_utc': now(), 'complete': False,
                 'expected_measurements': target, 'valid_measurements': 0, 'suites': {}}
+    if run_plan and run_plan.get('jev_cache_exception'):
+        manifest['jev_cache_exception'] = run_plan['jev_cache_exception']
+        manifest['cache_verified'] = False
     call_ids, cache_keys, prefixes = set(), set(), set()
     for suite in expected:
         directory = root / suite
@@ -53,6 +58,9 @@ def _build_validation(root):
         metadata_path = directory / "metadata.json"
         metadata = json.loads(metadata_path.read_text()) if metadata_path.exists() else {}
         definition = metadata.get("experiment")
+        if definition is not None and (definition.get('jev_cache_exception') !=
+                (run_plan or {}).get('jev_cache_exception')):
+            raise ValueError('Jev cache exception differs between target and suite metadata')
         if path.exists():
             with path.open(newline='', encoding='utf-8') as f:
                 rows = list(csv.DictReader(f))
@@ -130,8 +138,11 @@ def update_validation(root):
                 try:
                     fcntl.flock(handle, fcntl.LOCK_SH | fcntl.LOCK_NB)
                 except BlockingIOError:
+                    plan_path = root / 'run_plan.json'
+                    plan = json.loads(plan_path.read_text()) if plan_path.exists() else None
                     manifest = {'policy': POLICY, 'updated_at_utc': now(), 'complete': False,
-                                'expected_measurements': 55, 'status': 'suite_writer_active'}
+                                'expected_measurements': 11 * plan['repetitions'] if plan else 55,
+                                'status': 'suite_writer_active'}
                     atomic_write(root / 'validation.json', lambda f: json.dump(manifest, f, indent=2))
                     return manifest
         return _build_validation(root)

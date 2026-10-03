@@ -17,7 +17,7 @@ from benchmark.cases import CASES
 from benchmark.metrics import RAW_COLUMNS, derive, flatten_values, is_success, results_frame, summarize
 from benchmark.plots import plot_results
 from benchmark.prompts import SYSTEM_PROMPT, systemone_questions
-from benchmark.providers import MODELS, create_provider
+from benchmark.providers import MODELS, create_provider, model_configuration
 from benchmark.providers.base import ProviderResult
 from benchmark.schemas import DecisionOutput
 from execution import (POLICY, atomic_write, output_lock, suite_directory, experiment_execution,
@@ -36,7 +36,7 @@ def experiment_definition(models=MODELS):
                     "pydantic", "pandas", "numpy", "matplotlib", "rich", "python-dotenv", "httpx",
                     *(['langchain-typesafe', 'httpx2'] if 'jev-1.13.0' in models else [])]:
         try:
-            dependencies[package] = importlib.metadata.version(package)
+            dependencies[package] = importlib.metadata.version(package) or 'version-unavailable'
         except importlib.metadata.PackageNotFoundError:
             dependencies[package] = "not-installed"
     return {
@@ -47,11 +47,8 @@ def experiment_definition(models=MODELS):
         "schema": DecisionOutput.model_json_schema(),
         "prompts": {"llm_system": SYSTEM_PROMPT, "systemone_questions": systemone_questions()},
         "model_configuration": {
-            model: (__import__('jev_execution').configuration() if model == 'jev-1.13.0' else {"provider": "systemone" if model.startswith("tev1:") else "langchain",
-                    "temperature": None if model.startswith("tev1:") else 0,
-                    "structured_method": "native" if model.startswith("tev1:") else "json_schema",
-                    "seed": None, "automatic_retries": 0,
-                    **({"local_model": model_identity(model)} if model.startswith(("tev1:", "gemma4:")) else {})}) for model in models
+            model: {**model_configuration(model),
+                    **({"local_model": model_identity(model)} if model.startswith(("tev1:", "gemma4:")) else {})} for model in models
         },
         "derivation": {"binary_threshold": 0.5, "entropy_base": 2,
                        "distribution_normalization": "derived calculations only", "std_ddof": 1},
@@ -222,9 +219,14 @@ def run_benchmark(models, cases, repetitions=30, warmups=2, output_dir="results"
         validate_selection(output_dir, models, warmups, max_new_calls)
     directory = suite_directory(output_dir, "benchmark")
     definition = {**(definition if definition is not None else experiment_definition(models)), "execution_policy": POLICY}
+    from jev_execution import cache_exception_for_root
+    cache_exception = cache_exception_for_root(output_dir) if 'jev-1.13.0' in models else None
+    if cache_exception:
+        definition = {**definition, "jev_cache_exception": cache_exception}
     if prefix_experiment:
         definition = {**definition, "prefix_strategy": PREFIX_STRATEGY}
-    console.print("Mandatory cache-free calls. Local latency includes private startup and teardown.")
+    console.print("Jev: server caching unverified; valid responses accepted by explicit exception."
+                  if cache_exception else "Mandatory cache-free calls. Local latency includes private startup and teardown.")
     with validation_on_exit(Path(output_dir)), output_lock(directory):
         store = ResultStore(directory, definition)
         pending = [(model, case, repetition) for model in models for case in cases
@@ -251,7 +253,7 @@ def run_benchmark(models, cases, repetitions=30, warmups=2, output_dir="results"
                         for _ in range(warmups):
                             guard.before_call()
                             try:
-                                result = enforce_result(provider.invoke(cases[0].message), model, {"state": cases[0].message}, directory / "execution_audit")
+                                result = enforce_result(provider.invoke(cases[0].message), model, {"state": cases[0].message}, directory / "execution_audit", allow_unverified_jev=bool(cache_exception))
                                 if result.error:
                                     console.print(f"Warm-up failed ({model}): {result.error}", markup=False)
                             except Exception as exc:
@@ -276,7 +278,7 @@ def run_benchmark(models, cases, repetitions=30, warmups=2, output_dir="results"
                         except Exception as exc:
                             result = ProviderResult(error=f"{type(exc).__name__}: {exc}")
                         latency = (time.perf_counter() - started) * 1000
-                        result = enforce_result(result, model, {"state": case.message}, directory / "execution_audit")
+                        result = enforce_result(result, model, {"state": case.message}, directory / "execution_audit", allow_unverified_jev=bool(cache_exception))
                         store.record(measured_row(model, case, repetition, result, latency))
                         progress.advance(task)
                         if result.error:

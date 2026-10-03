@@ -196,6 +196,10 @@ def build_report(directory, frame, history, metadata, include_raw=False, plot_di
     else:
         lines.extend([f"Experiment fingerprint: {metadata.get('fingerprint', 'unavailable')}",
                       f"Experiment created at UTC: {metadata.get('created_at_utc', 'unavailable')}"])
+    if 'jev-1.13.0' in frame.model.values and any(
+            (frame.model == 'jev-1.13.0') & frame.validation_success & frame.cache_verified.astype(str).str.lower().ne('true')):
+        lines.append("Jev server caching unverified: valid probabilities accepted under an explicit exception; "
+                     "cache_verified remains false. Jev latency is not verified as cache-free.")
     if history is None:
         lines.append("WARNING: attempt_history.csv is missing; total_attempts and historical_failures refer only to latest rows.")
     else:
@@ -361,6 +365,10 @@ def render_hard_case_report(directory, frame, history, metadata, include_raw=Fal
     lines = ["# Hard-case insurance benchmark", "", f"Results: {directory.resolve()}", "",
              "Six independent probabilities; no gold labels or accuracy claims. Local latency includes private startup and teardown.", "",
              f"Latest cache verification failures: {int((frame.failure_kind == 'cache_verification').sum())}; schema failures: {int((frame.failure_kind == 'schema').sum())}.", ""]
+    if 'jev-1.13.0' in frame.model.values and any(
+            (frame.model == 'jev-1.13.0') & frame.validation_success & frame.cache_verified.astype(str).str.lower().ne('true')):
+        lines.extend(["Jev server caching unverified: valid probabilities accepted under an explicit exception; "
+                      "cache_verified remains false. Jev latency is not verified as cache-free.", ""])
     overview = ["model", "successful_repetitions", "attempted_repetitions", "cache_verification_failures", "schema_failures", "latency_ms_p50", "latency_ms_p95"]
     table(lines, overview, summary[overview].itertuples(index=False, name=None))
     fields = ["model", *[f"{name}_mean" for name in PROBABILITY_FIELDS]]

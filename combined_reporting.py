@@ -62,6 +62,8 @@ def load_source(directory, suite):
                 latest_history[key] = row
             raw = json.loads(row['raw_response_json'])
             audit = revalidate_audit(raw['execution_audit'], raw, require_verified=False)
+            if audit.get('response') is not None and {k: v for k, v in raw.items() if k != 'execution_audit'} != audit['response']:
+                raise ValueError('Source response differs from audit evidence')
             if row['call_id'] != audit['call_id'] or row['audit_path'] != audit['audit_path']:
                 raise ValueError('Source row differs from audit linkage')
             for field in ('request_sha256', 'runtime_sha256', 'model_sha256'):
@@ -104,6 +106,12 @@ def load_source(directory, suite):
                 for field, value in values.items():
                     if value is not None and math.isfinite(value) and (not row[field] or float(row[field]) != value):
                         raise ValueError('Rejected Jev probabilities differ from audited response')
+                from jev_execution import count
+                usage = raw.get('usage') if isinstance(raw.get('usage'), dict) else {}
+                for field in ('input_tokens', 'output_tokens'):
+                    expected = count(usage.get(field))
+                    if (float(row[field]) if row[field] else None) != expected:
+                        raise ValueError('Rejected Jev token usage differs from audited response')
         loaded[filename] = rows
     if len(loaded['raw.csv']) != len(latest_history) or any(
         row != latest_history.get((row['model'], int(row['case_id']), int(row['repetition']))
@@ -142,6 +150,9 @@ def build_combined_report(roots, suite='all', models=None, case_ids=None, includ
     lines = ['# Combined benchmark comparison', '',
              'Sources remain independent. Probability aggregates exclude rejected rows; '
              'latency and usage retain the existing treatment of latest failed attempts.', '']
+    unavailable = [str(root) for root in roots if not any(d.parent == root for d, _ in directories)]
+    if unavailable:
+        lines.extend(['Source roots without saved measurements for the selected suites: ' + ', '.join(unavailable), ''])
     groups = {}
     identities = {}
     keys = set()
@@ -151,6 +162,10 @@ def build_combined_report(roots, suite='all', models=None, case_ids=None, includ
             stack.enter_context(saved_snapshot(directory))
         for directory, name in directories:
             source = load_source(directory, name)
+            if source['definition'].get('jev_cache_exception'):
+                lines.extend([f"{directory}: Jev server caching unverified. Valid responses are accepted "
+                              "under an explicit Jev-only exception; cache_verified remains false. "
+                              "Jev latency is not verified as cache-free.", ''])
             identity = semantic_identity(source['definition'], name)
             if name in identities and identity != identities[name]:
                 raise ValueError('Source semantic prompts, schema, or inputs differ: ' + name)

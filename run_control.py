@@ -23,7 +23,7 @@ class CallGuard:
     def after_result(self, model, result, console):
         if model == 'jev-1.13.0':
             console.print(f'{model}: input={result.input_tokens}, output={result.output_tokens}; '
-                          f'cache verification required; new calls={self.used}', markup=False)
+                          f'{"server caching unverified" if (result.raw_response or {}).get("execution_audit", {}).get("cache_exception") else "cache verification required"}; new calls={self.used}', markup=False)
         if model.startswith('mistral'):
             raw = result.raw_response or {}
             usage = raw.get('response_metadata', {}).get('token_usage', {})

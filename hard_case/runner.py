@@ -90,7 +90,7 @@ def experiment_definition(packet, models=MODELS, local_information=None, systemo
                     "pydantic", "pandas", "numpy", "matplotlib", "rich", "python-dotenv", "httpx",
                     *(['langchain-typesafe', 'httpx2'] if 'jev-1.13.0' in models else [])]:
         try:
-            dependencies[package] = importlib.metadata.version(package)
+            dependencies[package] = importlib.metadata.version(package) or 'version-unavailable'
         except importlib.metadata.PackageNotFoundError:
             dependencies[package] = "not-installed"
     observed = (local_model_information(models, systemone_context)
@@ -314,9 +314,14 @@ def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=DEFAUL
     definition = (experiment_definition(packet, models, systemone_context=systemone_context)
                   if definition is None else definition)
     definition = {**definition, "execution_policy": POLICY}
+    from jev_execution import cache_exception_for_root
+    cache_exception = cache_exception_for_root(output_dir) if 'jev-1.13.0' in models else None
+    if cache_exception:
+        definition = {**definition, "jev_cache_exception": cache_exception}
     if prefix_experiment:
         definition = {**definition, "prefix_strategy": PREFIX_STRATEGY}
-    console.print("Mandatory cache-free calls. Local latency includes private startup and teardown.")
+    console.print("Jev: server caching unverified; valid responses accepted by explicit exception."
+                  if cache_exception else "Mandatory cache-free calls. Local latency includes private startup and teardown.")
     directory = suite_directory(output_dir, "hard_case")
     with validation_on_exit(Path(output_dir)), output_lock(directory):
         store = ResultStore(directory, definition)
@@ -348,7 +353,7 @@ def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=DEFAUL
                         for _ in range(warmups):
                             guard.before_call()
                             try:
-                                result = enforce_result(provider.invoke(packet.text), model, {"state": packet.text}, directory / "execution_audit")
+                                result = enforce_result(provider.invoke(packet.text), model, {"state": packet.text}, directory / "execution_audit", allow_unverified_jev=bool(cache_exception))
                                 if result.error:
                                     console.print(f"Warm-up failed ({model}): {result.error}", markup=False)
                             except Exception as exc:
@@ -372,7 +377,7 @@ def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=DEFAUL
                         except Exception as exc:
                             result = exception_result(exc)
                         latency = (time.perf_counter() - started) * 1000
-                        result = enforce_result(result, model, {"state": packet.text}, directory / "execution_audit")
+                        result = enforce_result(result, model, {"state": packet.text}, directory / "execution_audit", allow_unverified_jev=bool(cache_exception))
                         store.record(measured_row(model, repetition, result, latency))
                         progress.advance(task)
                         if result.error:

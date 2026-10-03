@@ -1,0 +1,65 @@
+{
+  "policy": {
+    "version": 2,
+    "mode": "mandatory_cache_free",
+    "local_boundary": "fresh private server, worker and client for every call",
+    "local_verification": "every prompt including scoring retries: zero initial cache, full evaluation, no restore or truncation",
+    "within_request_prefix_reuse": false,
+    "hosted_verification": "fresh prompt_cache_key AND explicit numeric cached_tokens=0",
+    "langchain_cache": false,
+    "automatic_request_retries": 0,
+    "latency": "cold wall time includes startup, loading, verification and teardown",
+    "ollama_commit": "cc4069396f3ad2c370c53eed2e4a42ac13adab84"
+  },
+  "updated_at_utc": "2026-10-02T22:45:27.957675+00:00",
+  "experiment": "jev_30",
+  "expected_measurements": 660,
+  "valid_measurements": 660,
+  "complete": true,
+  "suites": {
+    "benchmark": {
+      "expected_measurements": 600,
+      "valid_measurements": 600,
+      "attempts": 600,
+      "linked_attempts": 600,
+      "prompt_tasks": 2400,
+      "evaluated_prompt_tokens": 1519560,
+      "failures": [],
+      "models": {
+        "tev1:0.8b": {
+          "valid_measurements": 300,
+          "input_tokens": 759780,
+          "output_tokens": 1200
+        },
+        "tev1:4b": {
+          "valid_measurements": 300,
+          "input_tokens": 759780,
+          "output_tokens": 1200
+        }
+      },
+      "measurement_keys": 600
+    },
+    "hard_case": {
+      "expected_measurements": 60,
+      "valid_measurements": 60,
+      "attempts": 60,
+      "linked_attempts": 60,
+      "prompt_tasks": 360,
+      "evaluated_prompt_tokens": 4363920,
+      "failures": [],
+      "models": {
+        "tev1:0.8b": {
+          "valid_measurements": 30,
+          "input_tokens": 2181960,
+          "output_tokens": 180
+        },
+        "tev1:4b": {
+          "valid_measurements": 30,
+          "input_tokens": 2181960,
+          "output_tokens": 180
+        }
+      },
+      "measurement_keys": 60
+    }
+  }
+}

@@ -1,0 +1,16 @@
+Mandatory cache-free calls. Local latency includes private startup and teardown.
+5 pending measurements; successful repetitions are skipped.
+mistral-large-latest · repetition 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+                   Hard-case insurance judgment repeatability                   
+┏━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━┓
+┃               ┃       ┃ Latest        ┃ Historical     ┃          ┃          ┃
+┃ Model         ┃ Valid ┃ failures      ┃ failures       ┃ p50 ms   ┃ p95 ms   ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━┩
+│ tev1:0.8b     │ 1/1   │ 0             │ 0              │ 23689.3  │ 23689.3  │
+│ tev1:4b       │ 1/1   │ 0             │ 0              │ 103183.4 │ 103183.4 │
+│ gemma4:e4b    │ 1/1   │ 0             │ 0              │ 76420.8  │ 76420.8  │
+│ mistral-smal… │ 1/1   │ 0             │ 0              │ 991.0    │ 991.0    │
+│ mistral-larg… │ 1/1   │ 0             │ 0              │ 1658.1   │ 1658.1   │
+└───────────────┴───────┴───────────────┴────────────────┴──────────┴──────────┘
+Six independent probability distributions saved in summary.csv. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/hard_case

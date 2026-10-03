@@ -1,4 +1,4 @@
-"""Mandatory audited execution for both suites. There is no alternate run policy."""
+"""Audited execution, with an explicit hosted Jev cache-evidence exception."""
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from functools import lru_cache
@@ -34,6 +34,8 @@ POLICY = {
 }
 AUDIT_COLUMNS = ['call_id', 'cache_verified', 'failure_kind', 'request_sha256',
                  'runtime_sha256', 'model_sha256', 'audit_path', 'audit_sha256']
+JEV_CACHE_EXCEPTION = {'version': 1, 'model': 'jev-1.13.0',
+                       'server_caching': 'unverified', 'accept_valid_responses': True}
 
 
 def now():
@@ -118,8 +120,8 @@ def experiment_execution(models):
     if 'jev-1.13.0' in models:
         sources.append(ROOT / 'jev_execution.py')
     return {'execution_policy': POLICY, 'execution_implementation_sha256': fingerprint({str(p.relative_to(ROOT)): checked_hash(p) for p in sources}),
-            'runtime': runtime_identity() if any(m.startswith(('tev1', 'gemma4:')) for m in models)
-                       else {'provider': 'hosted', 'local_runtime_required': False}}
+            'runtime': {'provider': 'hosted', 'local_runtime_required': False}
+                       if models and all(m == 'jev-1.13.0' for m in models) else runtime_identity()}
 
 
 def atomic_write(path, write):
@@ -480,7 +482,7 @@ def hosted_call(model, payload, directory, invoke, purpose='measurement'):
     return value, linked
 
 
-def revalidate_audit(link, raw=None, *, require_verified=True):
+def revalidate_audit(link, raw=None, *, require_verified=True, allow_unverified_jev=False):
     if not isinstance(link, dict) or not link.get('audit_path'):
         raise ValueError('Missing linked execution audit')
     path = Path(link['audit_path'])
@@ -489,7 +491,10 @@ def revalidate_audit(link, raw=None, *, require_verified=True):
     audit = json.loads(path.read_text())
     if audit.get('policy') != POLICY or audit.get('call_id') != link.get('call_id'):
         raise ValueError('Old or inconsistent execution audit')
-    if require_verified and not audit.get('verified'):
+    jev_exception = (allow_unverified_jev and audit.get('provider') == 'typesafe'
+                     and audit.get('cache_exception') == JEV_CACHE_EXCEPTION
+                     and audit.get('accepted') is True)
+    if require_verified and not audit.get('verified') and not jev_exception:
         raise ValueError('Cache verification failed: ' + audit.get('error', 'unverified audit'))
     if fingerprint(audit['input']) != audit['input_sha256']:
         raise ValueError('Input evidence fingerprint mismatch')
@@ -508,6 +513,25 @@ def revalidate_audit(link, raw=None, *, require_verified=True):
                 raise ValueError('Jev identity fingerprint mismatch')
         if audit.get('verified'):
             raise ValueError('Jev cannot claim verified cache-free execution')
+        if audit.get('cache_exception') is not None and audit['cache_exception'] != JEV_CACHE_EXCEPTION:
+            raise ValueError('Invalid Jev cache exception')
+        if audit.get('accepted'):
+            if (audit.get('cache_exception') != JEV_CACHE_EXCEPTION
+                    or audit['runtime'].get('cache_exception') != JEV_CACHE_EXCEPTION
+                    or audit.get('cache_status') != 'unverified'
+                    or audit['model'] != JEV_CACHE_EXCEPTION['model']
+                    or audit.get('purpose') != 'measurement'
+                    or len(audit.get('requests', [])) != 1
+                    or audit.get('http_status') != 200
+                    or audit.get('provider_error') or audit.get('budget_error') or audit.get('error')
+                    or audit['response'].get('model') != audit['model']):
+                raise ValueError('Invalid accepted Jev execution')
+            from benchmark.providers.ollama_systemone import map_response as benchmark_mapper
+            from hard_case.providers.ollama_systemone import map_response as hard_mapper
+            mapper = benchmark_mapper if 'route' in audit['input']['questions'] else hard_mapper
+            mapped = mapper({**audit['response'], 'usage': {}})
+            if mapped.error or mapped.output is None:
+                raise ValueError('Accepted Jev response has invalid probabilities')
         return audit
     if audit['provider'] == 'ollama':
         if audit.get('log_sha256'):
@@ -530,13 +554,13 @@ def revalidate_audit(link, raw=None, *, require_verified=True):
     return audit
 
 
-def enforce_result(result, model, payload, directory):
+def enforce_result(result, model, payload, directory, *, allow_unverified_jev=False):
     raw = result.raw_response if isinstance(result.raw_response, dict) else {'response': serial(result.raw_response)}
     if not raw.get('execution_audit'):
         raw['execution_audit'] = failed_audit(model, payload, directory, result.error or 'Provider returned no audited execution')
         result.raw_response = raw
     try:
-        revalidate_audit(raw['execution_audit'], raw)
+        revalidate_audit(raw['execution_audit'], raw, allow_unverified_jev=allow_unverified_jev)
     except (ValueError, OSError, KeyError) as exc:
         result.error = f'Cache verification failed: {exc}' + (f'; {result.error}' if result.error else '')
     return result
@@ -545,22 +569,36 @@ def enforce_result(result, model, payload, directory):
 def audit_fields(result):
     audit = (result.raw_response or {}).get('execution_audit', {}) if isinstance(result.raw_response, dict) else {}
     verified = bool(audit.get('verified', False)) and not result.error.startswith('Cache verification failed:')
+    exception_jev = (audit.get('provider') == 'typesafe'
+                    and audit.get('cache_exception') == JEV_CACHE_EXCEPTION
+                    and not result.error.startswith('Cache verification failed:'))
     return {**{name: audit.get(name) for name in AUDIT_COLUMNS}, 'cache_verified': verified,
-            'failure_kind': ('cache_verification' if not verified else 'schema' if result.error else '')}
+            'failure_kind': ('cache_verification' if not verified and not exception_jev else 'schema' if result.error else '')}
 
 
 def revalidate_row(row, definition=None):
     raw = json.loads(row['raw_response_json'])
-    audit = revalidate_audit(raw.get('execution_audit'), raw)
+    exception = (definition or {}).get('jev_cache_exception') == JEV_CACHE_EXCEPTION
+    audit = revalidate_audit(raw.get('execution_audit'), raw, allow_unverified_jev=exception)
     for name in AUDIT_COLUMNS:
         if name in {'cache_verified', 'failure_kind'}:
             continue
         expected = raw['execution_audit'].get(name, '')
         if str(row.get(name) or '') != str(expected or ''):
             raise ValueError('Row differs from its linked execution audit: ' + name)
-    if str(row.get('cache_verified')).lower() != 'true' or row.get('failure_kind'):
+    expected_cache = 'false' if audit.get('accepted') and audit['provider'] == 'typesafe' else 'true'
+    if str(row.get('cache_verified')).lower() != expected_cache or row.get('failure_kind'):
         raise ValueError('Successful row has invalid cache status')
+    if audit['provider'] == 'typesafe' and audit.get('accepted'):
+        from jev_execution import count
+        usage = raw.get('usage') if isinstance(raw.get('usage'), dict) else {}
+        for field in ('input_tokens', 'output_tokens'):
+            value = row.get(field)
+            if (float(value) if value not in ('', None) else None) != count(usage.get(field)):
+                raise ValueError('Jev token usage differs from audited response')
     if definition is not None:
+        if audit['provider'] == 'typesafe' and audit['input'].get('questions') != definition.get('prompts', {}).get('systemone_questions'):
+            raise ValueError('Saved Jev questions differ from experiment metadata')
         if audit['input'].get('prefix_strategy') != definition.get('prefix_strategy'):
             raise ValueError('Saved audit belongs to a different prefix strategy')
         if definition.get('prefix_strategy') and audit['input'].get('original_system_prompt') != definition.get('prompts', {}).get('llm_system'):
