@@ -1,0 +1,24 @@
+Mandatory cache-free calls. Local latency includes private startup and teardown.
+10 pending measurements; successful repetitions are skipped.
+mistral-small-latest: input=372, output=124, cached=0; new calls=1
+Failed mistral-small-latest, repetition 1: Cache verification failed: Cache 
+verification failed: ValueError: Mistral cached_tokens must be explicitly 
+numeric zero; received 348; Cache verification failed: Mistral cached_tokens 
+must be explicitly numeric zero; received 348
+mistral-small-latest: input=374, output=100, cached=348; new calls=2
+mistral-small-latest · repetition 1 ━━━━━━                           20% 0:00:06
+                Structured decision repeatability / distribution                
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━┓
+┃ Model                ┃ Case ┃ Valid ┃   Web ┃  Safe ┃ Fresh ┃ Route ┃ p95 ms ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━┩
+│ mistral-small-latest │    1 │   1/1 │ 0.000 │ 1.000 │ 0.000 │  100% │  863.8 │
+│ mistral-small-latest │    2 │   0/1 │     — │     — │     — │     — │  717.4 │
+└──────────────────────┴──────┴───────┴───────┴───────┴───────┴───────┴────────┘
+Web/Safe/Fresh: means; Route: consistency; Valid: valid/attempted.
+Latest failures: 1; historical failures: 1. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/experimen
+ts/refactor_validation_20261003_mistral-small-latest/benchmark
+Benchmark error: RunStopped: Stopped after saved failure: Cache verification 
+failed: Cache verification failed: ValueError: Mistral cached_tokens must be 
+explicitly numeric zero; received 348; Cache verification failed: Mistral 
+cached_tokens must be explicitly numeric zero; received 348

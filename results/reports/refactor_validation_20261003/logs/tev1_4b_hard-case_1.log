@@ -1,0 +1,13 @@
+Mandatory cache-free calls. Local latency includes private startup and teardown.
+1 pending measurements; successful repetitions are skipped.
+tev1:4b · repetition 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+                   Hard-case insurance judgment repeatability                   
+┏━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━┓
+┃         ┃       ┃                 ┃ Historical         ┃          ┃          ┃
+┃ Model   ┃ Valid ┃ Latest failures ┃ failures           ┃ p50 ms   ┃ p95 ms   ┃
+┡━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━┩
+│ tev1:4b │ 1/1   │ 0               │ 0                  │ 112466.4 │ 112466.4 │
+└─────────┴───────┴─────────────────┴────────────────────┴──────────┴──────────┘
+Six independent probability distributions saved in summary.csv. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/experimen
+ts/refactor_validation_20261003_tev1_4b/hard_case

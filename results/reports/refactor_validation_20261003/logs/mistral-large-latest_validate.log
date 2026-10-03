@@ -1,0 +1,101 @@
+{
+  "experiment": "benchmark",
+  "policy": {
+    "version": 2,
+    "mode": "mandatory_cache_free",
+    "local_boundary": "fresh private server, worker and client for every call",
+    "local_verification": "every prompt including scoring retries: zero initial cache, full evaluation, no restore or truncation",
+    "within_request_prefix_reuse": false,
+    "hosted_verification": "fresh prompt_cache_key AND explicit numeric cached_tokens=0",
+    "langchain_cache": false,
+    "automatic_request_retries": 0,
+    "latency": "cold wall time includes startup, loading, verification and teardown",
+    "ollama_commit": "cc4069396f3ad2c370c53eed2e4a42ac13adab84"
+  },
+  "updated_at_utc": "2026-10-03T13:25:53.127600+00:00",
+  "complete": false,
+  "expected_measurements": 10,
+  "valid_measurements": 7,
+  "suites": {
+    "benchmark": {
+      "expected_keys": 10,
+      "measurement_keys": 8,
+      "passed": 7,
+      "failures": [
+        {
+          "key": [
+            "mistral-large-latest",
+            8,
+            1
+          ],
+          "kind": "cache_verification",
+          "reason": "Cache verification failed: Cache verification failed: ValueError: Mistral cached_tokens must be explicitly numeric zero; received 296; Cache verification failed: Mistral cached_tokens must be explicitly numeric zero; received 296"
+        }
+      ],
+      "missing": [
+        [
+          "mistral-large-latest",
+          9,
+          1
+        ],
+        [
+          "mistral-large-latest",
+          10,
+          1
+        ]
+      ],
+      "attempts": 8,
+      "linked_attempts": 8,
+      "token_usage": [
+        {
+          "call_id": "831196f0bec94e369661837c8469cacb",
+          "input_tokens": 372,
+          "output_tokens": 122,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "86bd06a66fe04646ace940036a2639d9",
+          "input_tokens": 374,
+          "output_tokens": 135,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "34b4938f6b144e57bf72a63bc36bed8e",
+          "input_tokens": 374,
+          "output_tokens": 122,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "8f6e934f186c43c9bbd4186beced71e7",
+          "input_tokens": 371,
+          "output_tokens": 130,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "53ba907bd2b04364be42629c15bbec92",
+          "input_tokens": 373,
+          "output_tokens": 137,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "914792f5ac374544a4986f541a27eaff",
+          "input_tokens": 374,
+          "output_tokens": 139,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "d44d0f58c02f4fb78e14f88d1de351ea",
+          "input_tokens": 382,
+          "output_tokens": 146,
+          "cached_tokens": 0
+        },
+        {
+          "call_id": "c99e432e99b5457886941a5cff68dd56",
+          "input_tokens": 380,
+          "output_tokens": 122,
+          "cached_tokens": 296
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+Mandatory cache-free calls. Local latency includes private startup and teardown.
+10 pending measurements; successful repetitions are skipped.
+tev1:4b · repetition 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+         Structured decision repeatability / distribution          
+┏━━━━━━━━━┳━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━┓
+┃ Model   ┃ Case ┃ Valid ┃   Web ┃  Safe ┃ Fresh ┃ Route ┃ p95 ms ┃
+┡━━━━━━━━━╇━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━┩
+│ tev1:4b │    1 │   1/1 │ 0.094 │ 0.933 │ 0.327 │  100% │ 4082.4 │
+│ tev1:4b │    2 │   1/1 │ 0.899 │ 0.925 │ 2.981 │  100% │ 3911.2 │
+│ tev1:4b │    3 │   1/1 │ 0.991 │ 0.980 │ 4.168 │  100% │ 4260.0 │
+│ tev1:4b │    4 │   1/1 │ 0.180 │ 0.882 │ 0.284 │  100% │ 4318.2 │
+│ tev1:4b │    5 │   1/1 │ 0.974 │ 0.974 │ 3.533 │  100% │ 4357.4 │
+│ tev1:4b │    6 │   1/1 │ 0.839 │ 0.944 │ 2.084 │  100% │ 4402.0 │
+│ tev1:4b │    7 │   1/1 │ 0.291 │ 0.003 │ 0.997 │  100% │ 4401.5 │
+│ tev1:4b │    8 │   1/1 │ 0.113 │ 0.915 │ 0.325 │  100% │ 4382.7 │
+│ tev1:4b │    9 │   1/1 │ 0.916 │ 0.978 │ 2.906 │  100% │ 4372.8 │
+│ tev1:4b │   10 │   1/1 │ 0.984 │ 0.989 │ 3.988 │  100% │ 4393.0 │
+└─────────┴──────┴───────┴───────┴───────┴───────┴───────┴────────┘
+Web/Safe/Fresh: means; Route: consistency; Valid: valid/attempted.
+Latest failures: 0; historical failures: 0. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/experimen
+ts/refactor_validation_20261003_tev1_4b/benchmark
