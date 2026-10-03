@@ -3,7 +3,7 @@ import csv
 import json
 import os
 from pathlib import Path
-from jev_bench.runtime.execution import POLICY, now, fingerprint
+from jev_bench.runtime.execution import POLICY, now, fingerprint, supported_policy
 from jev_bench.storage.io import atomic_write
 from jev_bench.storage.paths import dataset_context
 from jev_bench.storage.verification import revalidate_row
@@ -26,7 +26,7 @@ class ResultStore:
         spec = get_suite(suite)
         self.suite, self.columns, self.key = suite, spec.columns, spec.row_key
         self.validate_values = spec.validate_row
-        if definition.get("execution_policy") != POLICY:
+        if not supported_policy(definition.get("execution_policy")):
             raise ValueError("Incompatible resume: mandatory cache-free metadata required")
         if suite == "hard_case" and definition.get("case_input", {}).get("profile") != "compact":
             raise ValueError("Only compact experiment metadata is supported")

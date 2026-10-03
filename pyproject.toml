@@ -7,6 +7,20 @@ name = "jev-bench"
 version = "0.1.0"
 description = "Audited structured judgment and repeatability benchmarks"
 requires-python = ">=3.12,<3.13"
+dependencies = [
+    "httpx>=0.28,<1", "langchain-core>=1.6.3,<2", "matplotlib>=3.10,<4",
+    "numpy>=2,<3", "ollama>=0.6.3,<0.7", "pandas>=2.2,<4",
+    "portalocker>=3,<4", "pydantic>=2.12,<3", "python-dotenv>=1,<2", "rich>=14,<16",
+]
+
+[project.optional-dependencies]
+azure = ["langchain-openai==1.6.2", "langchain-anthropic==1.7.2"]
+local = ["langchain-ollama>=1,<2"]
+mistral = ["langchain-mistralai>=1,<2"]
+jev = ["langchain-typesafe==0.0.1a3", "httpx2"]
+
+[dependency-groups]
+test = ["langchain-ollama>=1,<2", "langchain-mistralai>=1,<2", "langchain-typesafe==0.0.1a3", "httpx2"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/jev_bench"]

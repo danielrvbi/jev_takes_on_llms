@@ -21,7 +21,7 @@ def revalidate_row(row, definition=None, directory=None):
     if str(row.get('cache_verified')).lower() != expected_cache or row.get('failure_kind'):
         raise ValueError('Successful row has invalid cache status')
     if audit['provider'] == 'typesafe' and audit.get('accepted'):
-        from jev_bench.providers.jev import count
+        from jev_bench.providers.jev_contract import count
         usage = raw.get('usage') if isinstance(raw.get('usage'), dict) else {}
         for field in ('input_tokens', 'output_tokens'):
             value = row.get(field)
@@ -39,6 +39,14 @@ def revalidate_row(row, definition=None, directory=None):
             expected_model = configuration.get('inference_model', row['model'])
             if audit['model'] != expected_model:
                 raise ValueError('Saved audit belongs to a different model/configuration')
+            if audit['provider'] in ('azure-gpt', 'azure-claude'):
+                if audit['input'].get('configuration') != configuration or audit['input'].get('schema') != definition.get('schema'):
+                    raise ValueError('Azure settings or schema differ from experiment metadata')
+                if audit['policy'] != definition.get('execution_policy'):
+                    raise ValueError('Azure policy differs from experiment metadata')
+                for field in ('input_tokens', 'output_tokens'):
+                    if float(row[field]) != audit['usage'][field]:
+                        raise ValueError('Azure token usage differs from audited response')
         if definition.get('cases'):
             case = next((case for case in definition['cases'] if case['case_id'] == int(row['case_id'])), None)
             if case is None or row['message'] != case['message']:
@@ -65,8 +73,10 @@ def revalidate_row(row, definition=None, directory=None):
         else:
             probabilities = {name: answer["noul"] for name, answer in answers.items()}
     else:
-        calls = raw.get("tool_calls") or []
-        values = calls[0].get("args") if calls else json.loads(raw["content"])
+        from jev_bench.providers.parsing import raw_values
+        values = raw_values(raw)
+        if not values:
+            raise ValueError('Saved response has no structured probability fields')
         probabilities = {}
         for name, value in values.items():
             if isinstance(value, dict):

@@ -1,7 +1,9 @@
 # Current commands
 
-Use the existing parent environment with the editable installation described in
-the [repository README](../README.md). Set `MISTRAL_API_KEY` and `TYPESAFE_API`
+Use the self-contained frozen environment described in the
+[repository README](../README.md); the prior parent environment remains supported.
+For Azure GPT/Claude, follow the complete [work-computer guide](azure_handoff.md).
+Set `MISTRAL_API_KEY` and `TYPESAFE_API`
 in the environment or root `.env` as applicable.
 
 ## Local execution

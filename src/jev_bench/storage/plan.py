@@ -18,6 +18,14 @@ def record_selection(root, suite, models, cases, repetitions, warmups, definitio
             return
         if plan.get("kind") == "jev_api":
             return
+        if plan.get("kind") in ("azure_prefix_pilot", "azure_prefix_full"):
+            target = plan['targets'].get(suite, {})
+            for model in models:
+                expected = {"case_ids": sorted(cases), "repetitions": repetitions, "warmups": warmups,
+                            "configuration": definition['model_configuration'][model]}
+                if target.get(model) != expected:
+                    raise ValueError('Azure targets are immutable; use another --output-dir')
+            return
         before = deepcopy(plan.get("targets", {}))
         target = plan.setdefault("targets", {}).setdefault(suite, {})
         for model in models:

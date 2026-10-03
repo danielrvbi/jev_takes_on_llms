@@ -2,7 +2,7 @@
 import asyncio
 from contextlib import contextmanager
 from decimal import Decimal, InvalidOperation
-import fcntl
+from jev_bench.storage.locking import fcntl
 import json
 import os
 from pathlib import Path
@@ -16,12 +16,11 @@ from jev_bench.runtime.execution import (atomic_write, disable_client_cache, fin
                        save_audit, verify_request_binding, JEV_CACHE_EXCEPTION)
 from jev_bench.run.control import RunStopped
 
-JEV_MODEL = 'jev-1.13.0'
+from jev_bench.providers.jev_contract import JEV_MODEL, MAX_INPUT_TOKENS, count, cache_exception_for_root
 BASE_URL = 'https://api.typesafe.ai'
 ENDPOINT = BASE_URL + '/v1/systemone'
 TIMEOUT = 20
 INPUT_PRICE = Decimal('0.042') / 1_000_000
-MAX_INPUT_TOKENS = 65_536
 MAX_REQUEST_CHARGE = MAX_INPUT_TOKENS * INPUT_PRICE
 CACHE_REJECTION = 'TypeSafe has no supported cache-disable and explicit zero-cache evidence contract'
 
@@ -31,18 +30,6 @@ def configuration():
             'temperature': None, 'seed': None, 'structured_method': 'native',
             'automatic_retries': 0, 'timeout_seconds': TIMEOUT, 'base_url': BASE_URL,
             'context_override': None, 'truncation_policy': 'reject'}
-
-
-def cache_exception_for_root(root):
-    path = Path(root) / 'run_plan.json'
-    if not path.exists():
-        return None
-    plan = json.loads(path.read_text())
-    exception = plan.get('jev_cache_exception')
-    if exception is not None and (exception != JEV_CACHE_EXCEPTION
-            or plan.get('kind') != 'jev_api' or plan.get('models') != [JEV_MODEL]):
-        raise ValueError('Invalid Jev cache exception in target manifest')
-    return exception
 
 
 def typed_questions(questions):
@@ -57,10 +44,6 @@ def typed_questions(questions):
             result[name] = {'choice': Choice, 'score': Score}[question['type']](
                 **arguments, criteria=question['criteria'])
     return result
-
-
-def count(value):
-    return value if type(value) is int and 0 <= value <= MAX_INPUT_TOKENS else None
 
 
 class JevBudget:

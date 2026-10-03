@@ -21,6 +21,10 @@ class CallGuard:
         self.used += 1
 
     def after_result(self, model, result, console):
+        if model.startswith('azure-'):
+            usage = (result.raw_response or {}).get('execution_audit', {}).get('usage', {})
+            console.print(f'{model}: input={result.input_tokens}, output={result.output_tokens}, '
+                          f'cached={usage.get("cached_tokens", "missing")}; new calls={self.used}', markup=False)
         if model == 'jev-1.13.0':
             console.print(f'{model}: input={result.input_tokens}, output={result.output_tokens}; '
                           f'{"server caching unverified" if (result.raw_response or {}).get("execution_audit", {}).get("cache_exception") else "cache verification required"}; new calls={self.used}', markup=False)
@@ -37,6 +41,15 @@ class CallGuard:
 def experiment_settings(root, models, prefix_experiment, max_new_calls):
     guard = CallGuard(max_new_calls, prefix_experiment)
     root = Path(root)
+    if any(m.startswith('azure-') for m in models):
+        import json
+        from jev_bench.providers.azure_config import AZURE_MODELS
+        if not all(m in AZURE_MODELS for m in models) or not prefix_experiment or max_new_calls is None:
+            raise ValueError('Azure requires a separate, capped prefix experiment')
+        plan = root / 'run_plan.json'
+        if not plan.exists() or json.loads(plan.read_text()).get('kind') not in ('azure_prefix_pilot', 'azure_prefix_full'):
+            raise ValueError('Use python -m jev_bench.run azure to initialize both suite targets')
+        return root, guard
     if prefix_experiment:
         if any(not m.startswith('mistral') for m in models):
             raise ValueError('The prefix experiment supports only Mistral models')

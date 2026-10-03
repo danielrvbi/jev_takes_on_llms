@@ -10,7 +10,7 @@ from jev_bench.storage.paths import ensure_readable
 
 import argparse
 import csv
-import fcntl
+from jev_bench.storage.locking import fcntl
 import json
 import math
 import sys
@@ -149,6 +149,19 @@ def fenced_json(lines, value):
 
 def counts(series):
     return json.dumps(dict(sorted(Counter(str(value) for value in series.dropna()).items())), ensure_ascii=False)
+
+
+def azure_provenance(metadata):
+    """Keep deployed model versions visible even when CSVs use stable aliases."""
+    configurations = (metadata or {}).get('experiment', {}).get('model_configuration', {})
+    azure = [(alias, c) for alias, c in configurations.items() if c.get('provider', '').startswith('azure-')]
+    if not azure:
+        return ''
+    lines = ['> Altered-prompt Azure prefix experiment; hosted wall-time latency. '
+             'Shown separately from original-prompt measurements.', '']
+    table(lines, ['Alias', 'Deployment', 'Model', 'Configured version'],
+          [(alias, c['deployment'], c['model_name'], c['model_version']) for alias, c in azure])
+    return '\n'.join(lines) + '\n\n'
 
 
 def build_report(directory, frame, history, metadata, include_raw=False, plot_directory=None):
@@ -341,7 +354,7 @@ def build_report(directory, frame, history, metadata, include_raw=False, plot_di
     # A reconciler builds files in staging but links to their final published location.
     plots = sorted((Path(plot_directory) if plot_directory is not None else directory / "plots").glob("*.png"))
     lines.extend([f"- {(directory / 'plots' / path.name).resolve()}" for path in plots] or ["No saved plots found."])
-    return "\n".join(lines) + "\n"
+    return azure_provenance(metadata) + "\n".join(lines) + "\n"
 
 
 def build_hard_case_report(directory, models=None, include_raw=False):
@@ -393,7 +406,7 @@ def render_hard_case_report(directory, frame, history, metadata, include_raw=Fal
         for _, row in history.iterrows():
             fenced_json(lines, {"model": row.model, "repetition": int(row.repetition), "error": row.error,
                                 "response": json.loads(row.raw_response_json)})
-    return "\n".join(lines) + "\n"
+    return azure_provenance(metadata) + "\n".join(lines) + "\n"
 
 
 def main(argv=None):

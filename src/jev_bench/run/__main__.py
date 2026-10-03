@@ -3,7 +3,7 @@ import argparse
 from importlib import import_module
 import sys
 
-COMMANDS = {"benchmark": "benchmark_cli", "hard-case": "hard_case_cli",
+COMMANDS = {"azure": "azure", "benchmark": "benchmark_cli", "hard-case": "hard_case_cli",
             "jev-api": "jev_api", "prefix-pilot": "prefix_pilot"}
 
 
