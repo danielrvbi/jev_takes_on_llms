@@ -30,3 +30,7 @@ ENV/
 # Quarantined measurements and private compiler/runtime downloads
 results_contaminated_dont_use/
 .runtime/
+results/quarantine/
+results/.migration_backup/
+results/.migration_staging/
+*.lock

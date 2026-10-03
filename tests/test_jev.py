@@ -12,25 +12,25 @@ from unittest.mock import patch
 import httpx2
 from rich.console import Console
 
-from benchmark.cases import CASES
-from benchmark.prompts import SYSTEM_PROMPT, systemone_questions
-from benchmark.providers.jev import JevProvider
-from benchmark.runner import ResultStore, measured_row, run_benchmark
-from benchmark.schemas import DecisionOutput
-from combined_reporting import build_combined_report
-from execution import (POLICY, JEV_CACHE_EXCEPTION, file_hash, fingerprint,
+from jev_bench.suites.benchmark.cases import CASES
+from jev_bench.suites.benchmark.prompts import SYSTEM_PROMPT, systemone_questions
+from jev_bench.providers.suites.benchmark.jev import JevProvider
+from jev_bench.run.benchmark import ResultStore, measured_row, run_benchmark
+from jev_bench.suites.benchmark.schemas import DecisionOutput
+from jev_bench.run_evaluations.comparison import build_combined_report
+from jev_bench.runtime.execution import (POLICY, JEV_CACHE_EXCEPTION, file_hash, fingerprint,
                        revalidate_audit, revalidate_row, enforce_result)
-from hard_case.loader import load_claim_packet
-from hard_case.providers.jev import JevProvider as HardJevProvider
-from hard_case.runner import ResultStore as HardStore, measured_row as hard_row, run_hard_case_benchmark
-from hard_case.schemas import HardCaseOutput, PROBABILITY_FIELDS
-from jev_execution import (CACHE_REJECTION, JEV_MODEL, INPUT_PRICE, MAX_REQUEST_CHARGE,
+from jev_bench.suites.hard_case.loader import load_claim_packet
+from jev_bench.providers.suites.hard_case.jev import JevProvider as HardJevProvider
+from jev_bench.run.hard_case import ResultStore as HardStore, measured_row as hard_row, run_hard_case_benchmark
+from jev_bench.suites.hard_case.schemas import HardCaseOutput, PROBABILITY_FIELDS
+from jev_bench.providers.jev import (CACHE_REJECTION, JEV_MODEL, INPUT_PRICE, MAX_REQUEST_CHARGE,
                            JevBudget, typed_questions)
-from run_control import RunStopped
-from run_jev_api import run_jev
-from runtime.testing import audited_result
-from tests.test_benchmark import result as successful_result, values
-from validation import update_validation
+from jev_bench.run.control import RunStopped
+from jev_bench.run.jev_api import run_jev
+from tests.fixtures.audit import audited_result
+from tests.fixtures.benchmark import result as successful_result, values
+from jev_bench.run_evaluations.validation import update_validation
 
 
 def response_body(hard=False, usage=True):
@@ -55,7 +55,7 @@ def definition(suite='benchmark'):
                 'schema': DecisionOutput.model_json_schema(),
                 'prompts': {'llm_system': SYSTEM_PROMPT, 'systemone_questions': systemone_questions()},
                 'model_configuration': {JEV_MODEL: {}}}
-    from hard_case.prompts import SYSTEM_PROMPT as hard_prompt, systemone_questions as hard_questions
+    from jev_bench.suites.hard_case.prompts import SYSTEM_PROMPT as hard_prompt, systemone_questions as hard_questions
     packet = load_claim_packet()
     return {'execution_policy': POLICY, 'case_input': packet.metadata(),
             'schema': HardCaseOutput.model_json_schema(),
@@ -109,7 +109,7 @@ class JevTests(JevFixture):
                 self.root = Path(root)
                 provider = self.provider(hard)
                 state = load_claim_packet().text if hard else CASES[0].message
-                from hard_case.prompts import systemone_questions as hard_questions
+                from jev_bench.suites.hard_case.prompts import systemone_questions as hard_questions
                 questions = hard_questions() if hard else systemone_questions()
                 typed = typed_questions(questions)
                 self.assertEqual({k: q.model_dump(mode='json', exclude_none=True) for k, q in typed.items()}, questions)
@@ -119,7 +119,7 @@ class JevTests(JevFixture):
                     classifier = TypeSafeClassifier(**kwargs)
                     classifiers.append(classifier)
                     return classifier
-                with patch('jev_execution.TypeSafeClassifier', side_effect=capture):
+                with patch('jev_bench.providers.jev.TypeSafeClassifier', side_effect=capture):
                     measured = provider.invoke(state)
                 self.assertEqual(self.requests, [{'model': JEV_MODEL, 'state': state, 'questions': questions}])
                 expected = {f: (i + 1) / 10 for i, f in enumerate(PROBABILITY_FIELDS)} if hard else values()
@@ -144,8 +144,8 @@ class JevTests(JevFixture):
                 self.assertEqual(len(self.requests), 1)
 
     def test_rejected_rows_keep_same_columns_and_no_derived_decisions(self):
-        from benchmark.metrics import RAW_COLUMNS, results_frame, summarize
-        from hard_case.metrics import RAW_COLUMNS as hard_columns, results_frame as hard_frame, summarize as hard_summary
+        from jev_bench.suites.benchmark.metrics import RAW_COLUMNS, results_frame, summarize
+        from jev_bench.suites.hard_case.metrics import RAW_COLUMNS as hard_columns, results_frame as hard_frame, summarize as hard_summary
         for hard in (False, True):
             with self.subTest(hard=hard), tempfile.TemporaryDirectory() as root:
                 self.root = Path(root)
@@ -234,7 +234,7 @@ class JevTests(JevFixture):
                     definition=definition('hard_case' if hard else 'benchmark'), console=self.console)
                 runner = run_hard_case_benchmark if hard else run_benchmark
                 args = ([JEV_MODEL],) if hard else ([JEV_MODEL], [CASES[0]])
-                with patch('benchmark.runner.report'), patch('hard_case.runner.report'):
+                with patch('jev_bench.run.benchmark.report'), patch('jev_bench.run.hard_case.report'):
                     with self.assertRaises(RunStopped):
                         runner(*args, **settings)
                     with self.assertRaises(RunStopped):
@@ -247,8 +247,8 @@ class JevTests(JevFixture):
     def test_launcher_target_is_330_and_stops_before_second_suite(self):
         def fail(*args, **kwargs):
             raise RunStopped('fixture failure')
-        with patch('run_jev_api.run_benchmark', side_effect=fail) as bench, \
-             patch('run_jev_api.run_hard_case_benchmark') as hard:
+        with patch('jev_bench.run.jev_api.run_benchmark', side_effect=fail) as bench, \
+             patch('jev_bench.run.jev_api.run_hard_case_benchmark') as hard:
             self.assertEqual(run_jev(self.root, console=self.console), 1)
             bench.assert_called_once()
             hard.assert_not_called()
@@ -294,10 +294,10 @@ class JevCacheExceptionTests(JevFixture):
             transport = TrackingTransport(handle)
             transports.append(transport)
             return transport
-        with patch('jev_execution.httpx2.HTTPTransport', side_effect=factory), \
-             patch('benchmark.runner.experiment_definition', return_value=definition()), \
-             patch('hard_case.runner.experiment_definition', return_value=definition('hard_case')), \
-             patch('benchmark.runner.report'), patch('hard_case.runner.report'):
+        with patch('jev_bench.providers.jev.httpx2.HTTPTransport', side_effect=factory), \
+             patch('jev_bench.run.benchmark.experiment_definition', return_value=definition()), \
+             patch('jev_bench.run.hard_case.experiment_definition', return_value=definition('hard_case')), \
+             patch('jev_bench.run.benchmark.report'), patch('jev_bench.run.hard_case.report'):
             self.assertEqual(run_jev(self.root, 10, 110, console=self.console,
                                     allow_unverified_server_cache=True), 0)
             self.assertEqual(len(requests), 110)
@@ -309,7 +309,7 @@ class JevCacheExceptionTests(JevFixture):
         self.assertTrue(all(t.closed for t in transports))
         for hard in (False, True):
             suite = 'hard_case' if hard else 'benchmark'
-            columns = __import__('hard_case.metrics' if hard else 'benchmark.metrics',
+            columns = __import__('jev_bench.suites.hard_case.metrics' if hard else 'jev_bench.suites.benchmark.metrics',
                                  fromlist=['RAW_COLUMNS']).RAW_COLUMNS
             data = json.loads((self.root / suite / 'metadata.json').read_text())['experiment']
             self.assertEqual(data['jev_cache_exception'], JEV_CACHE_EXCEPTION)
@@ -322,15 +322,15 @@ class JevCacheExceptionTests(JevFixture):
                 self.assertEqual(row['validation_success'], 'True')
                 self.assertEqual(row['cache_verified'], 'False')
                 self.assertEqual(row['failure_kind'], '')
-                revalidate_row(row, data)
+                revalidate_row(row, data, self.root / suite)
             raw = json.loads(rows[0]['raw_response_json'])
             with self.assertRaisesRegex(ValueError, 'Cache verification failed'):
-                revalidate_audit(raw['execution_audit'], raw)
-            audit = revalidate_audit(raw['execution_audit'], raw, allow_unverified_jev=True)
+                revalidate_audit(raw['execution_audit'], raw, directory=self.root / suite)
+            audit = revalidate_audit(raw['execution_audit'], raw, allow_unverified_jev=True, directory=self.root / suite)
             self.assertFalse(audit['verified'])
             self.assertEqual(audit['cache_status'], 'unverified')
             self.assertEqual(requests[100 if hard else 0]['questions'],
-                             __import__('hard_case.prompts' if hard else 'benchmark.prompts',
+                             __import__('jev_bench.suites.hard_case.prompts' if hard else 'jev_bench.suites.benchmark.prompts',
                                         fromlist=['systemone_questions']).systemone_questions())
             if hard:
                 self.assertEqual(requests[100]['state'], load_claim_packet().text)
@@ -338,13 +338,13 @@ class JevCacheExceptionTests(JevFixture):
                 self.assertEqual(requests[0]['state'], CASES[0].message)
             bad_row = {**rows[0], 'cache_verified': 'True'}
             with self.assertRaisesRegex(ValueError, 'cache status'):
-                revalidate_row(bad_row, data)
+                revalidate_row(bad_row, data, self.root / suite)
             with self.assertRaisesRegex(ValueError, 'Cache verification failed'):
-                revalidate_row(rows[0], {k: v for k, v in data.items() if k != 'jev_cache_exception'})
+                revalidate_row(rows[0], {k: v for k, v in data.items() if k != 'jev_cache_exception'}, self.root / suite)
             for field, value in [('input_tokens', '1'),
                                  (PROBABILITY_FIELDS[0] if hard else 'requires_web_probability', '.01')]:
                 with self.assertRaisesRegex(ValueError, 'differ'):
-                    revalidate_row({**rows[0], field: value}, data)
+                    revalidate_row({**rows[0], field: value}, data, self.root / suite)
         manifest = update_validation(self.root)
         self.assertTrue(manifest['complete'])
         self.assertEqual(manifest['valid_measurements'], 110)
@@ -403,7 +403,7 @@ class CombinedReportTests(JevFixture):
         data = definition(suite)
         data['model_configuration'] = {model: {}}
         if prefix:
-            from run_control import PREFIX_STRATEGY
+            from jev_bench.run.control import PREFIX_STRATEGY
             data['prefix_strategy'] = PREFIX_STRATEGY
         store = HardStore(root / suite, data) if hard else ResultStore(root / suite, data)
         if rejected:
@@ -412,7 +412,7 @@ class CombinedReportTests(JevFixture):
         elif prefix:
             import httpx
             from langchain_mistralai import ChatMistralAI
-            from benchmark.providers.mistral import MistralProvider
+            from jev_bench.providers.suites.benchmark.mistral import MistralProvider
             def handle(request):
                 return httpx.Response(200, json={'id': 'prefix-fixture', 'model': model,
                     'choices': [{'index': 0, 'finish_reason': 'stop', 'message': {
@@ -423,12 +423,12 @@ class CombinedReportTests(JevFixture):
                 return ChatMistralAI(**settings, client=httpx.Client(
                     base_url='https://fixture/v1', transport=httpx.MockTransport(handle)))
             with patch.dict('os.environ', {'MISTRAL_API_KEY': 'fixture'}), \
-                 patch('benchmark.providers.mistral.ChatMistralAI', side_effect=factory):
+                 patch('jev_bench.providers.suites.benchmark.mistral.ChatMistralAI', side_effect=factory):
                 provider = MistralProvider(model, audit_directory=root / suite / 'execution_audit')
                 provider.prefix_experiment = True
                 measured = provider.invoke(CASES[0].message)
         elif hard:
-            from hard_case.providers.base import validate_result
+            from jev_bench.providers.suites.hard_case.base import validate_result
             measured = audited_result(validate_result({f: .5 for f in PROBABILITY_FIELDS}, {}), model, load_claim_packet().text)
         else:
             measured = audited_result(successful_result(), model, CASES[0].message)
@@ -509,7 +509,7 @@ class CombinedReportTests(JevFixture):
             fcntl.flock(lock, fcntl.LOCK_EX)
             with self.assertRaisesRegex(ValueError, 'currently writing'):
                 build_combined_report([root])
-        from show_evaluations import main
+        from jev_bench.run_evaluations.reporting import main
         before = (directory / 'raw.csv').read_bytes()
         with patch('sys.stderr', new=io.StringIO()):
             self.assertEqual(main(['--input-dirs', str(root), '--output', str(directory / 'raw.csv')]), 1)

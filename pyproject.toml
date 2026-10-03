@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jev-bench"
+version = "0.1.0"
+description = "Audited structured judgment and repeatability benchmarks"
+requires-python = ">=3.12,<3.13"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jev_bench"]
+
+[tool.uv]
+package = true

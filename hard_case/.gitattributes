@@ -1,2 +1,0 @@
-# Preserve published measurement bytes so their recorded SHA256 hashes survive checkout.
-results/** -text whitespace=cr-at-eol

@@ -1,5 +1,6 @@
-from execution import POLICY
-from runtime.testing import audited_result
+from jev_bench.storage.io import output_lock
+from jev_bench.runtime.execution import POLICY
+from tests.fixtures.audit import audited_result
 import copy
 import csv
 import io
@@ -14,33 +15,17 @@ from langchain_core.messages import AIMessage
 from pydantic import ValidationError
 from rich.console import Console
 
-from benchmark.cases import CASES
-from benchmark.metrics import derive, normalized, results_frame, summarize
-from benchmark.plots import plot_results
-from benchmark.providers.base import structured_result, token_usage, validate_result
-from benchmark.providers.ollama_systemone import SystemOneProvider, map_response
-from benchmark.runner import ResultStore, compatible_definition, measured_row as production_measured_row, output_lock, run_benchmark
-from benchmark.schemas import DecisionOutput
-from main import main, parse_args
+from jev_bench.suites.benchmark.cases import CASES
+from jev_bench.suites.benchmark.metrics import derive, normalized, results_frame, summarize
+from jev_bench.run_evaluations.plots.benchmark import plot_results
+from jev_bench.providers.suites.benchmark.base import structured_result, token_usage, validate_result
+from jev_bench.providers.suites.benchmark.ollama_systemone import SystemOneProvider, map_response
+from jev_bench.run.benchmark import ResultStore, compatible_definition, measured_row as production_measured_row, run_benchmark
+from jev_bench.suites.benchmark.schemas import DecisionOutput
+from jev_bench.run.benchmark_cli import main, parse_args
 
 
-def values():
-    return {
-        "requires_web_probability": 0.5,
-        "is_safe_probability": 0.9,
-        "route_probabilities": {"answer_directly": 0.2, "web_search": 0.2,
-                                "refuse": 0.1, "ask_clarification": 0.0},
-        "freshness_probabilities": {"0": 0.0, "1": 0.0, "2": 0.0,
-                                    "3": 0.2, "4": 0.2, "5": 0.0},
-    }
-
-
-def result():
-    return audited_result(validate_result(values(), {"fixture": True}, 10, 20))
-
-
-def measured_row(model, case, repetition, response, latency):
-    return production_measured_row(model, case, repetition, audited_result(response, model, case.message), latency)
+from tests.fixtures.benchmark import values, result, measured_row
 
 
 class SchemaAndMetricsTests(unittest.TestCase):
@@ -121,7 +106,7 @@ class ProviderTests(unittest.TestCase):
                                       "probabilities": values()["freshness_probabilities"]}},
             "usage": {"input_tokens": 123, "output_tokens": 4},
         }
-        with patch("benchmark.providers.ollama_systemone.systemone_call", return_value=response) as native:
+        with patch("jev_bench.providers.suites.benchmark.ollama_systemone.systemone_call", return_value=response) as native:
             measured = SystemOneProvider("tev1:0.8b", audit_directory="fixture").invoke(CASES[0].message)
         arguments = native.call_args.kwargs
         self.assertEqual(arguments["state"], CASES[0].message)
@@ -164,12 +149,12 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual(token_usage(AIMessage(content="")), (None, None))
 
     def test_provider_configuration(self):
-        from benchmark.providers import create_provider
-        with patch("benchmark.providers.ollama_chat.ChatOllama") as local:
+        from jev_bench.providers.suites.benchmark import create_provider
+        with patch("jev_bench.providers.suites.benchmark.ollama_chat.ChatOllama") as local:
             provider = create_provider("gemma4:e4b", audit_directory="fixture")
             self.assertEqual(provider.model, "gemma4:e4b")
             local.assert_not_called()  # Client creation is per invoke, never per model.
-        with patch.dict("os.environ", {"MISTRAL_API_KEY": "fixture"}), patch("benchmark.providers.mistral.ChatMistralAI") as hosted:
+        with patch.dict("os.environ", {"MISTRAL_API_KEY": "fixture"}), patch("jev_bench.providers.suites.benchmark.mistral.ChatMistralAI") as hosted:
             provider = create_provider("mistral-small-latest", audit_directory="fixture")
             self.assertEqual(provider.model, "mistral-small-latest")
             hosted.assert_not_called()
@@ -238,7 +223,7 @@ class PersistenceAndRunnerTests(unittest.TestCase):
                 ResultStore(self.directory, incompatible)
 
     def run_fixture(self, models, cases, repetitions, provider_factory):
-        with patch("benchmark.runner.report"), patch("benchmark.runner.measured_row", side_effect=measured_row):
+        with patch("jev_bench.run.benchmark.report"), patch("jev_bench.run.benchmark.measured_row", side_effect=measured_row):
             return run_benchmark(models, cases, repetitions, 2, self.root,
                                  provider_factory, self.console, self.definition,
                                  )
@@ -290,7 +275,7 @@ class PersistenceAndRunnerTests(unittest.TestCase):
         # Other tests exercise per-attempt atomic snapshots. Batch snapshots here
         # to keep this 1,500-row regression fast; the real CSV history is retained
         # and reloaded between all six invocations.
-        with patch.object(ResultStore, "save_raw"), patch("benchmark.runner.os.fsync"):
+        with patch.object(ResultStore, "save_raw"), patch("jev_bench.run.benchmark.os.fsync"):
             expected_rows = 0
             for models in groups:
                 before = provider.invoke.call_count
@@ -351,7 +336,7 @@ class PersistenceAndRunnerTests(unittest.TestCase):
 
 class CliTests(unittest.TestCase):
     def test_all_runs_six_models_without_gemma_12b(self):
-        with patch("main.run_benchmark", return_value=0) as runner, patch("main.load_dotenv"):
+        with patch("jev_bench.run.benchmark_cli.run_benchmark", return_value=0) as runner, patch("jev_bench.run.benchmark_cli.load_dotenv"):
             self.assertEqual(main(["--all"]), 0)
         models = runner.call_args.args[0]
         self.assertEqual(len(models), 6)

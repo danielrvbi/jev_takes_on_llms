@@ -1,5 +1,6 @@
-from execution import POLICY
-from runtime.testing import audited_result
+from jev_bench.storage.io import output_lock
+from jev_bench.runtime.execution import POLICY
+from tests.fixtures.audit import audited_result
 import copy
 import csv
 import hashlib
@@ -11,23 +12,23 @@ from unittest.mock import patch
 
 import pandas as pd
 
-from benchmark.cases import CASES
-from benchmark.metrics import RAW_COLUMNS, results_frame, summarize
-from benchmark.providers.base import validate_result
-from benchmark.runner import ResultStore, experiment_definition, measured_row, output_lock
-from reconcile_results import (
+from jev_bench.suites.benchmark.cases import CASES
+from jev_bench.suites.benchmark.metrics import RAW_COLUMNS, results_frame, summarize
+from jev_bench.providers.suites.benchmark.base import validate_result
+from jev_bench.run.benchmark import ResultStore, experiment_definition, measured_row
+from jev_bench.run_evaluations.reconcile import (
     MISTRAL_MODELS, SUITE_MODELS, definition_fingerprint, load_source, reconcile,
 )
-from show_evaluations import load_results
-from tests.test_benchmark import result, measured_row
+from jev_bench.run_evaluations.reporting import load_results
+from tests.fixtures.benchmark import result, measured_row
 
 
 class ReconciliationTests(unittest.TestCase):
     def setUp(self):
-        patcher = patch("benchmark.runner.experiment_execution", return_value={"execution_policy": POLICY, "runtime": "offline-fixture"})
+        patcher = patch("jev_bench.run.benchmark.experiment_execution", return_value={"execution_policy": POLICY, "runtime": "offline-fixture"})
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = patch("benchmark.runner.model_identity", side_effect=lambda m: {"model":m,"digest":"fixture"})
+        patcher = patch("jev_bench.run.benchmark.model_identity", side_effect=lambda m: {"model":m,"digest":"fixture"})
         patcher.start()
         self.addCleanup(patcher.stop)
         self.temp = tempfile.TemporaryDirectory()
@@ -64,8 +65,8 @@ class ReconciliationTests(unittest.TestCase):
 
     def run_reconcile(self):
         # Plot generation is covered by the existing plot tests and the real-data run.
-        with patch("reconcile_results.plot_results"), patch("ollama.systemone", side_effect=AssertionError("No calls")), \
-                patch("benchmark.providers.create_provider", side_effect=AssertionError("No providers")):
+        with patch("jev_bench.run_evaluations.reconcile.plot_results"), patch("ollama.systemone", side_effect=AssertionError("No calls")), \
+                patch("jev_bench.providers.suites.benchmark.create_provider", side_effect=AssertionError("No providers")):
             return reconcile(self.suite, self.mistral, self.output)
 
     def update_definition(self, directory, change):
@@ -190,7 +191,7 @@ class ReconciliationTests(unittest.TestCase):
         self.assertEqual((self.output / "keep.txt").read_text(), "preserve")
 
     def test_failure_during_plotting_does_not_publish_or_leave_staging(self):
-        with patch("reconcile_results.plot_results", side_effect=RuntimeError("plot failed")):
+        with patch("jev_bench.run_evaluations.reconcile.plot_results", side_effect=RuntimeError("plot failed")):
             with self.assertRaisesRegex(RuntimeError, "plot failed"):
                 reconcile(self.suite, self.mistral, self.output)
         self.assertFalse(self.output.exists())

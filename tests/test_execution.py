@@ -1,3 +1,4 @@
+from jev_bench.storage.io import output_lock
 import io
 import json
 from pathlib import Path
@@ -13,15 +14,15 @@ from langchain_core.globals import get_llm_cache, set_llm_cache
 from langchain_mistralai import ChatMistralAI
 from rich.console import Console
 
-from execution import (AuditError, POLICY, fingerprint, hosted_call, local_call, revalidate_audit,
+from jev_bench.runtime.execution import (AuditError, POLICY, fingerprint, hosted_call, local_call, revalidate_audit,
                        stop_process_tree, verify_cold_log, verify_mistral_cache)
-from benchmark.cases import CASES
-from benchmark.providers.mistral import MistralProvider
-from benchmark.runner import ResultStore, measured_row, run_benchmark
-from hard_case.main import parse_args as hard_args
-from main import parse_args
-from runtime.testing import audited_result
-from tests.test_benchmark import result, values
+from jev_bench.suites.benchmark.cases import CASES
+from jev_bench.providers.suites.benchmark.mistral import MistralProvider
+from jev_bench.run.benchmark import ResultStore, measured_row, run_benchmark
+from jev_bench.run.hard_case_cli import parse_args as hard_args
+from jev_bench.run.benchmark_cli import parse_args
+from tests.fixtures.audit import audited_result
+from tests.fixtures.benchmark import result, values
 
 
 def task_log(task, tokens=123):
@@ -104,11 +105,11 @@ class ProcessLifecycleTests(unittest.TestCase):
                 audit['requests'] = [{'model': 'tev1:0.8b', 'state': 'unchanged'}]
                 audit['request_sha256'] = fingerprint(audit['requests'][0])
                 return {'model': 'tev1:0.8b'}
-            with patch('execution.runtime_identity', return_value={'binary': 'bin/ollama'}), \
-                 patch('execution.model_identity', return_value={'model': 'fixture'}), \
-                 patch('execution.subprocess.Popen', side_effect=launch), \
-                 patch('execution.stop_process_tree', side_effect=cleanup) as stop, \
-                 patch('execution.httpx.Client') as http_factory, patch('execution.ollama.Client') as clients:
+            with patch('jev_bench.runtime.execution.runtime_identity', return_value={'binary': 'bin/ollama'}), \
+                 patch('jev_bench.runtime.execution.model_identity', return_value={'model': 'fixture'}), \
+                 patch('jev_bench.runtime.execution.subprocess.Popen', side_effect=launch), \
+                 patch('jev_bench.runtime.execution.stop_process_tree', side_effect=cleanup) as stop, \
+                 patch('jev_bench.runtime.execution.httpx.Client') as http_factory, patch('jev_bench.runtime.execution.ollama.Client') as clients:
                 http_factory.return_value.__enter__.return_value = http
                 clients.return_value.__enter__.return_value = client
                 args = ('tev1:0.8b', {'model': 'tev1:0.8b', 'state': 'unchanged'}, directory)
@@ -128,7 +129,7 @@ class ProcessLifecycleTests(unittest.TestCase):
     def test_hung_server_is_killed_reaped_and_group_absence_checked(self):
         process = Mock(pid=1234)
         process.wait.side_effect = [subprocess.TimeoutExpired('serve', 10), 0]
-        with patch('execution.os.killpg', side_effect=[None, None, None, ProcessLookupError()]) as kill:
+        with patch('jev_bench.runtime.execution.os.killpg', side_effect=[None, None, None, ProcessLookupError()]) as kill:
             self.assertTrue(stop_process_tree(process))
         self.assertEqual(kill.call_args_list[-1].args, (1234, 0))
         self.assertEqual(process.wait.call_count, 2)
@@ -138,8 +139,8 @@ class ProcessLifecycleTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             process = Mock(pid=99999, returncode=1)
             process.poll.return_value = 1
-            with patch('execution.runtime_identity', return_value={'binary':'bin/ollama'}), patch('execution.model_identity', return_value={}), \
-                 patch('execution.subprocess.Popen', return_value=process), patch('execution.stop_process_tree', return_value=True) as stop:
+            with patch('jev_bench.runtime.execution.runtime_identity', return_value={'binary':'bin/ollama'}), patch('jev_bench.runtime.execution.model_identity', return_value={}), \
+                 patch('jev_bench.runtime.execution.subprocess.Popen', return_value=process), patch('jev_bench.runtime.execution.stop_process_tree', return_value=True) as stop:
                 with self.assertRaises(AuditError):
                     local_call('tev1:0.8b', {}, directory, Mock(), minimum_tasks=1, endpoint='/v1/systemone')
             stop.assert_called_once_with(process)
@@ -164,7 +165,7 @@ class HostedClientTests(unittest.TestCase):
                 clients.append(llm)
                 return llm
             set_llm_cache(InMemoryCache())
-            with patch.dict('os.environ', {'MISTRAL_API_KEY': 'fixture'}), patch('benchmark.providers.mistral.ChatMistralAI', side_effect=factory):
+            with patch.dict('os.environ', {'MISTRAL_API_KEY': 'fixture'}), patch('jev_bench.providers.suites.benchmark.mistral.ChatMistralAI', side_effect=factory):
                 provider = MistralProvider('mistral-small-latest', audit_directory=directory)
                 provider.prefix_experiment = prefix
                 results = [provider.invoke(CASES[0].message) for _ in range(count)]
@@ -173,7 +174,7 @@ class HostedClientTests(unittest.TestCase):
             self.assertTrue(all(c.client.is_closed for c in clients))
             self.assertEqual(len({r['prompt_cache_key'] for r in requests}), count)
             if prefix:
-                from benchmark.prompts import SYSTEM_PROMPT
+                from jev_bench.suites.benchmark.prompts import SYSTEM_PROMPT
                 identifiers = [r['messages'][0]['content'].split('\n\n', 1)[0] for r in requests]
                 self.assertEqual(len(set(identifiers)), count)
                 for r in requests:
@@ -207,11 +208,11 @@ class HostedClientTests(unittest.TestCase):
 
 class ResumeAndLayoutTests(unittest.TestCase):
     def test_only_one_policy_and_common_root(self):
-        self.assertEqual(parse_args(['--all']).output_dir, hard_args(['--all']).output_dir)
+        self.assertEqual(parse_args(['--all']).output_dir.parent, hard_args(['--all']).output_dir.parent)
         for parse in [parse_args, hard_args]:
             with self.assertRaises(SystemExit), patch('sys.stderr', new=io.StringIO()):
                 parse(['--all', '--systemone-execution', 'shared'])
-        with tempfile.TemporaryDirectory() as directory, patch('benchmark.runner.report'):
+        with tempfile.TemporaryDirectory() as directory, patch('jev_bench.run.benchmark.report'):
             provider = Mock()
             provider.invoke.side_effect = lambda message: result()
             kwargs = dict(models=['fixture'], cases=[CASES[0]], repetitions=1, warmups=2, output_dir=directory,
@@ -238,11 +239,11 @@ class ResumeAndLayoutTests(unittest.TestCase):
             ResultStore(directory, {'old':True})
 
     def test_common_root_keeps_csv_schemas_separate(self):
-        from hard_case.runner import run_hard_case_benchmark
-        from hard_case.schemas import PROBABILITY_FIELDS
-        from hard_case.providers.base import validate_result
+        from jev_bench.run.hard_case import run_hard_case_benchmark
+        from jev_bench.suites.hard_case.schemas import PROBABILITY_FIELDS
+        from jev_bench.providers.suites.hard_case.base import validate_result
         import csv
-        with tempfile.TemporaryDirectory() as directory, patch('benchmark.runner.report'), patch('hard_case.runner.report'):
+        with tempfile.TemporaryDirectory() as directory, patch('jev_bench.run.benchmark.report'), patch('jev_bench.run.hard_case.report'):
             original = Mock()
             original.invoke.side_effect = lambda message: result()
             hard = Mock()
@@ -274,12 +275,12 @@ class ResumeAndLayoutTests(unittest.TestCase):
                 ResultStore(directory,definition)
 
     def test_manifest_requires_all_55_independent_audited_keys(self):
-        from validation import update_validation
-        from benchmark.providers import MODELS
-        from tests.test_benchmark import measured_row as fixture_original_row
-        from hard_case.runner import ResultStore as HardStore, measured_row as hard_row
-        from hard_case.providers.base import validate_result
-        from hard_case.schemas import PROBABILITY_FIELDS
+        from jev_bench.run_evaluations.validation import update_validation
+        from jev_bench.providers.suites.benchmark import MODELS
+        from tests.fixtures.benchmark import measured_row as fixture_original_row
+        from jev_bench.run.hard_case import ResultStore as HardStore, measured_row as hard_row
+        from jev_bench.providers.suites.hard_case.base import validate_result
+        from jev_bench.suites.hard_case.schemas import PROBABILITY_FIELDS
         import hashlib
         with tempfile.TemporaryDirectory() as root:
             root=Path(root)
@@ -304,7 +305,7 @@ class ResumeAndLayoutTests(unittest.TestCase):
             manifest=update_validation(root)
             self.assertTrue(manifest['complete'])
             self.assertEqual(manifest['valid_measurements'],55)
-            from show_evaluations import main as report_main
+            from jev_bench.run_evaluations.reporting import main as report_main
             with patch('sys.stderr',new=io.StringIO()):
                 self.assertEqual(report_main(['--input-dir',str(root),'--output',str(root/'evaluation.md')]),0)
             rendered=(root/'evaluation.md').read_text()
@@ -315,8 +316,7 @@ class ResumeAndLayoutTests(unittest.TestCase):
             self.assertFalse(update_validation(root)['complete'])
 
     def test_validation_does_not_read_a_partially_written_suite(self):
-        from execution import output_lock
-        from validation import update_validation
+        from jev_bench.run_evaluations.validation import update_validation
         with tempfile.TemporaryDirectory() as root:
             with output_lock(Path(root)/'benchmark'):
                 manifest=update_validation(root)
@@ -324,6 +324,6 @@ class ResumeAndLayoutTests(unittest.TestCase):
                 self.assertEqual(manifest['status'],'suite_writer_active')
 
     def test_quarantine_root_is_rejected_before_writing(self):
-        from execution import suite_directory
+        from jev_bench.runtime.execution import suite_directory
         with self.assertRaisesRegex(ValueError, 'Quarantined'):
             suite_directory('results_contaminated_dont_use', 'benchmark')

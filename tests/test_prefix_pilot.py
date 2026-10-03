@@ -7,14 +7,14 @@ from unittest.mock import Mock, patch
 
 from rich.console import Console
 
-from benchmark.cases import CASES
-from benchmark.providers.base import ProviderResult
-from benchmark.runner import run_benchmark
-from hard_case.runner import run_hard_case_benchmark
-from run_control import CallGuard, RunStopped, experiment_settings
-from run_prefix_pilot import run_pilot
-from tests.test_benchmark import result
-from runtime.testing import audited_result
+from jev_bench.suites.benchmark.cases import CASES
+from jev_bench.providers.suites.benchmark.base import ProviderResult
+from jev_bench.run.benchmark import run_benchmark
+from jev_bench.run.hard_case import run_hard_case_benchmark
+from jev_bench.run.control import CallGuard, RunStopped, experiment_settings
+from jev_bench.run.prefix_pilot import run_pilot
+from tests.fixtures.benchmark import result
+from tests.fixtures.audit import audited_result
 
 
 class PilotTests(unittest.TestCase):
@@ -22,7 +22,7 @@ class PilotTests(unittest.TestCase):
         self.console = Console(file=io.StringIO())
 
     def test_budget_includes_warmups_and_does_not_dispatch_extra_call(self):
-        with tempfile.TemporaryDirectory() as directory, patch('benchmark.runner.report'):
+        with tempfile.TemporaryDirectory() as directory, patch('jev_bench.run.benchmark.report'):
             provider = Mock()
             provider.invoke.side_effect = lambda text: result()
             with self.assertRaisesRegex(RunStopped, 'budget exhausted'):
@@ -36,7 +36,7 @@ class PilotTests(unittest.TestCase):
     def test_both_suites_persist_cache_failure_before_stopping(self):
         for suite in ('benchmark', 'hard_case'):
             with self.subTest(suite=suite), tempfile.TemporaryDirectory() as directory, \
-                    patch('benchmark.runner.report'), patch('hard_case.runner.report'):
+                    patch('jev_bench.run.benchmark.report'), patch('jev_bench.run.hard_case.report'):
                 provider = Mock()
                 provider.invoke.side_effect = lambda text: ProviderResult(error='backend failed')
                 kwargs=dict(repetitions=2, warmups=0, output_dir=directory,
@@ -51,7 +51,7 @@ class PilotTests(unittest.TestCase):
                     rows=list(csv.DictReader(f))
                 self.assertEqual(len(rows), 1)
                 self.assertEqual(rows[0]['failure_kind'], 'cache_verification')
-                self.assertTrue(Path(rows[0]['audit_path']).exists())
+                self.assertTrue((Path(directory)/suite/rows[0]['audit_path']).exists())
 
     def test_prefix_requires_mistral_budget_and_distinct_root(self):
         root, guard=experiment_settings('results', ['mistral-small-latest'], True, 8)
@@ -63,8 +63,8 @@ class PilotTests(unittest.TestCase):
 
     def test_pilot_stops_globally_and_refuses_retry(self):
         with tempfile.TemporaryDirectory() as directory, \
-                patch('run_prefix_pilot.run_benchmark', side_effect=RunStopped('cached')) as bench, \
-                patch('run_prefix_pilot.run_hard_case_benchmark') as hard:
+                patch('jev_bench.run.prefix_pilot.run_benchmark', side_effect=RunStopped('cached')) as bench, \
+                patch('jev_bench.run.prefix_pilot.run_hard_case_benchmark') as hard:
             self.assertEqual(run_pilot(directory,self.console),1)
             self.assertEqual(bench.call_count,1)
             hard.assert_not_called()
@@ -72,7 +72,7 @@ class PilotTests(unittest.TestCase):
             path=Path(directory)/'prefix_pilot/benchmark/attempt_history.csv'
             path.parent.mkdir(parents=True)
             path.write_text('validation_success\nFalse\n')
-            with patch('run_prefix_pilot.run_benchmark') as bench, self.assertRaisesRegex(RunStopped,'rejected attempt'):
+            with patch('jev_bench.run.prefix_pilot.run_benchmark') as bench, self.assertRaisesRegex(RunStopped,'rejected attempt'):
                 run_pilot(directory,self.console)
             bench.assert_not_called()
 
@@ -83,9 +83,9 @@ class PilotTests(unittest.TestCase):
             calls.append(('benchmark',models[0],settings));return 0
         def hard(models,**settings):
             calls.append(('hard_case',models[0],settings));return 0
-        with tempfile.TemporaryDirectory() as directory, patch('run_prefix_pilot.run_benchmark',side_effect=bench), \
-                patch('run_prefix_pilot.run_hard_case_benchmark',side_effect=hard), \
-                patch('run_prefix_pilot.update_validation',return_value={'complete':True}):
+        with tempfile.TemporaryDirectory() as directory, patch('jev_bench.run.prefix_pilot.run_benchmark',side_effect=bench), \
+                patch('jev_bench.run.prefix_pilot.run_hard_case_benchmark',side_effect=hard), \
+                patch('jev_bench.run.prefix_pilot.update_validation',return_value={'complete':True}):
             self.assertEqual(run_pilot(directory,self.console),0)
         self.assertEqual([(s,m) for s,m,k in calls],[(s,m) for s in ('benchmark','hard_case')
             for m in ('mistral-small-latest','mistral-large-latest')])
@@ -105,10 +105,10 @@ class PilotTests(unittest.TestCase):
         import json
         import httpx
         from langchain_mistralai import ChatMistralAI
-        from benchmark.prompts import SYSTEM_PROMPT as original_prompt
-        from hard_case.prompts import SYSTEM_PROMPT as hard_prompt
-        from hard_case.schemas import PROBABILITY_FIELDS
-        from tests.test_benchmark import values
+        from jev_bench.suites.benchmark.prompts import SYSTEM_PROMPT as original_prompt
+        from jev_bench.suites.hard_case.prompts import SYSTEM_PROMPT as hard_prompt
+        from jev_bench.suites.hard_case.schemas import PROBABILITY_FIELDS
+        from tests.fixtures.benchmark import values
         requests=[]
         def handle(request):
             body=json.loads(request.content);requests.append(body)
@@ -124,11 +124,11 @@ class PilotTests(unittest.TestCase):
         definition={'prompts':{'llm_system':original_prompt},
             'cases':[{'case_id':1,'message':CASES[0].message}]}
         with tempfile.TemporaryDirectory() as directory, patch.dict('os.environ',{'MISTRAL_API_KEY':'fixture'}), \
-                patch('benchmark.providers.mistral.ChatMistralAI',side_effect=factory), \
-                patch('hard_case.providers.mistral.ChatMistralAI',side_effect=factory), \
-                patch('benchmark.runner.experiment_definition',return_value=definition), \
-                patch('hard_case.runner.experiment_definition',side_effect=hard_definition), \
-                patch('benchmark.runner.report'), patch('hard_case.runner.report'):
+                patch('jev_bench.providers.suites.benchmark.mistral.ChatMistralAI',side_effect=factory), \
+                patch('jev_bench.providers.suites.hard_case.mistral.ChatMistralAI',side_effect=factory), \
+                patch('jev_bench.run.benchmark.experiment_definition',return_value=definition), \
+                patch('jev_bench.run.hard_case.experiment_definition',side_effect=hard_definition), \
+                patch('jev_bench.run.benchmark.report'), patch('jev_bench.run.hard_case.report'):
             self.assertEqual(run_pilot(directory,self.console),0)
             manifest=json.loads((Path(directory)/'prefix_pilot/validation.json').read_text())
             self.assertTrue(manifest['complete'])
@@ -136,7 +136,7 @@ class PilotTests(unittest.TestCase):
             self.assertEqual(manifest['valid_measurements'],8)
             self.assertEqual(run_pilot(directory,self.console),0)
             self.assertEqual(len(requests),8)
-            from benchmark.runner import ResultStore
+            from jev_bench.run.benchmark import ResultStore
             with self.assertRaisesRegex(ValueError,'Incompatible'):
-                ResultStore(Path(directory)/'prefix_pilot/benchmark',{'execution_policy':__import__('execution').POLICY,**definition})
+                ResultStore(Path(directory)/'prefix_pilot/benchmark',{'execution_policy':__import__('jev_bench.runtime.execution', fromlist=['POLICY']).POLICY,**definition})
         self.assertEqual(len({r['messages'][0]['content'] for r in requests}),8)

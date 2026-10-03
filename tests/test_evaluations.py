@@ -1,5 +1,6 @@
-from execution import POLICY
-from runtime.testing import audited_result
+from jev_bench.storage.io import output_lock
+from jev_bench.runtime.execution import POLICY
+from tests.fixtures.audit import audited_result
 import io
 import tempfile
 import unittest
@@ -7,11 +8,11 @@ from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
-from benchmark.cases import CASES
-from benchmark.providers.base import validate_result
-from benchmark.runner import ResultStore, measured_row, output_lock
-from show_evaluations import build_report, find_results, load_results, main
-from tests.test_benchmark import result
+from jev_bench.suites.benchmark.cases import CASES
+from jev_bench.providers.suites.benchmark.base import validate_result
+from jev_bench.run.benchmark import ResultStore, measured_row
+from jev_bench.run_evaluations.reporting import build_report, find_results, load_results, main
+from tests.fixtures.benchmark import result
 
 
 class EvaluationReportTests(unittest.TestCase):
