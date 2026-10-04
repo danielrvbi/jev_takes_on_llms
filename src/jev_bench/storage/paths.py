@@ -43,7 +43,7 @@ def resolve_evidence(value):
         for ancestor in (directory, *directory.parents):
             manifest = ancestor / "migrations/relocations.json"
             if manifest.exists():
-                for old, new in json.loads(manifest.read_text())["paths"].items():
+                for old, new in json.loads(manifest.read_text(encoding="utf-8"))["paths"].items():
                     if path.is_relative_to(old):
                         return ancestor / new / path.relative_to(old)
                 break
@@ -56,7 +56,7 @@ def ensure_writable(directory):
     for ancestor in (directory, *directory.parents):
         catalog = ancestor / "catalog.json"
         if catalog.exists():
-            for relative, entry in json.loads(catalog.read_text()).get("datasets", {}).items():
+            for relative, entry in json.loads(catalog.read_text(encoding="utf-8")).get("datasets", {}).items():
                 if directory.is_relative_to((ancestor / relative).resolve()) and entry.get("archived"):
                     raise ValueError("Archived dataset is reportable only; select a new experiment")
 

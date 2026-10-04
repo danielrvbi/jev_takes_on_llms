@@ -95,7 +95,7 @@ def evidence_status(root, moves, physical_root=None):
                 if not audit_path.exists() or hashlib.sha256(audit_path.read_bytes()).hexdigest() != link.get('audit_sha256'):
                     issues.append({'dataset': str(history.parent), 'call_id': row.get('call_id'), 'reason': 'missing or mismatched audit'})
                     continue
-                audit = json.loads(audit_path.read_text())
+                audit = json.loads(audit_path.read_text(encoding="utf-8"))
                 if audit.get('log_path') and audit.get('log_sha256'):
                     log = resolve(audit['log_path'], history.parent)
                     if not log.exists() or hashlib.sha256(log.read_bytes()).hexdigest() != audit['log_sha256']:
@@ -114,7 +114,7 @@ def migrate(root=PROJECT_ROOT, *, apply=False):
     root = Path(root).resolve()
     manifest_path = root / 'results/migrations/migration.json'
     if manifest_path.exists():
-        plan = json.loads(manifest_path.read_text())
+        plan = json.loads(manifest_path.read_text(encoding="utf-8"))
         if plan['status'] == 'complete':
             for item in plan['moves']:
                 destination = root / item['destination']

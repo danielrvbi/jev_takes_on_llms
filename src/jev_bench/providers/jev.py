@@ -139,7 +139,7 @@ def validate_selection(root, models, warmups, max_new_calls):
         history = root / suite / 'attempt_history.csv'
         if history.exists():
             import csv
-            with history.open(newline='') as handle:
+            with history.open(newline='', encoding='utf-8') as handle:
                 if any(row['model'] == JEV_MODEL and row['validation_success'].lower() != 'true'
                        for row in csv.DictReader(handle)):
                     raise RunStopped('Jev already has a rejected attempt; no automatic retry')

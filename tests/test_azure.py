@@ -18,7 +18,7 @@ from jev_bench.providers.azure_config import AZURE_MODELS, configuration
 from jev_bench.providers.base import InvocationContext
 from jev_bench.run.azure import run_azure
 from jev_bench.run.control import RunStopped
-from jev_bench.runtime.execution import revalidate_audit, fingerprint
+from jev_bench.runtime.execution import revalidate_audit, fingerprint, file_hash
 from jev_bench.suites import get_suite
 from tests.fixtures.benchmark import values
 
@@ -182,6 +182,48 @@ class AzureRunTests(unittest.TestCase):
             return backend.factory(suite)(model, **settings)
         with patch('jev_bench.run.benchmark.report'), patch('jev_bench.run.hard_case.report'):
             return run_azure(phase, root, provider_factory=factory, console=Console(file=io.StringIO()), **kwargs)
+
+    def test_unicode_audits_resume_and_reporting_with_windows_default_encoding(self):
+        from jev_bench.run.azure import verify_pilot
+        from jev_bench.run_evaluations.artifacts import render
+        from jev_bench.run_evaluations.validation import validate_saved
+
+        original_open, original_read_text = Path.open, Path.read_text
+
+        def windows_open(path, mode='r', buffering=-1, encoding=None, errors=None, newline=None):
+            if 'b' not in mode and encoding in (None, 'locale'):
+                encoding = 'cp1252'
+            return original_open(path, mode, buffering, encoding, errors, newline)
+
+        def windows_read_text(path, encoding=None, errors=None):
+            return original_read_text(path, encoding=encoding or 'cp1252', errors=errors)
+
+        backend = OfflineAzure()
+        pilot = self.root / 'pilot'
+        with patch.object(Path, 'open', windows_open), patch.object(Path, 'read_text', windows_read_text):
+            # Save all eight benchmark calls and one Unicode insurance call, then resume.
+            with self.assertRaises(RunStopped):
+                self.run_backend(backend, 'pilot', pilot, max_new_calls=9)
+            self.assertEqual(len(backend.requests), 9)
+            audit_path = next((pilot / 'hard_case' / 'execution_audit').glob('*.json'))
+            with self.assertRaises(UnicodeDecodeError):
+                audit_path.read_text()
+            audit = json.loads(audit_path.read_text(encoding='utf-8'))
+            link = {'audit_path': str(audit_path), 'audit_sha256': file_hash(audit_path),
+                    'call_id': audit['call_id']}
+            self.assertTrue(revalidate_audit(link)['verified'])
+
+            self.assertTrue(self.run_backend(backend, 'pilot', pilot)['complete'])
+            self.assertEqual(len(backend.requests), 16)
+            self.assertTrue(self.run_backend(backend, 'pilot', pilot)['complete'])
+            self.assertEqual(len(backend.requests), 16)
+            plan = json.loads((pilot / 'run_plan.json').read_text(encoding='utf-8'))
+            verify_pilot(pilot, plan['compatibility_sha256'])
+            self.assertTrue(validate_saved(pilot, self.root / 'validation-report')['complete'])
+            with patch('jev_bench.providers.registry.create_provider', side_effect=AssertionError('No model calls')):
+                report = render(pilot, self.root / 'reports')
+            self.assertIn('Altered-prompt prefix experiment', report.read_text(encoding='utf-8'))
+            self.assertEqual(len(backend.requests), 16)
 
     def test_pilot_full_targets_resume_and_relocated_offline_reporting(self):
         backend = OfflineAzure()

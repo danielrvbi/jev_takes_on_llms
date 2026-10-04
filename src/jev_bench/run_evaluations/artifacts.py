@@ -20,7 +20,7 @@ def render(root, output, *, suite='all', models=None, case_ids=None, include_raw
     directories = [(root / name, name) for name in ('benchmark', 'hard_case')
                    if (root / name / 'raw.csv').exists() and suite in ('all', name)]
     if (root / 'raw.csv').exists():
-        with (root / 'raw.csv').open(newline='') as stream:
+        with (root / 'raw.csv').open(newline='', encoding='utf-8') as stream:
             columns = csv.DictReader(stream).fieldnames
         name = 'benchmark' if 'case_id' in columns else 'hard_case'
         directories = [(root, name)] if suite in ('all', name) else []
@@ -31,8 +31,8 @@ def render(root, output, *, suite='all', models=None, case_ids=None, include_raw
         spec = get_suite(name)
         with saved_snapshot(directory):
             metadata_path = directory / 'metadata.json'
-            metadata = json.loads(metadata_path.read_text()) if metadata_path.exists() else {}
-            with (directory / 'raw.csv').open(newline='') as stream:
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8")) if metadata_path.exists() else {}
+            with (directory / 'raw.csv').open(newline='', encoding='utf-8') as stream:
                 reader = csv.DictReader(stream)
                 columns, rows = reader.fieldnames, list(reader)
             definition = metadata.get('experiment', {})
@@ -45,7 +45,7 @@ def render(root, output, *, suite='all', models=None, case_ids=None, include_raw
                 frame = spec.metrics.results_frame(rows)
                 history_path = directory / 'attempt_history.csv'
                 if history_path.exists():
-                    with history_path.open(newline='') as stream:
+                    with history_path.open(newline='', encoding='utf-8') as stream:
                         history = spec.metrics.results_frame(list(csv.DictReader(stream)))
                 else:
                     history = frame.copy()

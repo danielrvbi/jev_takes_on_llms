@@ -10,7 +10,7 @@ def record_selection(root, suite, models, cases, repetitions, warmups, definitio
     ensure_writable(root)
     with output_lock(root / "plan_lock"):
         path = root / "run_plan.json"
-        plan = json.loads(path.read_text()) if path.exists() else {
+        plan = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {
             "version": 2, "kind": "prefix_pilot" if prefix else "benchmark",
             "targets": {}, "revisions": []}
         # Version-one hosted plans are immutable and remain supported for legacy fixtures.

@@ -21,7 +21,7 @@ def _build_validation(root, output_directory=None):
         'hard_case': {(m, 1) for m in MODELS},
     }
     run_plan_path = root / 'run_plan.json'
-    run_plan = json.loads(run_plan_path.read_text()) if run_plan_path.exists() else None
+    run_plan = json.loads(run_plan_path.read_text(encoding="utf-8")) if run_plan_path.exists() else None
     if run_plan is not None and run_plan.get('version') == 2:
         from jev_bench.storage.plan import expected_keys
         expected = expected_keys(run_plan)
@@ -42,7 +42,7 @@ def _build_validation(root, output_directory=None):
                     'hard_case': {(JEV_MODEL, r) for r in repetitions}}
         from jev_bench.providers.jev_contract import cache_exception_for_root
         cache_exception_for_root(root)
-    prefix = any(json.loads((root / suite / 'metadata.json').read_text()).get('experiment', {}).get('prefix_strategy')
+    prefix = any(json.loads((root / suite / 'metadata.json').read_text(encoding="utf-8")).get('experiment', {}).get('prefix_strategy')
                  for suite in expected if (root / suite / 'metadata.json').exists())
     if prefix and not (run_plan or {}).get('version') == 2:
         mistral = [m for m in MODELS if m.startswith('mistral')]
@@ -63,7 +63,7 @@ def _build_validation(root, output_directory=None):
         path = directory / 'attempt_history.csv'
         latest = {}
         metadata_path = directory / "metadata.json"
-        metadata = json.loads(metadata_path.read_text()) if metadata_path.exists() else {}
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8")) if metadata_path.exists() else {}
         definition = metadata.get("experiment")
         if definition is not None and (definition.get('jev_cache_exception') !=
                 (run_plan or {}).get('jev_cache_exception')):
@@ -154,7 +154,7 @@ def update_validation(root, output_directory=None):
                     fcntl.flock(handle, fcntl.LOCK_SH | fcntl.LOCK_NB)
                 except BlockingIOError:
                     plan_path = root / 'run_plan.json'
-                    plan = json.loads(plan_path.read_text()) if plan_path.exists() else None
+                    plan = json.loads(plan_path.read_text(encoding="utf-8")) if plan_path.exists() else None
                     if plan and plan.get('version') == 2:
                         from jev_bench.storage.plan import expected_keys
                         expected = sum(len(keys) for keys in expected_keys(plan).values())

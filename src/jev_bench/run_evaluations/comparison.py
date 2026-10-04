@@ -21,7 +21,7 @@ def load_source(directory, suite):
     from jev_bench.suites.hard_case.metrics import RAW_COLUMNS as hard_columns, results_frame as hard_frame
     columns = benchmark_columns if suite == 'benchmark' else hard_columns
     frame_factory = benchmark_frame if suite == 'benchmark' else hard_frame
-    metadata = json.loads((directory / 'metadata.json').read_text())
+    metadata = json.loads((directory / 'metadata.json').read_text(encoding="utf-8"))
     definition = metadata['experiment']
     if metadata.get('kind') == 'reconciled_evaluation' or fingerprint(definition) != metadata.get('fingerprint'):
         raise ValueError('Select an original source with valid metadata: ' + str(directory))

@@ -172,7 +172,7 @@ def save_audit(audit):
     path = Path(audit['audit_path'])
     suite = path.parent.parent
     plan = suite.parent / 'run_plan.json'
-    if plan.exists() and json.loads(plan.read_text()).get('version') == 2:
+    if plan.exists() and json.loads(plan.read_text(encoding="utf-8")).get('version') == 2:
         audit['audit_path'] = str(path.relative_to(suite))
         if audit.get('log_path'):
             audit['log_path'] = str(Path(audit['log_path']).relative_to(suite))
@@ -516,7 +516,7 @@ def revalidate_audit(link, raw=None, *, require_verified=True, allow_unverified_
     path = resolve_evidence(link['audit_path'])
     if file_hash(path) != link.get('audit_sha256'):
         raise ValueError('Execution audit fingerprint mismatch')
-    audit = json.loads(path.read_text())
+    audit = json.loads(path.read_text(encoding="utf-8"))
     expected_policy = POLICY
     if audit.get('provider') in ('azure-gpt', 'azure-claude'):
         from jev_bench.runtime.azure import AZURE_POLICY

@@ -40,12 +40,12 @@ def run_plan(phase, definitions):
 def verify_pilot(pilot, compatibility):
     from jev_bench.run_evaluations.validation import validate_saved
     pilot = Path(pilot).resolve()
-    saved = json.loads((pilot / "run_plan.json").read_text())
+    saved = json.loads((pilot / "run_plan.json").read_text(encoding="utf-8"))
     if saved.get("kind") != "azure_prefix_pilot" or saved.get("compatibility_sha256") != compatibility:
         raise ValueError("A successful pilot with identical deployments, settings and implementation is required")
     observed = {}
     for suite in ('benchmark', 'hard_case'):
-        metadata = json.loads((pilot / suite / 'metadata.json').read_text())
+        metadata = json.loads((pilot / suite / 'metadata.json').read_text(encoding="utf-8"))
         observed[suite] = metadata['experiment']
         if metadata.get('fingerprint') != fingerprint(observed[suite]):
             raise ValueError('Pilot metadata fingerprint mismatch')
@@ -102,7 +102,7 @@ def run_azure(phase, output_dir, *, pilot_dir=None, max_new_calls=None, provider
     with output_lock(root / "orchestration"):
         path = root / "run_plan.json"
         if path.exists():
-            if json.loads(path.read_text()) != plan:
+            if json.loads(path.read_text(encoding="utf-8")) != plan:
                 raise ValueError("Azure plan/configuration changed; use a new --output-dir")
         else:
             if any((root / suite).exists() for suite in configs):

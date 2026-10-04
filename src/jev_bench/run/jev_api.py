@@ -43,12 +43,12 @@ def run_jev(output_dir=None, repetitions=30, max_new_calls=330,
         for suite in plan['suites']:
             history = root / suite / 'attempt_history.csv'
             if history.exists():
-                with history.open(newline='') as handle:
+                with history.open(newline='', encoding='utf-8') as handle:
                     if any(row['validation_success'].lower() != 'true' for row in csv.DictReader(handle)):
                         raise RunStopped('Jev already has a rejected attempt; no automatic retry')
         target = root / 'run_plan.json'
         if target.exists():
-            if json.loads(target.read_text()) != plan:
+            if json.loads(target.read_text(encoding="utf-8")) != plan:
                 raise RunStopped('Jev target manifest changed; refusing resume')
         else:
             if any((root / suite / 'metadata.json').exists() for suite in plan['suites']):

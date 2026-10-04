@@ -364,16 +364,16 @@ def build_hard_case_report(directory, models=None, include_raw=False):
     if any("contaminated" in part.lower() for part in directory.resolve().parts):
         raise ValueError("Quarantined results cannot be imported for reporting")
     with saved_snapshot(directory):
-        with (directory / "raw.csv").open(newline="") as f:
+        with (directory / "raw.csv").open(newline="", encoding="utf-8") as f:
             frame = hard_frame(list(csv.DictReader(f)))
-        with (directory / "attempt_history.csv").open(newline="") as f:
+        with (directory / "attempt_history.csv").open(newline="", encoding="utf-8") as f:
             history = hard_frame(list(csv.DictReader(f)))
     if models:
         frame = frame[frame.model.isin(models)]
         history = history[history.model.isin(models)]
     if frame.empty:
         raise ValueError("No hard-case measurements match selected models")
-    metadata = json.loads((directory / 'metadata.json').read_text())
+    metadata = json.loads((directory / 'metadata.json').read_text(encoding="utf-8"))
     return render_hard_case_report(directory, frame, history, metadata, include_raw)
 
 
@@ -449,7 +449,7 @@ def main(argv=None):
         known = [root / suite for suite in ["benchmark", "hard_case"] if (root / suite / "raw.csv").exists()]
         if known:
             directories = [d for d in known if args.suite == "all" or d.name == args.suite]
-        elif args.suite == "hard_case" or (root / "metadata.json").exists() and json.loads((root / "metadata.json").read_text()).get("kind") == "hard_case_benchmark":
+        elif args.suite == "hard_case" or (root / "metadata.json").exists() and json.loads((root / "metadata.json").read_text(encoding="utf-8")).get("kind") == "hard_case_benchmark":
             directories = [root]
         else:
             directories = [find_results(root)]
@@ -457,7 +457,7 @@ def main(argv=None):
             raise ValueError("Selected suite has no saved results")
         reports = []
         for directory in directories:
-            metadata = json.loads((directory / "metadata.json").read_text()) if (directory / "metadata.json").exists() else {}
+            metadata = json.loads((directory / "metadata.json").read_text(encoding="utf-8")) if (directory / "metadata.json").exists() else {}
             if metadata.get("kind") == "hard_case_benchmark":
                 reports.append(build_hard_case_report(directory, args.models, args.include_raw))
             else:

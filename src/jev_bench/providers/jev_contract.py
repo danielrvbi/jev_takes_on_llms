@@ -16,7 +16,7 @@ def cache_exception_for_root(root):
     path = Path(root) / 'run_plan.json'
     if not path.exists():
         return None
-    plan = json.loads(path.read_text())
+    plan = json.loads(path.read_text(encoding="utf-8"))
     exception = plan.get('jev_cache_exception')
     if exception is not None and (exception != JEV_CACHE_EXCEPTION
             or plan.get('kind') != 'jev_api' or plan.get('models') != [JEV_MODEL]):

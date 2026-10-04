@@ -47,7 +47,7 @@ def experiment_settings(root, models, prefix_experiment, max_new_calls):
         if not all(m in AZURE_MODELS for m in models) or not prefix_experiment or max_new_calls is None:
             raise ValueError('Azure requires a separate, capped prefix experiment')
         plan = root / 'run_plan.json'
-        if not plan.exists() or json.loads(plan.read_text()).get('kind') not in ('azure_prefix_pilot', 'azure_prefix_full'):
+        if not plan.exists() or json.loads(plan.read_text(encoding="utf-8")).get('kind') not in ('azure_prefix_pilot', 'azure_prefix_full'):
             raise ValueError('Use python -m jev_bench.run azure to initialize both suite targets')
         return root, guard
     if prefix_experiment:
@@ -57,6 +57,6 @@ def experiment_settings(root, models, prefix_experiment, max_new_calls):
             raise ValueError('The prefix experiment requires --max-new-calls')
         import json
         plan = root / 'run_plan.json'
-        if not plan.exists() or json.loads(plan.read_text()).get('kind') != 'prefix_pilot':
+        if not plan.exists() or json.loads(plan.read_text(encoding="utf-8")).get('kind') != 'prefix_pilot':
             root = root / 'prefix_pilot'
     return root, guard
