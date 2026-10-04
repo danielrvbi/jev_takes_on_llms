@@ -98,7 +98,7 @@ class AuditedChatProvider:
             # The sidecar holds the complete response even when cache verification rejects it.
             from pathlib import Path
             from jev_bench.storage.paths import resolve_evidence
-            raw = json.loads(resolve_evidence(exc.audit['audit_path']).read_text()).get('response')
+            raw = json.loads(resolve_evidence(exc.audit['audit_path']).read_text(encoding="utf-8")).get('response')
             usage = (raw or {}).get('response_metadata', {}).get('token_usage', {}) if isinstance(raw, dict) else {}
             return self.result_class(input_tokens=usage.get('prompt_tokens'), output_tokens=usage.get('completion_tokens'), raw_response={**(raw if isinstance(raw, dict) else {'response': raw}),
                                                     'execution_audit': exc.audit},

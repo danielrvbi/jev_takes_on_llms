@@ -1,0 +1,703 @@
+{
+  "experiment": "benchmark",
+  "policy": {
+    "version": 2,
+    "mode": "mandatory_cache_free",
+    "local_boundary": "fresh private server, worker and client for every call",
+    "local_verification": "every prompt including scoring retries: zero initial cache, full evaluation, no restore or truncation",
+    "within_request_prefix_reuse": false,
+    "hosted_verification": "fresh prompt_cache_key AND explicit numeric cached_tokens=0",
+    "langchain_cache": false,
+    "automatic_request_retries": 0,
+    "latency": "cold wall time includes startup, loading, verification and teardown",
+    "ollama_commit": "cc4069396f3ad2c370c53eed2e4a42ac13adab84"
+  },
+  "updated_at_utc": "2026-10-03T13:25:20.356226+00:00",
+  "complete": true,
+  "expected_measurements": 110,
+  "valid_measurements": 110,
+  "suites": {
+    "benchmark": {
+      "expected_keys": 100,
+      "measurement_keys": 100,
+      "passed": 100,
+      "failures": [],
+      "missing": [],
+      "attempts": 100,
+      "linked_attempts": 100,
+      "token_usage": [
+        {
+          "call_id": "7a94d0d02fbd46dcb8c57e00545cdc5a",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "cdfd0e7aeae146a982b5e49365ebd71c",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "2a725fa77b9344268b75834c0bb0fd34",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "056a7393ca8e4b6b90bf86018c85ec62",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "91506f190ec34674b7cf01ce0e137429",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "437625fa3fc44a81b97c685d3d5f17dd",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "e1cdf095869f45d4b3108e68a6890983",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "33bc7acf5b2c4c418693f253d1b3f48b",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "f9240cf6c0fd4f18a2723f256b63185d",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "6505887efcb5405e92745d49e7d6b286",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "1040cb608bab40b8a4a0de738dfd8043",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "c567c95ee994486cb6192cd2be58c7bd",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "b255e7b692f0461ebe374e83f189e04c",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "db7a04c5cc334f0a93f9122c7e6969ec",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "464d3107d25b4f1990e18fb3c70e7cc4",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "04556768bf7f40cabeaeb44f3be2856f",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "778de3878f6f49dcb8566f99bb2d9da6",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "244b463283374d28a7986e4438b5bffa",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "80dff1499cf24d89a38be761eccafd54",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "18c3b28a46ee4aa298bf30f6eb07d6d0",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "21d37e3f71d64411a0f2cdc7844b5f00",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "bee2d0ae7431483f8f7255e80d506553",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "a501cd62f8694b53abfcc1c96184d606",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "aa143a7d4deb47f7803ea83a694ccf36",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "5dd3e8596c6d4ac1b769e22739730e82",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "b5888e1e122846afbf9aeff000f64481",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "2f1c645df6704de99c41f7f54f70dcd0",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "13353feaa4ba4751ad63f40b4eba34dc",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "0112314d298d4368a8bc5ec1c50c3b66",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "51e9e2267bbb4af8a852b234e9e5e1a7",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "eb51040a4c654cf283a861af1ecdd339",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "4753702e2e2e491abcb6d89a5241d966",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "a2dcfef72dbc4f71a0a7652602c50fbd",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "69da1cfea7214c01a1486fe8755a1a05",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "2c43fc19a07b4740b19664d41a3b8c65",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "9e2ea99978534f43a1c2a817841c2659",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "606ac1e3dc3d4430be79a1fbacce3507",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "18c64ada27ba4b3496a48d67f2442e31",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "54e87ca52029425ea4777f00dedc8e69",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "7c61b5ae471b47068e6ba8e3354d02a9",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "347405b78fc14dfb86b48941b230962f",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "bc30fa2167704841814afbd11a2887b7",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "e628098b2d754226bf0391716d88f263",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "c5af9e9325e14c178fcf11b32b552ff6",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "b3c1a4e04c284b0a9d2cc4e44a204b99",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "0071c2b952ee49f3bab0e8e37ca3220f",
+          "input_tokens": 2519,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "a3334a6ac5b14afba26fd6dcedcfa434",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "0e5054f51c844b9b81be31b5b71b8597",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "fcd6a4f2be504a78b63caef1982374b3",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "63c15fa8b53b4edfb2ff87cdcd2b8a4b",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "ab8b4179bc0b4c7e9650496dc4a0181e",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "1c2df256fa1f44359517cd153a97b31b",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "4b76c171668248059e9a91f14755e7b9",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "556f3279de744bfcbe24a77d8149c0fd",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "ccbd4031d160437ca546093c96fe0593",
+          "input_tokens": 2527,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "c06f2f0832834828b5899601e7ac3134",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "c2af286b26cd4ceaa1b765aa450f4f19",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "2908e1db7b5144659bcdd4865d922ff9",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "5fc94c8ebb0b479581921a4fd965976a",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "3c5703fe5e144cf89203e7135187b4aa",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "37f790baf03041dbbd2742e72bbb471d",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "97281c051fb64b5aae7a797230575dfe",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "c2441403d5194089b6877a702ea20195",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "d9e4d75bcd8646c4b36f6cfc561d0ced",
+          "input_tokens": 2531,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "88133635d6e84be3a0a251e7da8e585a",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "8c49e07067634aacab20e4181536cd44",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "d36851c4fb4a40a5a6d6af45e1fde739",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "e41b0e5c23044e15b3a130914ed07b1a",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "4d5169a7eba246ae93b342df4e2e0fc0",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "2e9b1369df2a4050981aa77982535801",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "85c5799dd9c745e0876b3a603b193180",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "bb87b7e7873a48bfa59e0754152d4de5",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "dc9d02ff77ab432a98aa1ffbe45923a3",
+          "input_tokens": 2555,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "6c762148e8d749edbc983f008e211860",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "128fe25daa6448d4b8c790d119f99526",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "e8c091686c314d489a3a88d4a793993d",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "2ef89a406e9944a7876df6118ae1162c",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "99553e79a5a544499bb11ac716b881ea",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "3fed6cec90e14d348af75a2f6cc73981",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "a07ba07a424f49bc9eb8c63125b95611",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "c318f19504cb4ea48a711cb2472e1d08",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "ebcbed7f4e9a49b09ba543cc3bb779fd",
+          "input_tokens": 2551,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "7c6e1a8e6ac84b6588c21ff1948dd025",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "88b62d44cbde4d36bd2cb17558046c08",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "b5f8912ceb1e4693bfe841ff815a9277",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "d4ed5a85420741c09b846f5c6fa9808c",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "0e8fb5aec67e4dd6bd0a07bf675c3b9e",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "a10688f364cc4ae1816eee6014a9b972",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "8311d6492de64d3181570dc5b0acb90c",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "c2d1f9a593f741449cbcf3f10c4d12df",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "0df2f43b7eda41a9bf965aa627cbb3d0",
+          "input_tokens": 2535,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "0e9b4dcc95c448bcb971431938629fbb",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "86118becf33a42dd9765019801014eda",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "9172646d30b1471ba6320c4bebd983d0",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "6ed9f16f7c61447d99125191f977c1fa",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "3517456d5b864010a9a5f16ccc2ad812",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "8535adb907914751bba646c3fbe1c1e6",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "4a4c56ea781f4efe9a1527b82efef745",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "e612454f53ab4a9499b385de18c5d956",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "f8f9525a130d4eebbfa2a6ca9f3ad801",
+          "input_tokens": 2523,
+          "output_tokens": 4,
+          "cached_tokens": null
+        }
+      ]
+    },
+    "hard_case": {
+      "expected_keys": 10,
+      "measurement_keys": 10,
+      "passed": 10,
+      "failures": [],
+      "missing": [],
+      "attempts": 10,
+      "linked_attempts": 10,
+      "token_usage": [
+        {
+          "call_id": "3aa0c765c35a4d1aa744830f10178389",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "17145bf489004117a9acd8db0ec18a9c",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "f4060e78813e40978479e230586c07cd",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "64348f5c56324b61baac7693fb23f277",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "daec715223ed4a22bfda200f0e0799c1",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "f3ad3446cfb14030a408b22937bc3e83",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "f573a19a1289494a83962474caa22dce",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "6b594877d31e480e9c9a2aff3d54ad5b",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "2a68427c37564365af322037eaa5b035",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        },
+        {
+          "call_id": "c45a0b119ff14255b7a1ff145eac8a96",
+          "input_tokens": 72732,
+          "output_tokens": 6,
+          "cached_tokens": null
+        }
+      ]
+    }
+  }
+}

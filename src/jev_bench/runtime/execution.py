@@ -118,9 +118,24 @@ def experiment_execution(models):
     sources = [p for name in ('run', 'providers', 'storage', 'runtime')
                for p in sorted((PACKAGE_ROOT / name).rglob('*.py'))]
     sources.extend(sorted((PACKAGE_ROOT / 'suites').glob('*.py')))
-    return {'execution_policy': POLICY, 'execution_implementation_sha256': fingerprint({str(p.relative_to(PACKAGE_ROOT)): checked_hash(p) for p in sources}),
+    return {'execution_policy': execution_policy(models), 'execution_implementation_sha256': fingerprint({str(p.relative_to(PACKAGE_ROOT)): checked_hash(p) for p in sources}),
             'runtime': {'provider': 'hosted', 'local_runtime_required': False}
-                       if models and all(m == 'jev-1.13.0' for m in models) else runtime_identity()}
+                       if models and not any(m.startswith(('tev1:', 'gemma4:')) for m in models) else runtime_identity()}
+
+
+def execution_policy(models):
+    from jev_bench.providers.azure_config import AZURE_MODELS
+    if any(m in AZURE_MODELS for m in models):
+        if not all(m in AZURE_MODELS for m in models):
+            raise ValueError('Azure prefix experiments cannot mix with other providers')
+        from jev_bench.runtime.azure import AZURE_POLICY
+        return AZURE_POLICY
+    return POLICY
+
+
+def supported_policy(policy):
+    from jev_bench.runtime.azure import AZURE_POLICY
+    return policy == POLICY or policy == AZURE_POLICY
 
 
 from jev_bench.storage.io import atomic_write, output_lock
@@ -157,7 +172,7 @@ def save_audit(audit):
     path = Path(audit['audit_path'])
     suite = path.parent.parent
     plan = suite.parent / 'run_plan.json'
-    if plan.exists() and json.loads(plan.read_text()).get('version') == 2:
+    if plan.exists() and json.loads(plan.read_text(encoding="utf-8")).get('version') == 2:
         audit['audit_path'] = str(path.relative_to(suite))
         if audit.get('log_path'):
             audit['log_path'] = str(Path(audit['log_path']).relative_to(suite))
@@ -192,6 +207,9 @@ def request_recorder(audit, endpoint, mutate=None):
 
 
 def verify_request_binding(audit):
+    if audit.get('provider') in ('azure-gpt', 'azure-claude'):
+        from jev_bench.runtime.azure import verify_request
+        return verify_request(audit)
     payload = audit['input']
     request = audit['requests'][0]
     if 'state' in payload:
@@ -498,8 +516,12 @@ def revalidate_audit(link, raw=None, *, require_verified=True, allow_unverified_
     path = resolve_evidence(link['audit_path'])
     if file_hash(path) != link.get('audit_sha256'):
         raise ValueError('Execution audit fingerprint mismatch')
-    audit = json.loads(path.read_text())
-    if audit.get('policy') != POLICY or audit.get('call_id') != link.get('call_id'):
+    audit = json.loads(path.read_text(encoding="utf-8"))
+    expected_policy = POLICY
+    if audit.get('provider') in ('azure-gpt', 'azure-claude'):
+        from jev_bench.runtime.azure import AZURE_POLICY
+        expected_policy = AZURE_POLICY
+    if audit.get('policy') != expected_policy or audit.get('call_id') != link.get('call_id'):
         raise ValueError('Old or inconsistent execution audit')
     jev_exception = (allow_unverified_jev and audit.get('provider') == 'typesafe'
                      and audit.get('cache_exception') == JEV_CACHE_EXCEPTION
@@ -515,6 +537,10 @@ def revalidate_audit(link, raw=None, *, require_verified=True, allow_unverified_
     if raw is not None and audit.get('verified'):
         if serial({k: v for k, v in raw.items() if k != 'execution_audit'}) != audit['response']:
             raise ValueError('Saved response differs from audited response')
+    if audit['provider'] in ('azure-gpt', 'azure-claude'):
+        from jev_bench.runtime.azure import revalidate
+        revalidate(audit)
+        return audit
     if audit['provider'] == 'typesafe':
         if raw is not None and serial({k: v for k, v in raw.items() if k != 'execution_audit'}) != audit['response']:
             raise ValueError('Saved response differs from audited Jev response')

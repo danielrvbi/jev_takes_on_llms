@@ -10,7 +10,7 @@ from jev_bench.storage.paths import ensure_readable
 
 import argparse
 import csv
-import fcntl
+from jev_bench.storage.locking import fcntl
 import json
 import math
 import sys
@@ -149,6 +149,19 @@ def fenced_json(lines, value):
 
 def counts(series):
     return json.dumps(dict(sorted(Counter(str(value) for value in series.dropna()).items())), ensure_ascii=False)
+
+
+def azure_provenance(metadata):
+    """Keep deployed model versions visible even when CSVs use stable aliases."""
+    configurations = (metadata or {}).get('experiment', {}).get('model_configuration', {})
+    azure = [(alias, c) for alias, c in configurations.items() if c.get('provider', '').startswith('azure-')]
+    if not azure:
+        return ''
+    lines = ['> Altered-prompt Azure prefix experiment; hosted wall-time latency. '
+             'Shown separately from original-prompt measurements.', '']
+    table(lines, ['Alias', 'Deployment', 'Model', 'Configured version'],
+          [(alias, c['deployment'], c['model_name'], c['model_version']) for alias, c in azure])
+    return '\n'.join(lines) + '\n\n'
 
 
 def build_report(directory, frame, history, metadata, include_raw=False, plot_directory=None):
@@ -341,7 +354,7 @@ def build_report(directory, frame, history, metadata, include_raw=False, plot_di
     # A reconciler builds files in staging but links to their final published location.
     plots = sorted((Path(plot_directory) if plot_directory is not None else directory / "plots").glob("*.png"))
     lines.extend([f"- {(directory / 'plots' / path.name).resolve()}" for path in plots] or ["No saved plots found."])
-    return "\n".join(lines) + "\n"
+    return azure_provenance(metadata) + "\n".join(lines) + "\n"
 
 
 def build_hard_case_report(directory, models=None, include_raw=False):
@@ -351,16 +364,16 @@ def build_hard_case_report(directory, models=None, include_raw=False):
     if any("contaminated" in part.lower() for part in directory.resolve().parts):
         raise ValueError("Quarantined results cannot be imported for reporting")
     with saved_snapshot(directory):
-        with (directory / "raw.csv").open(newline="") as f:
+        with (directory / "raw.csv").open(newline="", encoding="utf-8") as f:
             frame = hard_frame(list(csv.DictReader(f)))
-        with (directory / "attempt_history.csv").open(newline="") as f:
+        with (directory / "attempt_history.csv").open(newline="", encoding="utf-8") as f:
             history = hard_frame(list(csv.DictReader(f)))
     if models:
         frame = frame[frame.model.isin(models)]
         history = history[history.model.isin(models)]
     if frame.empty:
         raise ValueError("No hard-case measurements match selected models")
-    metadata = json.loads((directory / 'metadata.json').read_text())
+    metadata = json.loads((directory / 'metadata.json').read_text(encoding="utf-8"))
     return render_hard_case_report(directory, frame, history, metadata, include_raw)
 
 
@@ -393,7 +406,7 @@ def render_hard_case_report(directory, frame, history, metadata, include_raw=Fal
         for _, row in history.iterrows():
             fenced_json(lines, {"model": row.model, "repetition": int(row.repetition), "error": row.error,
                                 "response": json.loads(row.raw_response_json)})
-    return "\n".join(lines) + "\n"
+    return azure_provenance(metadata) + "\n".join(lines) + "\n"
 
 
 def main(argv=None):
@@ -436,7 +449,7 @@ def main(argv=None):
         known = [root / suite for suite in ["benchmark", "hard_case"] if (root / suite / "raw.csv").exists()]
         if known:
             directories = [d for d in known if args.suite == "all" or d.name == args.suite]
-        elif args.suite == "hard_case" or (root / "metadata.json").exists() and json.loads((root / "metadata.json").read_text()).get("kind") == "hard_case_benchmark":
+        elif args.suite == "hard_case" or (root / "metadata.json").exists() and json.loads((root / "metadata.json").read_text(encoding="utf-8")).get("kind") == "hard_case_benchmark":
             directories = [root]
         else:
             directories = [find_results(root)]
@@ -444,7 +457,7 @@ def main(argv=None):
             raise ValueError("Selected suite has no saved results")
         reports = []
         for directory in directories:
-            metadata = json.loads((directory / "metadata.json").read_text()) if (directory / "metadata.json").exists() else {}
+            metadata = json.loads((directory / "metadata.json").read_text(encoding="utf-8")) if (directory / "metadata.json").exists() else {}
             if metadata.get("kind") == "hard_case_benchmark":
                 reports.append(build_hard_case_report(directory, args.models, args.include_raw))
             else:

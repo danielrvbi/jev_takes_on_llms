@@ -1,6 +1,6 @@
 """Root manifest: complete only when all 55 requested repetition-one keys pass."""
 import csv
-import fcntl
+from jev_bench.storage.locking import fcntl
 from contextlib import ExitStack, contextmanager
 import json
 from pathlib import Path
@@ -21,15 +21,15 @@ def _build_validation(root, output_directory=None):
         'hard_case': {(m, 1) for m in MODELS},
     }
     run_plan_path = root / 'run_plan.json'
-    run_plan = json.loads(run_plan_path.read_text()) if run_plan_path.exists() else None
+    run_plan = json.loads(run_plan_path.read_text(encoding="utf-8")) if run_plan_path.exists() else None
     if run_plan is not None and run_plan.get('version') == 2:
         from jev_bench.storage.plan import expected_keys
         expected = expected_keys(run_plan)
         if run_plan.get('kind') == 'jev_api':
-            from jev_bench.providers.jev import cache_exception_for_root
+            from jev_bench.providers.jev_contract import cache_exception_for_root
             cache_exception_for_root(root)
     elif run_plan is not None:
-        from jev_bench.providers.jev import JEV_MODEL
+        from jev_bench.providers.jev_contract import JEV_MODEL
         if (run_plan.get('version') != 1 or run_plan.get('kind') != 'jev_api'
                 or run_plan.get('models') != [JEV_MODEL]
                 or type(run_plan.get('repetitions')) is not int
@@ -40,16 +40,16 @@ def _build_validation(root, output_directory=None):
         repetitions = range(1, run_plan['repetitions'] + 1)
         expected = {'benchmark': {(JEV_MODEL, c, r) for c in run_plan['case_ids'] for r in repetitions},
                     'hard_case': {(JEV_MODEL, r) for r in repetitions}}
-        from jev_bench.providers.jev import cache_exception_for_root
+        from jev_bench.providers.jev_contract import cache_exception_for_root
         cache_exception_for_root(root)
-    prefix = any(json.loads((root / suite / 'metadata.json').read_text()).get('experiment', {}).get('prefix_strategy')
+    prefix = any(json.loads((root / suite / 'metadata.json').read_text(encoding="utf-8")).get('experiment', {}).get('prefix_strategy')
                  for suite in expected if (root / suite / 'metadata.json').exists())
     if prefix and not (run_plan or {}).get('version') == 2:
         mistral = [m for m in MODELS if m.startswith('mistral')]
         expected = {'benchmark': {(m, 1, r) for m in mistral for r in (1, 2)},
                     'hard_case': {(m, r) for m in mistral for r in (1, 2)}}
     target = sum(map(len, expected.values()))
-    manifest = {'experiment': run_plan.get('kind', 'original') if run_plan else 'prefix_pilot' if prefix else 'original', 'policy': POLICY, 'updated_at_utc': now(), 'complete': False,
+    manifest = {'experiment': run_plan.get('kind', 'original') if run_plan else 'prefix_pilot' if prefix else 'original', 'policy': (run_plan or {}).get('execution_policy', POLICY), 'updated_at_utc': now(), 'complete': False,
                 'expected_measurements': target, 'valid_measurements': 0, 'suites': {}}
     if run_plan and run_plan.get('jev_cache_exception'):
         manifest['jev_cache_exception'] = run_plan['jev_cache_exception']
@@ -63,7 +63,7 @@ def _build_validation(root, output_directory=None):
         path = directory / 'attempt_history.csv'
         latest = {}
         metadata_path = directory / "metadata.json"
-        metadata = json.loads(metadata_path.read_text()) if metadata_path.exists() else {}
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8")) if metadata_path.exists() else {}
         definition = metadata.get("experiment")
         if definition is not None and (definition.get('jev_cache_exception') !=
                 (run_plan or {}).get('jev_cache_exception')):
@@ -96,11 +96,12 @@ def _build_validation(root, output_directory=None):
                             raise ValueError('Request prefix reused')
                         prefixes.add(identifier)
                     response = audit.get('response') or {}
-                    usage = response.get('usage') or response.get('response_metadata', {}).get('token_usage', {})
+                    usage = audit.get('usage') or response.get('usage') or response.get('response_metadata', {}).get('token_usage', {})
                     usage = usage if isinstance(usage, dict) else {}
                     info['token_usage'].append({'call_id': audit['call_id'], 'input_tokens': usage.get('input_tokens', usage.get('prompt_tokens')),
                         'output_tokens': usage.get('output_tokens', usage.get('completion_tokens')),
-                        'cached_tokens': usage.get('prompt_tokens_details', {}).get('cached_tokens')})
+                        'cached_tokens': usage.get('cached_tokens', usage.get('prompt_tokens_details', {}).get('cached_tokens')),
+                        'cache_creation_input_tokens': usage.get('cache_creation_input_tokens')})
                     info['linked_attempts'] += 1
                 except (ValueError, OSError, KeyError) as exc:
                     info['failures'].append({'key': key, 'attempt': row['attempt'], 'kind': 'audit_integrity', 'reason': str(exc)})
@@ -130,7 +131,7 @@ def _build_validation(root, output_directory=None):
         manifest['suites'][suite] = info
     manifest['complete'] = manifest['valid_measurements'] == target and all(
         info['linked_attempts'] == info['attempts'] and not info['failures'] for info in manifest['suites'].values())
-    if prefix and (sum(info['attempts'] for info in manifest['suites'].values()) > 8
+    if prefix and not (run_plan or {}).get('kind', '').startswith('azure_prefix_') and (sum(info['attempts'] for info in manifest['suites'].values()) > 8
                    or any(info['attempts'] != info['expected_keys'] for info in manifest['suites'].values())):
         manifest['complete'] = False
     destination = Path(output_directory) if output_directory else root
@@ -153,7 +154,7 @@ def update_validation(root, output_directory=None):
                     fcntl.flock(handle, fcntl.LOCK_SH | fcntl.LOCK_NB)
                 except BlockingIOError:
                     plan_path = root / 'run_plan.json'
-                    plan = json.loads(plan_path.read_text()) if plan_path.exists() else None
+                    plan = json.loads(plan_path.read_text(encoding="utf-8")) if plan_path.exists() else None
                     if plan and plan.get('version') == 2:
                         from jev_bench.storage.plan import expected_keys
                         expected = sum(len(keys) for keys in expected_keys(plan).values())

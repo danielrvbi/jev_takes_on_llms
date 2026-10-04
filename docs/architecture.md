@@ -31,3 +31,16 @@ historical absolute paths resolve through migration manifests.
 Offline evaluations use saved snapshots and write only to separate artifact
 directories. Runner summaries delegate to those renderers. `analysis/` is reserved
 for future notebooks and exploratory work.
+
+Azure adapters share the same request boundary and suite/result stores. A dedicated
+launcher records immutable pilot/full targets for both suites before dispatch and
+shares one call guard across them. Its Azure policy is version 3; legacy version-2
+policies remain supported. HTTP evidence binds messages, deployment, structured
+schema, sampling settings, response text and cache-read telemetry. The stable
+`azure-gpt-luna`, `azure-gpt-sol`, `azure-claude-opus` and `azure-claude-sonnet`
+aliases remain outside legacy default selections.
+
+Portable locks preserve the existing POSIX flock protocol and use portalocker on
+Windows. Pure Jev contract helpers are separated from SDK construction so offline
+readers do not need the Jev integration installed. See the
+[Azure handoff guide](azure_handoff.md) for installation and execution.

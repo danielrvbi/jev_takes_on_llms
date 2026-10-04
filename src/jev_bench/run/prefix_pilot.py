@@ -35,7 +35,7 @@ def run_pilot(output_dir=None, console=None, *, direct=False):
         for suite in ('benchmark', 'hard_case'):
             path = pilot / suite / 'attempt_history.csv'
             if path.exists():
-                with path.open(newline='') as handle:
+                with path.open(newline='', encoding='utf-8') as handle:
                     prior.extend(csv.DictReader(handle))
         if any(row['validation_success'].lower() != 'true' for row in prior):
             raise RunStopped('Pilot already has a rejected attempt; no retry or replacement calls allowed')

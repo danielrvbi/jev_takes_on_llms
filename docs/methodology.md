@@ -34,3 +34,13 @@ deterministic calls can still yield identical outputs.
 Original requests, responses, evidence hashes, logs, budget ledgers, and metadata
 remain immutable during migration. Archived results cannot be extended by the
 new implementation.
+
+Azure GPT and Claude use a separate altered-prompt prefix experiment. Each call
+adds a fresh UUID identifier before the original system message; inputs and output
+probability semantics are otherwise preserved. Zero cache-read telemetry is
+mandatory, with Claude cache-creation tokens recorded independently. Missing
+telemetry or nonzero reads stop execution; a unique prefix alone is not accepted
+as evidence. Azure hosted wall time includes client creation and teardown, without
+a local cold-start claim. Prefix results are shown separately from original-prompt
+measurements and the Mistral pilot. The 16-call Azure pilot must pass before
+the 1,320-measurement full experiment can begin.

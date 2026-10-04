@@ -17,7 +17,7 @@ from jev_bench.suites.benchmark.metrics import RAW_COLUMNS, derive, flatten_valu
 from jev_bench.suites.benchmark.prompts import SYSTEM_PROMPT, systemone_questions
 from jev_bench.providers.suites.benchmark import MODELS, create_provider, model_configuration
 from jev_bench.suites.benchmark.schemas import DecisionOutput
-from jev_bench.runtime.execution import POLICY, output_lock, suite_directory, experiment_execution, audit_fields, model_identity
+from jev_bench.runtime.execution import POLICY, output_lock, suite_directory, experiment_execution, audit_fields, model_identity, execution_policy
 from jev_bench.run.control import PREFIX_STRATEGY, experiment_settings
 
 
@@ -28,8 +28,9 @@ def utc_now():
 def experiment_definition(models=MODELS):
     dependencies = {}
     for package in ["ollama", "langchain-core", "langchain-ollama", "langchain-mistralai",
-                    "pydantic", "pandas", "numpy", "matplotlib", "rich", "python-dotenv", "httpx",
-                    *(['langchain-typesafe', 'httpx2'] if 'jev-1.13.0' in models else [])]:
+                    "pydantic", "pandas", "numpy", "matplotlib", "rich", "python-dotenv", "httpx", "portalocker",
+                    *(['langchain-typesafe', 'httpx2'] if 'jev-1.13.0' in models else []),
+                    *(['langchain-openai', 'langchain-anthropic', 'openai', 'anthropic', 'httpx2'] if any(m.startswith('azure-') for m in models) else [])]:
         try:
             dependencies[package] = importlib.metadata.version(package) or 'version-unavailable'
         except importlib.metadata.PackageNotFoundError:
@@ -108,7 +109,7 @@ from jev_bench.run_evaluations.benchmark_summary import report
 
 
 def run_benchmark(models, cases, repetitions=30, warmups=2, output_dir=None,
-                  provider_factory=create_provider, console=None, definition=None, *, prefix_experiment=False, max_new_calls=None):
+                  provider_factory=create_provider, console=None, definition=None, *, prefix_experiment=False, max_new_calls=None, call_guard=None):
     console = console or Console()
     if output_dir is None:
         from jev_bench.storage.paths import new_experiment
@@ -117,19 +118,23 @@ def run_benchmark(models, cases, repetitions=30, warmups=2, output_dir=None,
     if not models or not cases or repetitions < 1 or warmups < 0:
         raise ValueError("Select models/cases, positive repetitions and nonnegative warm-ups")
     output_dir, guard = experiment_settings(output_dir, models, prefix_experiment, max_new_calls)
+    guard = call_guard if call_guard is not None else guard
     if 'jev-1.13.0' in models:
         from jev_bench.providers.jev import validate_selection
         validate_selection(output_dir, models, warmups, max_new_calls)
     directory = suite_directory(output_dir, "benchmark")
-    definition = {**(definition if definition is not None else experiment_definition(models)), "execution_policy": POLICY}
-    from jev_bench.providers.jev import cache_exception_for_root
-    cache_exception = cache_exception_for_root(output_dir) if 'jev-1.13.0' in models else None
+    definition = {**(definition if definition is not None else experiment_definition(models)), "execution_policy": execution_policy(models)}
+    cache_exception = None
+    if 'jev-1.13.0' in models:
+        from jev_bench.providers.jev import cache_exception_for_root
+        cache_exception = cache_exception_for_root(output_dir)
     if cache_exception:
         definition = {**definition, "jev_cache_exception": cache_exception}
     if prefix_experiment:
         definition = {**definition, "prefix_strategy": PREFIX_STRATEGY}
     console.print("Jev: server caching unverified; valid responses accepted by explicit exception."
-                  if cache_exception else "Mandatory cache-free calls. Local latency includes private startup and teardown.")
+                  if cache_exception else "Azure prefix experiment: verified zero cache-read telemetry; hosted wall-time latency."
+                  if any(m.startswith("azure-") for m in models) else "Mandatory cache-free calls. Local latency includes private startup and teardown.")
     from jev_bench.run.engine import execute, RunHooks
     return execute(RunHooks(ResultStore, measured_row, report), 'benchmark', models, cases, repetitions, warmups,
                    Path(output_dir), directory, definition, provider_factory, console, guard,

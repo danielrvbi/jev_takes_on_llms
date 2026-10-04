@@ -29,7 +29,7 @@ class NativeProvider:
                 questions=questions, directory=directory, purpose=purpose))
         except AuditError as exc:
             with dataset_context(directory.parent):
-                raw = json.loads(resolve_evidence(exc.audit["audit_path"]).read_text()).get("response")
+                raw = json.loads(resolve_evidence(exc.audit["audit_path"]).read_text(encoding="utf-8")).get("response")
             result = self.mapper(raw) if isinstance(raw, dict) else self.result_class()
             result.raw_response = {**(raw or {}), "execution_audit": exc.audit}
             result.error = f"Cache verification failed: {exc}"

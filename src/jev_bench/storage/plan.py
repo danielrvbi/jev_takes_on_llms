@@ -10,13 +10,21 @@ def record_selection(root, suite, models, cases, repetitions, warmups, definitio
     ensure_writable(root)
     with output_lock(root / "plan_lock"):
         path = root / "run_plan.json"
-        plan = json.loads(path.read_text()) if path.exists() else {
+        plan = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {
             "version": 2, "kind": "prefix_pilot" if prefix else "benchmark",
             "targets": {}, "revisions": []}
         # Version-one hosted plans are immutable and remain supported for legacy fixtures.
         if plan["version"] == 1:
             return
         if plan.get("kind") == "jev_api":
+            return
+        if plan.get("kind") in ("azure_prefix_pilot", "azure_prefix_full"):
+            target = plan['targets'].get(suite, {})
+            for model in models:
+                expected = {"case_ids": sorted(cases), "repetitions": repetitions, "warmups": warmups,
+                            "configuration": definition['model_configuration'][model]}
+                if target.get(model) != expected:
+                    raise ValueError('Azure targets are immutable; use another --output-dir')
             return
         before = deepcopy(plan.get("targets", {}))
         target = plan.setdefault("targets", {}).setdefault(suite, {})

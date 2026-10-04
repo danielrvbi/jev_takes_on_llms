@@ -1,0 +1,92 @@
+[
+  {
+    "model": "tev1:0.8b",
+    "suite": "benchmark",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "tev1:0.8b",
+    "suite": "hard_case",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "tev1:4b",
+    "suite": "benchmark",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "tev1:4b",
+    "suite": "hard_case",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "gemma4:e4b",
+    "suite": "benchmark",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "gemma4:e4b",
+    "suite": "hard_case",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "jev-1.13.0",
+    "suite": "benchmark",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "jev-1.13.0",
+    "suite": "hard_case",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "mistral-small-latest",
+    "suite": "benchmark",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "mistral-small-latest",
+    "suite": "hard_case",
+    "status": "not_run"
+  },
+  {
+    "model": "mistral-large-latest",
+    "suite": "benchmark",
+    "schema_equal": true,
+    "prompts_equal": true,
+    "input_equal": true,
+    "configuration_equal": true
+  },
+  {
+    "model": "mistral-large-latest",
+    "suite": "hard_case",
+    "status": "not_run"
+  }
+]

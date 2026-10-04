@@ -1,0 +1,26 @@
+name: Azure portability and offline regression
+on: [push, pull_request]
+jobs:
+  azure:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install uv==0.12.21
+      - run: uv sync --frozen --extra azure
+      - run: uv run --frozen --extra azure python -m unittest tests.test_azure tests.test_portable_locks
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install uv==0.12.21
+      - run: uv sync --frozen --extra azure --group test
+      - run: uv run --frozen --extra azure --group test python -m unittest discover -s tests -p 'test_*.py'

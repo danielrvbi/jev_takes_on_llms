@@ -17,7 +17,7 @@ from jev_bench.providers.suites.hard_case import MODELS, create_provider, model_
 from jev_bench.providers.suites.hard_case.base import exception_result
 from jev_bench.providers.suites.hard_case.context import inference_model, validate_alias, validate_request_budget
 from jev_bench.suites.hard_case.schemas import HardCaseOutput
-from jev_bench.runtime.execution import POLICY, suite_directory, experiment_execution, audit_fields, model_identity
+from jev_bench.runtime.execution import POLICY, suite_directory, experiment_execution, audit_fields, model_identity, execution_policy
 from jev_bench.run.control import PREFIX_STRATEGY, experiment_settings
 
 
@@ -83,8 +83,9 @@ def local_model_information(models, systemone_context=None):
 def experiment_definition(packet, models=MODELS, local_information=None, systemone_context=None):
     dependencies = {}
     for package in ["ollama", "langchain-core", "langchain-ollama", "langchain-mistralai",
-                    "pydantic", "pandas", "numpy", "matplotlib", "rich", "python-dotenv", "httpx",
-                    *(['langchain-typesafe', 'httpx2'] if 'jev-1.13.0' in models else [])]:
+                    "pydantic", "pandas", "numpy", "matplotlib", "rich", "python-dotenv", "httpx", "portalocker",
+                    *(['langchain-typesafe', 'httpx2'] if 'jev-1.13.0' in models else []),
+                    *(['langchain-openai', 'langchain-anthropic', 'openai', 'anthropic', 'httpx2'] if any(m.startswith('azure-') for m in models) else [])]:
         try:
             dependencies[package] = importlib.metadata.version(package) or 'version-unavailable'
         except importlib.metadata.PackageNotFoundError:
@@ -177,7 +178,7 @@ from jev_bench.run_evaluations.hard_case_summary import report
 
 def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=None,
                             provider_factory=create_provider, console=None, packet=None, definition=None,
-                            input_profile="compact", systemone_context=None, prefix_experiment=False, max_new_calls=None):
+                            input_profile="compact", systemone_context=None, prefix_experiment=False, max_new_calls=None, call_guard=None):
     console = console or Console()
     if output_dir is None:
         from jev_bench.storage.paths import new_experiment
@@ -194,6 +195,7 @@ def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=None,
     if not models or repetitions < 1 or warmups < 0:
         raise ValueError("Select models, at least one repetition, and nonnegative warm-ups")
     output_dir, guard = experiment_settings(output_dir, models, prefix_experiment, max_new_calls)
+    guard = call_guard if call_guard is not None else guard
     if 'jev-1.13.0' in models:
         from jev_bench.providers.jev import validate_selection
         validate_selection(output_dir, models, warmups, max_new_calls)
@@ -206,15 +208,18 @@ def run_hard_case_benchmark(models, repetitions=30, warmups=2, output_dir=None,
                 validate_alias(model, systemone_context)
     definition = (experiment_definition(packet, models, systemone_context=systemone_context)
                   if definition is None else definition)
-    definition = {**definition, "execution_policy": POLICY}
-    from jev_bench.providers.jev import cache_exception_for_root
-    cache_exception = cache_exception_for_root(output_dir) if 'jev-1.13.0' in models else None
+    definition = {**definition, "execution_policy": execution_policy(models)}
+    cache_exception = None
+    if 'jev-1.13.0' in models:
+        from jev_bench.providers.jev import cache_exception_for_root
+        cache_exception = cache_exception_for_root(output_dir)
     if cache_exception:
         definition = {**definition, "jev_cache_exception": cache_exception}
     if prefix_experiment:
         definition = {**definition, "prefix_strategy": PREFIX_STRATEGY}
     console.print("Jev: server caching unverified; valid responses accepted by explicit exception."
-                  if cache_exception else "Mandatory cache-free calls. Local latency includes private startup and teardown.")
+                  if cache_exception else "Azure prefix experiment: verified zero cache-read telemetry; hosted wall-time latency."
+                  if any(m.startswith("azure-") for m in models) else "Mandatory cache-free calls. Local latency includes private startup and teardown.")
     directory = suite_directory(output_dir, "hard_case")
     from jev_bench.run.engine import execute, RunHooks
     return execute(RunHooks(ResultStore, measured_row, report, exception_result), 'hard_case', models, [packet.text], repetitions, warmups,

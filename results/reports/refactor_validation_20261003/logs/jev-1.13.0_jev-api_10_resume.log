@@ -1,0 +1,34 @@
+Jev: server caching unverified; valid responses accepted by explicit exception.
+0 pending measurements; successful repetitions are skipped.
+Measuring ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━   0% -:--:--
+           Structured decision repeatability / distribution           
+┏━━━━━━━━━━━━┳━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━┓
+┃ Model      ┃ Case ┃ Valid ┃   Web ┃  Safe ┃ Fresh ┃ Route ┃ p95 ms ┃
+┡━━━━━━━━━━━━╇━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━┩
+│ jev-1.13.0 │    1 │ 10/10 │ 0.211 │ 0.980 │ 0.022 │  100% │  386.6 │
+│ jev-1.13.0 │    2 │ 10/10 │ 0.782 │ 0.980 │ 3.918 │  100% │  392.9 │
+│ jev-1.13.0 │    3 │ 10/10 │ 0.955 │ 0.970 │ 4.937 │  100% │  322.5 │
+│ jev-1.13.0 │    4 │ 10/10 │ 0.087 │ 0.984 │ 0.000 │  100% │  370.7 │
+│ jev-1.13.0 │    5 │ 10/10 │ 0.937 │ 0.972 │ 4.894 │  100% │  360.4 │
+│ jev-1.13.0 │    6 │ 10/10 │ 0.782 │ 0.980 │ 3.974 │  100% │  380.9 │
+│ jev-1.13.0 │    7 │ 10/10 │ 0.135 │ 0.020 │ 0.153 │  100% │  415.5 │
+│ jev-1.13.0 │    8 │ 10/10 │ 0.064 │ 0.986 │ 0.000 │  100% │  396.0 │
+│ jev-1.13.0 │    9 │ 10/10 │ 0.891 │ 0.971 │ 4.227 │  100% │  404.6 │
+│ jev-1.13.0 │   10 │ 10/10 │ 0.872 │ 0.977 │ 4.457 │  100% │  410.2 │
+└────────────┴──────┴───────┴───────┴───────┴───────┴───────┴────────┘
+Web/Safe/Fresh: means; Route: consistency; Valid: valid/attempted.
+Latest failures: 0; historical failures: 0. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/experimen
+ts/refactor_validation_20261003_jev-1.13.0/benchmark
+Jev: server caching unverified; valid responses accepted by explicit exception.
+0 pending measurements; successful repetitions are skipped.
+Measuring ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━   0% -:--:--
+                   Hard-case insurance judgment repeatability                   
+┏━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━┓
+┃ Model      ┃ Valid ┃ Latest failures ┃ Historical failures ┃ p50 ms ┃ p95 ms ┃
+┡━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━┩
+│ jev-1.13.0 │ 10/10 │ 0               │ 0                   │ 434.4  │ 786.7  │
+└────────────┴───────┴─────────────────┴─────────────────────┴────────┴────────┘
+Six independent probability distributions saved in summary.csv. Results: 
+/Users/danielrvbi/Desktop/PythonStuff/agents/jev_takes_on_llms/results/experimen
+ts/refactor_validation_20261003_jev-1.13.0/hard_case

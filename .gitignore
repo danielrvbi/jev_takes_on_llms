@@ -34,3 +34,4 @@ results/quarantine/
 results/.migration_backup/
 results/.migration_staging/
 *.lock
+!uv.lock
